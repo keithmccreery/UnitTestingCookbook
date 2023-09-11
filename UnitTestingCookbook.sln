@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33627.172
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestingCookbook.Test", "UnitTestingCookbook.Test\UnitTestingCookbook.Test.csproj", "{FA8DA9C0-60EE-496D-9029-D807BD14078B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestingCookbook.Support", "UnitTestingCookbook.Support\UnitTestingCookbook.Support.csproj", "{9D43B53C-3339-4E4E-BD34-2CD7C7058A20}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestingCookbook.TestHelpers", "UnitTestingCookbook.TestHelpers\UnitTestingCookbook.TestHelpers.csproj", "{46C0C830-5C48-4DD0-884F-1310BD8D2B67}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6D460169-6FCC-4F39-AAC6-A383E1FCE9BE}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+		README\README_Analyzers.md = README\README_Analyzers.md
+		README\README_DataHangover.md = README\README_DataHangover.md
+		README\README_DependencyInjection.md = README\README_DependencyInjection.md
+		README\README_Docker.md = README\README_Docker.md
+		README\README_FluentAssertions.md = README\README_FluentAssertions.md
+		README\README_FluentAssertionsAddOns.md = README\README_FluentAssertionsAddOns.md
+		README\README_GeneralTips.md = README\README_GeneralTips.md
+		README\README_HttpClientFactory.md = README\README_HttpClientFactory.md
+		README\README_Logging.md = README\README_Logging.md
+		README\README_SystemIoAbstraction.md = README\README_SystemIoAbstraction.md
+		README\README_WireMockNet.md = README\README_WireMockNet.md
+		README\README_WireMockNetPollyPolicies.md = README\README_WireMockNetPollyPolicies.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FA8DA9C0-60EE-496D-9029-D807BD14078B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA8DA9C0-60EE-496D-9029-D807BD14078B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA8DA9C0-60EE-496D-9029-D807BD14078B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA8DA9C0-60EE-496D-9029-D807BD14078B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D43B53C-3339-4E4E-BD34-2CD7C7058A20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D43B53C-3339-4E4E-BD34-2CD7C7058A20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D43B53C-3339-4E4E-BD34-2CD7C7058A20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D43B53C-3339-4E4E-BD34-2CD7C7058A20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46C0C830-5C48-4DD0-884F-1310BD8D2B67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46C0C830-5C48-4DD0-884F-1310BD8D2B67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46C0C830-5C48-4DD0-884F-1310BD8D2B67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46C0C830-5C48-4DD0-884F-1310BD8D2B67}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6C9773E5-8DD7-4763-8ACB-EC1DF3B1F0BB}
+	EndGlobalSection
+EndGlobal
