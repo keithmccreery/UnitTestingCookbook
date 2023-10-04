@@ -47,11 +47,11 @@ public void B_DataDrivenTest_TestCaseSource( Whale whale, bool expected )
 ```
 
 ```csharp
-// This class can be name anything
+// This class can be named anything
 // There can be multiple properties in this class
 public static class DataDrivenTestData
 {
-    // This Property can be name anything
+    // This Property can be named anything
     // IEnumerable from System.Collections
     public static IEnumerable TestCaseSourceData
     {

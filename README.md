@@ -44,6 +44,8 @@ and the explanation will follow.
 
 - [FluentAssertions](./README/README_FluentAssertions.md)
     - [FluentAssertionsTest.cs](./UnitTestingCookbook.Test/FluentAssertionsTest.cs)
+- [Data Driven](./README/README_DataDriven.md)
+    - [DataDrivenTest.cs](./UnitTestingCookbook.Test/DataDrivenTest.cs)
 - [FluentAssertions Add-Ons](./README/README_FluentAssertionsAddOns.md)
     - [FluentAssertionsAddOnsTest.cs](./UnitTestingCookbook.Test/FluentAssertionsAddOnsTest.cs)
 - [Dependency Injection](./README/README_DependencyInjection.md)
@@ -67,8 +69,6 @@ and the explanation will follow.
     - [AnalyzersTest.cs](./UnitTestingCookbook.Test/AnalyzersTest.cs)
 - [General Tips](./README/README_GeneralTips.md)
     - [GeneralTipsTest.cs](./UnitTestingCookbook.Test/GeneralTipsTest.cs)
-- [Data Driven](./README/README_DataDriven.md)
-    - [DataDrivenTest.cs](./UnitTestingCookbook.Test/DataDrivenTest.cs)
 
 # Errata
 
@@ -76,6 +76,7 @@ and the explanation will follow.
 
 # Future
 
+- Parallel Processing
 - Moq Examples
 - MinimalApi Integration Testing
 - AWS via LocalStack

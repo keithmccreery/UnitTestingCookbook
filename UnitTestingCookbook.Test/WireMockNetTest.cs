@@ -11,15 +11,15 @@ using WireMock.Server;
 
 namespace UnitTestingCookbook.Test;
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage( "Structure", "NUnit1032:An IDisposable field/property should be Disposed in a TearDown method", Justification = "IServiceProvider is cast to IDisposable" )]
 [Category( "unit" )]
 [Category( "wiremocknet" )]
 [TestFixture]
 public class WireMockNetTest
 {
     private static WireMockServer _wireMockServer;
-    private IServiceProvider? _serviceProvider;
     private string? _baseUrl;
+    [System.Diagnostics.CodeAnalysis.SuppressMessage( "Structure", "NUnit1032:An IDisposable field/property should be Disposed in a TearDown method", Justification = "IServiceProvider is cast to IDisposable" )]
+    private IServiceProvider? _serviceProvider;
 
     const string ENDPOINT_STATUS_OK = "/status/200"; // requires leading slash
 
