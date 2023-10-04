@@ -11,6 +11,7 @@ using WireMock.Server;
 
 namespace UnitTestingCookbook.Test;
 
+[System.Diagnostics.CodeAnalysis.SuppressMessage( "Structure", "NUnit1032:An IDisposable field/property should be Disposed in a TearDown method", Justification = "IServiceProvider is cast to IDisposable" )]
 [Category( "unit" )]
 [Category( "wiremocknet" )]
 [TestFixture]
@@ -49,6 +50,7 @@ public class WireMockNetTest
     public void OneTimeTearDown()
     {
         _wireMockServer.Stop();
+        _wireMockServer.Dispose();
     }
 
     [SetUp]
@@ -75,7 +77,7 @@ public class WireMockNetTest
     [TearDown]
     public void TearDown()
     {
-        // NOP
+        ( _serviceProvider as IDisposable )?.Dispose();
     }
 
     //

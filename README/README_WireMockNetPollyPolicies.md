@@ -203,6 +203,19 @@ public void SetUp()
 public async Task TearDown()
 {
     await Task.Delay( 3000 ); // BUG in WireMock.Net LogEntries. Need to wait for this call to be logged, to allow .ResetLogEntries() to work
+
+    ( _serviceProvider as IDisposable )?.Dispose();
+}
+```
+
+### One Time TearDown
+
+```csharp
+[OneTimeTearDown]
+public void OneTimeTearDown()
+{
+    _wireMockServer.Stop();
+    _wireMockServer.Dispose();
 }
 ```
 

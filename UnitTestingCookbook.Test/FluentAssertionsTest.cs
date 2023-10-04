@@ -168,7 +168,7 @@ public class FluentAssertionsTest
         // Act
 
         // Assert
-        animals.First().As<Whale>().Length.Should().Be( 100 );
+        animals[ 0 ].As<Whale>().Length.Should().Be( 100 );
     }
 
     //

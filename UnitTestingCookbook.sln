@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 		README\README_Analyzers.md = README\README_Analyzers.md
+		README\README_DataDriven.md = README\README_DataDriven.md
 		README\README_DataHangover.md = README\README_DataHangover.md
 		README\README_DependencyInjection.md = README\README_DependencyInjection.md
 		README\README_Docker.md = README\README_Docker.md

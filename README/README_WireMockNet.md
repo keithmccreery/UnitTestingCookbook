@@ -113,10 +113,21 @@ public void SetUp()
 ### TearDown
 
 ```csharp
+[TearDown]
+public void TearDown()
+{
+    ( _serviceProvider as IDisposable )?.Dispose();
+}
+```
+
+### One Time TearDown
+
+```csharp
 [OneTimeTearDown]
 public void OneTimeTearDown()
 {
     _wireMockServer.Stop();
+    _wireMockServer.Dispose();
 }
 ```
 

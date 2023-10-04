@@ -27,6 +27,7 @@ using WireMock.Server;
 
 namespace UnitTestingCookbook.Test;
 
+[System.Diagnostics.CodeAnalysis.SuppressMessage( "Structure", "NUnit1032:An IDisposable field/property should be Disposed in a TearDown method", Justification = "IServiceProvider is cast to IDisposable" )]
 [Category( "unit" )]
 [Category( "wiremocknet_pollypolicies" )]
 [TestFixture]
@@ -89,6 +90,7 @@ public class WireMockNetPollyPoliciesTest
     public void OneTimeTearDown()
     {
         _wireMockServer.Stop();
+        _wireMockServer.Dispose();
     }
 
     [SetUp]
@@ -189,6 +191,8 @@ public class WireMockNetPollyPoliciesTest
     public async Task TearDown()
     {
         await Task.Delay( 3000 ); // BUG in WireMock.Net LogEntries. Need to wait for this call to be logged, to allow .ResetLogEntries() to work
+
+        ( _serviceProvider as IDisposable )?.Dispose();
     }
 
     //
