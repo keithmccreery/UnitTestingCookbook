@@ -10,10 +10,13 @@ All examples are located in `UnitTestingCookbook.Test` -> [`DataDrivenTest`](../
 
 Using `TestCaseAttribute`.  
 
+NOTE: For value type data driven tests, it is best NOT to use a TestName.
+Using TestName, especially with VS TestExplorer doesn't lend well to the visual appearance of the test names.  
+
 ```csharp
-[TestCase( 1, 1, 2, TestName = "1 + 1")]
-[TestCase( 0, 0, 0, TestName = "0 + 0" )]
-[TestCase( -1, 1, 0, TestName = "-1 + 1" )]
+[TestCase( 1, 1, 2 )]
+[TestCase( 0, 0, 0 )]
+[TestCase( -1, 1, 0 )]
 [Category( "_passes" )]
 public void A_DataDrivenTest_TestCase( int a, int b, int expected)
 {
@@ -57,10 +60,14 @@ public static class DataDrivenTestData
     {
         get
         {
-            yield return new TestCaseData( new Whale() { Species = "Blue", Length = 60 }, true ) { TestName = "Blue Whale, Length of 60" };
-            yield return new TestCaseData( new Whale() { Species = "Beluga", Length = 10 }, true ) { TestName = "Beluga Whale, Length of 10" };
-            yield return new TestCaseData( new Whale() { Species = "Unicorn", Length = 0 }, false ) { TestName = "Unicorn Whale, Length of 0" };
-            yield return new TestCaseData( null, false ) { TestName = "Null" };
+            yield return new TestCaseData( new Whale() { Species = "Blue", Length = 60 }, true )
+                .SetName( "{m}[ Blue Whale, Length of 60 ]" );
+            yield return new TestCaseData( new Whale() { Species = "Beluga", Length = 10 }, true )
+                .SetName( "{m}[ Beluga Whale, Length of 10 ]" );
+            yield return new TestCaseData( new Whale() { Species = "Unicorn", Length = 0 }, false )
+                .SetName( "{m}[ Unicorn Whale, Length of 0 ]" );
+            yield return new TestCaseData( null, false )
+                .SetName( "{m}[ Null ]" );
         }
     }
 }
