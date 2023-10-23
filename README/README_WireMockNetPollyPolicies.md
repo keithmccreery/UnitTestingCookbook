@@ -5,6 +5,7 @@
 - Polly https://github.com/App-vNext/Polly
 - WireMock.Net https://github.com/WireMock-Net/WireMock.Net
 - FluentAssertions.WireMock-Net https://github.com/akamud/FluentAssertions.WireMock-Net
+- WireMock.Net.FluentAssertions https://github.com/WireMock-Net/WireMock.Net/tree/master/src/WireMock.Net.FluentAssertions
 - Serilog.Extensions.Logging https://github.com/serilog/serilog-extensions-logging
 - Humanizer https://github.com/Humanizr/Humanizer
 
@@ -495,6 +496,40 @@ OUTPUT...
 [10:59:15 INF] [{"SourceContext": "UnitTestingCookbook.Support.Services.HttpBinOrgService", "HttpMethod": "GET", "Uri": "http://localhost:52615/status/500", "Scope": ["HTTP GET http://localhost:52615/status/500"]}] Cookbook-WaitAndRetry-Policy at HttpBinOrgService.GetStatusAsync: execution is waiting for 3 seconds before retry.
 [10:59:24 INF] [{"SourceContext": "UnitTestingCookbook.Support.Services.HttpBinOrgService", "HttpMethod": "GET", "Uri": "http://localhost:52615/status/200", "Scope": ["HTTP GET http://localhost:52615/status/200"]}] Cookbook-CircuitBreaker-Policy at HttpBinOrgService.GetStatusAsync: circuit breaker has Reset ('Closed').
 
+```
+
+### Intermittnet Failure, then Success
+
+```csharp
+public async Task F_WireMockNet_Polly_HandleIntermittentFailureThenSuccess()
+{
+    // Arrange
+    IHttpBinOrgService service = _serviceProvider!.GetRequiredService<IHttpBinOrgService>();
+
+    // Act
+    HttpStatusCode result = await service.GetStatusAsync( HttpStatusCode.Created );
+
+    // Assert
+    result.Should().Be( HttpStatusCode.Created );
+
+    _wireMockServer.Should()
+        .HaveReceivedACall()
+        .AtUrl( $"{_baseUrl}{ENDPOINT_STATUS_STATEMACHINE}" );
+
+    //
+    // 1st attempt is InternalServerError
+    // 2nd attempt is Created
+    //
+    _wireMockServer.LogEntries.Should().HaveCount( 2 );
+}
+```
+
+OUTPUT...
+
+Polly Policy WaitAndRetry is executed once.  
+
+```
+[13:55:53 INF] [{"SourceContext": "UnitTestingCookbook.Support.Services.HttpBinOrgService", "HttpMethod": "GET", "Uri": "http://localhost:49978/status/201", "Scope": ["HTTP GET http://localhost:49978/status/201"]}] Cookbook-WaitAndRetry-Policy at HttpBinOrgService.GetStatusAsync: execution is waiting for 3 seconds before retry.
 ```
 
 ---

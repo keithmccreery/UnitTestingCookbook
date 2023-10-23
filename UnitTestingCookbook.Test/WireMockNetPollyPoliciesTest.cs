@@ -27,6 +27,14 @@ using WireMock.Server;
 
 namespace UnitTestingCookbook.Test;
 
+//
+// Wiremock.NET https://github.com/WireMock-Net/WireMock.Net
+//   Stubbing (responses) https://github.com/WireMock-Net/WireMock.Net/wiki/Stubbing
+//   Request matching https://github.com/WireMock-Net/WireMock.Net/wiki/Request-Matching
+//     Matchers https://github.com/WireMock-Net/WireMock.Net/wiki/Request-Matchers
+//   Response Templating https://github.com/WireMock-Net/WireMock.Net/wiki/Response-Templating
+//   Scenarios and States https://github.com/WireMock-Net/WireMock.Net/wiki/Scenarios-and-States
+//
 [Category( "unit" )]
 [Category( "wiremocknet_pollypolicies" )]
 [TestFixture]
@@ -37,9 +45,13 @@ public class WireMockNetPollyPoliciesTest
     [System.Diagnostics.CodeAnalysis.SuppressMessage( "Structure", "NUnit1032:An IDisposable field/property should be Disposed in a TearDown method", Justification = "IServiceProvider is cast to IDisposable" )]
     private IServiceProvider? _serviceProvider;
 
-    const string ENDPOINT_STATUS_OK = "/status/200"; // requires leading slash
-    const string ENDPOINT_STATUS_INTERNALSERVER = "/status/500"; // requires leading slash
-    const string ENDPOINT_STATUS_REQUESTTIMEOUT = "/status/408"; // requires leading slash
+    private const string STATEMACHINE_STATUS_FAILED = "Failed";
+    private const string STATEMACHINE_NAME_FAILED_THEN_SUCCEED = "Fail then Succeed";
+
+    private const string ENDPOINT_STATUS_STATEMACHINE = "/status/201"; // requires leading slash
+    private const string ENDPOINT_STATUS_OK = "/status/200"; // requires leading slash
+    private const string ENDPOINT_STATUS_INTERNALSERVER = "/status/500"; // requires leading slash
+    private const string ENDPOINT_STATUS_REQUESTTIMEOUT = "/status/408"; // requires leading slash
 
     [OneTimeSetUp]
     public void OneTimeSetUp()
@@ -83,6 +95,33 @@ public class WireMockNetPollyPoliciesTest
                 Response.Create()
                     .WithDelay( 3000 ) // simulate (short) timeout
                     .WithStatusCode( HttpStatusCode.RequestTimeout )
+            );
+
+        // State Machine
+        _wireMockServer
+            .Given(
+                Request.Create()
+                    .WithPath( ENDPOINT_STATUS_STATEMACHINE )
+                    .UsingGet()
+            )
+            .InScenario( STATEMACHINE_NAME_FAILED_THEN_SUCCEED )
+            .WillSetStateTo( STATEMACHINE_STATUS_FAILED )
+            .RespondWith(
+                Response.Create()
+                .WithStatusCode( HttpStatusCode.InternalServerError )
+            );
+
+        _wireMockServer
+            .Given(
+                Request.Create()
+                    .WithPath( ENDPOINT_STATUS_STATEMACHINE )
+                    .UsingGet()
+            )
+            .InScenario( STATEMACHINE_NAME_FAILED_THEN_SUCCEED )
+            .WhenStateIs( STATEMACHINE_STATUS_FAILED )
+            .RespondWith(
+                Response.Create()
+                .WithStatusCode( HttpStatusCode.Created )
             );
     }
 
@@ -378,5 +417,35 @@ public class WireMockNetPollyPoliciesTest
 
         // 16 failed attempts + 1 successful
         _wireMockServer.LogEntries.Should().HaveCount( 17 );
+    }
+
+    //
+    // Q: How do I verify Polly Policies with an Intermittent Failure, then Succcess?
+    //
+    // First attempt, InternalServerError (500)
+    // Second attempt, Created (201)
+    //
+    [Test]
+    [Category( "_passes" )]
+    public async Task F_WireMockNet_Polly_HandleIntermittentFailureThenSuccess()
+    {
+        // Arrange
+        IHttpBinOrgService service = _serviceProvider!.GetRequiredService<IHttpBinOrgService>();
+
+        // Act
+        HttpStatusCode result = await service.GetStatusAsync( HttpStatusCode.Created );
+
+        // Assert
+        result.Should().Be( HttpStatusCode.Created );
+
+        _wireMockServer.Should()
+            .HaveReceivedACall()
+            .AtUrl( $"{_baseUrl}{ENDPOINT_STATUS_STATEMACHINE}" );
+
+        //
+        // 1st attempt is InternalServerError
+        // 2nd attempt is Created
+        //
+        _wireMockServer.LogEntries.Should().HaveCount( 2 );
     }
 }
