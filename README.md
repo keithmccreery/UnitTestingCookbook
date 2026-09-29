@@ -71,6 +71,9 @@ and the explanation will follow.
     - [GeneralTipsTest.cs](./UnitTestingCookbook.Test/GeneralTipsTest.cs)
 - [Bogus](./README/README_Bogus.md)
     - [BogusTest.cs](./UnitTestingCookbook.Test/BogusTest.cs)
+- [MinimalApi Integration Testing](./README/README_MinimalApi.md)
+    - [MinimalApiTest.cs](./UnitTestingCookbook.Test/MinimalApiTest.cs)
+    - [UnitTestingCookbook.MinimalApi](./UnitTestingCookbook.MinimalApi)
 
 # Errata
 
@@ -80,7 +83,6 @@ and the explanation will follow.
 
 - Parallel Processing
 - Moq Examples
-- MinimalApi Integration Testing
 - AWS via LocalStack
 - Microsoft TestServer
 - More Extension Methods / Helper Classes for TestCorrelator and WireMock.Net Objects
