@@ -3,9 +3,8 @@
 ## NuGet Packages Referenced
 
 - Polly https://github.com/App-vNext/Polly
-- WireMock.Net https://github.com/WireMock-Net/WireMock.Net
-- FluentAssertions.WireMock-Net https://github.com/akamud/FluentAssertions.WireMock-Net
-- WireMock.Net.FluentAssertions https://github.com/WireMock-Net/WireMock.Net/tree/master/src/WireMock.Net.FluentAssertions
+- WireMock.Net https://github.com/wiremock/WireMock.Net
+- WireMock.Net.AwesomeAssertions https://github.com/wiremock/WireMock.Net/tree/master/src/WireMock.Net.AwesomeAssertions
 - Serilog.Extensions.Logging https://github.com/serilog/serilog-extensions-logging
 - Humanizer https://github.com/Humanizr/Humanizer
 
@@ -36,6 +35,10 @@ private static WireMockServer _wireMockServer;
 private IServiceProvider? _serviceProvider;
 private string? _baseUrl;
 
+private const string STATEMACHINE_STATUS_FAILED = "Failed";
+private const string STATEMACHINE_NAME_FAILED_THEN_SUCCEED = "Fail then Succeed";
+
+const string ENDPOINT_STATUS_STATEMACHINE = "/status/201"; // requires leading slash
 const string ENDPOINT_STATUS_OK = "/status/200"; // requires leading slash
 const string ENDPOINT_STATUS_INTERNALSERVER = "/status/500"; // requires leading slash
 const string ENDPOINT_STATUS_REQUESTTIMEOUT = "/status/408"; // requires leading slash
@@ -83,8 +86,37 @@ public void OneTimeSetUp()
                 .WithDelay( 3000 ) // simulate (short) timeout
                 .WithStatusCode( HttpStatusCode.RequestTimeout )
         );
+
+    // State Machine - 1st call fails, 2nd call (and onward) succeeds
+    _wireMockServer
+        .Given(
+            Request.Create()
+                .WithPath( ENDPOINT_STATUS_STATEMACHINE )
+                .UsingGet()
+        )
+        .InScenario( STATEMACHINE_NAME_FAILED_THEN_SUCCEED )
+        .WillSetStateTo( STATEMACHINE_STATUS_FAILED )
+        .RespondWith(
+            Response.Create()
+            .WithStatusCode( HttpStatusCode.InternalServerError )
+        );
+
+    _wireMockServer
+        .Given(
+            Request.Create()
+                .WithPath( ENDPOINT_STATUS_STATEMACHINE )
+                .UsingGet()
+        )
+        .InScenario( STATEMACHINE_NAME_FAILED_THEN_SUCCEED )
+        .WhenStateIs( STATEMACHINE_STATUS_FAILED )
+        .RespondWith(
+            Response.Create()
+            .WithStatusCode( HttpStatusCode.Created )
+        );
 }
 ```
+
+:exclamation: Scenarios and States reference https://github.com/wiremock/WireMock.Net/wiki/Scenarios-and-States  
 
 ### Setup
 
@@ -498,7 +530,7 @@ OUTPUT...
 
 ```
 
-### Intermittnet Failure, then Success
+### Intermittent Failure, then Success
 
 ```csharp
 public async Task F_WireMockNet_Polly_HandleIntermittentFailureThenSuccess()

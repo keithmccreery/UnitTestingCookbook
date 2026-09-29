@@ -1,4 +1,4 @@
-global using FluentAssertions;
-global using FluentAssertions.Execution;
+global using AwesomeAssertions;
+global using AwesomeAssertions.Execution;
 
 global using NUnit.Framework;

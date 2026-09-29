@@ -351,25 +351,21 @@ Output...
 
 ```text
 Before...
-NUnit.Framework.AssertionException: Expected boolean to be true, but found False.
-   at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)
-   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
-   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
-   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
-   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
-   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
-   at FluentAssertions.Primitives.BooleanAssertions`1.BeTrue(String because, Object[] becauseArgs)
-   at UnitTestingCookbook.Test.GeneralTipsTest.G_Demystifier() in C:\git\keithmccreery\UnitTestingCookbook\UnitTestingCookbook.Test\GeneralTipsTest.cs:line 178
+NUnit.Framework.AssertionException: Expected boolean to be True, but found False.
+   at AwesomeAssertions.Execution.LateBoundTestFramework.Throw(String message)
+   at AwesomeAssertions.Primitives.BooleanAssertions`1.BeTrue(String because, Object[] becauseArgs)
+   at UnitTestingCookbook.Test.GeneralTipsTest.G_Demystifier() in C:\git\keithmccreery\UnitTestingCookbook\UnitTestingCookbook.Test\GeneralTipsTest.cs:line 205
 
 After...
-NUnit.Framework.AssertionException: Expected boolean to be true, but found False.
-   at void FluentAssertions.Execution.LateBoundTestFramework.Throw(string message)
-   at void FluentAssertions.Execution.TestFrameworkProvider.Throw(string message)
-   at void FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(string message)
-   at Continuation FluentAssertions.Execution.AssertionScope.FailWith(Func<string> failReasonFunc) x 3
-   at AndConstraint<TAssertions> FluentAssertions.Primitives.BooleanAssertions<TAssertions>.BeTrue(string because, params object[] becauseArgs)
-   at void UnitTestingCookbook.Test.GeneralTipsTest.G_Demystifier() in C:/git/keithmccreery/UnitTestingCookbook/UnitTestingCookbook.Test/GeneralTipsTest.cs:line 178
+NUnit.Framework.AssertionException: Expected boolean to be True, but found False.
+   at void AwesomeAssertions.Execution.LateBoundTestFramework.Throw(string message)
+   at AndConstraint<TAssertions> AwesomeAssertions.Primitives.BooleanAssertions<TAssertions>.BeTrue(string because, params object[] becauseArgs)
+   at void UnitTestingCookbook.Test.GeneralTipsTest.G_Demystifier() in C:/git/keithmccreery/UnitTestingCookbook/UnitTestingCookbook.Test/GeneralTipsTest.cs:line 205
 ```
+
+**NOTE:** AwesomeAssertions' internal call stack is noticeably shallower than FluentAssertions' was (no more
+`TestFrameworkProvider`/`DefaultAssertionStrategy`/repeated `FailWith` frames), so `Demystify()` has less to
+trim here than it used to - but the technique is unchanged.  
 
 ---
 

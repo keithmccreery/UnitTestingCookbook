@@ -2,8 +2,8 @@
 
 ## NuGet Packages Referenced
 
-- WireMock.Net https://github.com/WireMock-Net/WireMock.Net
-- FluentAssertions.WireMock-Net https://github.com/akamud/FluentAssertions.WireMock-Net
+- WireMock.Net https://github.com/wiremock/WireMock.Net
+- WireMock.Net.AwesomeAssertions https://github.com/wiremock/WireMock.Net (same repo, `WireMock.Net.AwesomeAssertions` project)
 
 Honorable Mentions...
 - TestServer

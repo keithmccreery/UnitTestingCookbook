@@ -2,7 +2,7 @@
 
 ## NuGet Packages Referenced
 
-- FluentAssertions.Analyzers https://github.com/fluentassertions/fluentassertions.analyzers
+- AwesomeAssertions.Analyzers https://github.com/awesomeassertions/awesomeassertions.analyzers
 - nunit.analyzers https://github.com/nunit/nunit.analyzers
 
 All examples are located in `UnitTestingCookbook.Test` -> [`AnalyzersTest`](../UnitTestingCookbook.Test/AnalyzersTest.cs)
@@ -11,18 +11,18 @@ All examples are located in `UnitTestingCookbook.Test` -> [`AnalyzersTest`](../U
 
 ## How do I improve Assertions?
 
-This example shows both `NUnit` and the transition to `FluentAssertions`.  
-`nunit.analyzers` provides assistance to improving, along with `FluentAssertions.Analyzers`.  
+This example shows both `NUnit` and the transition to `AwesomeAssertions`.  
+`nunit.analyzers` provides assistance to improving, along with `AwesomeAssertions.Analyzers`.  
 
-`FluentAssertions.Analyzers` shows that...  
+`AwesomeAssertions.Analyzers` shows that...  
 `list.All( b => b ).Should().BeTrue();`  
 Can be improved to...  
 `list.Should().OnlyContain( b => b );`  
 
-:exclamation: For more examples... https://fluentassertions.com/tips/#improved-assertions  
+:exclamation: For more examples... https://awesomeassertions.org/tips/#improved-assertions  
 
 ```csharp
-public void A_FluentAssertions()
+public void A_AwesomeAssertions()
 {
     // Arrange
     List<bool> list = new List<bool>() { true, true };
@@ -30,7 +30,7 @@ public void A_FluentAssertions()
     // Act
 
     // Assert
-    Assert.IsTrue( list.All( b => b ) );
+    ClassicAssert.IsTrue( list.All( b => b ) ); // NUnit 4+: classic Assert.* moved to NUnit.Framework.Legacy.ClassicAssert
     Assert.That( list.All( b => b ) );
 
     list.All( b => b ).Should().BeTrue();
@@ -45,7 +45,7 @@ public void A_FluentAssertions()
 
 ### Example 1 - Null-Conditional Operator `?.` short-circuit in Assert
 
-FluentAssertion Analyzer will flag this code as possibly not executing.  
+AwesomeAssertions Analyzer will flag this code as possibly not executing.  
 
 The statement will short-circuited and generate a false positive response, due to the Null-Conditional Operator in the Assert.  
 

@@ -1,6 +1,6 @@
 # Unit Testing Cookbook
 
-...with an introduction to **FluentAssertions**.  
+...with an introduction to **AwesomeAssertions**.  
 
 ## Why
 
@@ -8,7 +8,7 @@
 
 ## What this is...
 
-- An introduction to FluentAssertions.
+- An introduction to AwesomeAssertions.
 - A **Cookbook** of Unit Test patterns / examples.
 - An introduction to several useful NuGet packages.
 - Examples that range from beginner to expert.
@@ -42,12 +42,12 @@ and the explanation will follow.
 
 # Sub-Section README
 
-- [FluentAssertions](./README/README_FluentAssertions.md)
-    - [FluentAssertionsTest.cs](./UnitTestingCookbook.Test/FluentAssertionsTest.cs)
+- [AwesomeAssertions](./README/README_AwesomeAssertions.md)
+    - [AwesomeAssertionsTest.cs](./UnitTestingCookbook.Test/AwesomeAssertionsTest.cs)
 - [Data Driven](./README/README_DataDriven.md)
     - [DataDrivenTest.cs](./UnitTestingCookbook.Test/DataDrivenTest.cs)
-- [FluentAssertions Add-Ons](./README/README_FluentAssertionsAddOns.md)
-    - [FluentAssertionsAddOnsTest.cs](./UnitTestingCookbook.Test/FluentAssertionsAddOnsTest.cs)
+- [AwesomeAssertions Add-Ons](./README/README_AwesomeAssertionsAddOns.md)
+    - [AwesomeAssertionsAddOnsTest.cs](./UnitTestingCookbook.Test/AwesomeAssertionsAddOnsTest.cs)
 - [Dependency Injection](./README/README_DependencyInjection.md)
     - [DependencyInjectionTest.cs](./UnitTestingCookbook.Test/DependencyInjectionTest.cs)
 - [System.IO Abstraction](./README/README_SystemIoAbstraction.md)
@@ -88,5 +88,5 @@ and the explanation will follow.
 - `appsetting.json` Validation examples https://code-maze.com/aspnet-configuration-options-validation/
 - Prevent http requests to external services in unit tests https://www.meziantou.net/prevent-http-requests-to-external-services-in-unit-tests.htm
 - Add WireMockInspector Examples https://github.com/WireMock-Net/WireMockInspector
-- Test for HttpClient consumed by a Singleton, using `SocketsHttpHandler` via `.ConfigurePrimaryHttpMessageHandler()`, setting `PooledConnectionLifetime` via `FluentAssertions.Microsoft.Extensions.DependencyInjection` and `GetPrivateField()`.
+- Test for HttpClient consumed by a Singleton, using `SocketsHttpHandler` via `.ConfigurePrimaryHttpMessageHandler()`, setting `PooledConnectionLifetime`, asserted directly against `IServiceCollection` (see [AwesomeAssertions Add-Ons](./README/README_AwesomeAssertionsAddOns.md) - there is no AwesomeAssertions equivalent of `FluentAssertions.Microsoft.Extensions.DependencyInjection`) and `GetPrivateField()`.
 - Fake Data (via Bogus https://github.com/bchavez/Bogus)

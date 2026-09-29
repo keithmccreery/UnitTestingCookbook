@@ -1,8 +1,7 @@
 ﻿using System.Net;
 using System.Reflection;
 
-using FluentAssertions.Json;
-using FluentAssertions.Microsoft.Extensions.DependencyInjection;
+using AwesomeAssertions.Json;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -10,7 +9,6 @@ using Microsoft.Extensions.Hosting.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Logging.Debug;
-using Microsoft.Extensions.Logging.EventLog;
 using Microsoft.Extensions.Logging.EventSource;
 using Microsoft.Extensions.Options;
 
@@ -21,12 +19,12 @@ using UnitTestingCookbook.Support.Models;
 namespace UnitTestingCookbook.Test;
 
 [Category( "unit" )]
-[Category( "fluentassertions_addons" )]
+[Category( "awesomeassertions_addons" )]
 [TestFixture]
-public class FluentAssertionsAddOnsTest
+public class AwesomeAssertionsAddOnsTest
 {
     //
-    // FluentAssertions.Json 
+    // AwesomeAssertions.Json
     //
     [Test]
     [Category( "_passes" )]
@@ -55,7 +53,7 @@ public class FluentAssertionsAddOnsTest
     }
 
     //
-    // FluentAssertions.Web
+    // AwesomeAssertions.Web
     //
     [Test]
     [Category( "_passes" )]
@@ -91,7 +89,11 @@ public class FluentAssertionsAddOnsTest
     }
 
     //
-    // FluentAssertions.Microsoft.Extensions.DependencyInjection
+    // DI ServiceCollection assertions
+    //
+    // NOTE: There is no AwesomeAssertions equivalent of FluentAssertions.Microsoft.Extensions.DependencyInjection
+    // (its fluent .Should().HaveService<T>().WithImplementation<T>().AsSingleton() API), so this asserts directly
+    // against IServiceCollection / ServiceDescriptor using AwesomeAssertions' core collection assertions.
     //
     [Test]
     [Category( "_passes" )]
@@ -115,38 +117,46 @@ public class FluentAssertionsAddOnsTest
         // Assert
         using ( new AssertionScope() )
         {
-            serviceCollection.Should().HaveCount( 44 );
+            // NOTE: this count is tied to exactly what Microsoft.Extensions.Hosting registers by default
+            // for this package version - it will drift on future framework/package upgrades.
+            serviceCollection.Should().HaveCount( 52 );
 
             // With Implementation
-            serviceCollection.Should()
-                .HaveService<IHostApplicationLifetime>()
-                .WithImplementation<ApplicationLifetime>()
-                .AsSingleton();
+            serviceCollection!.Should()
+                .ContainSingle( d => d.ServiceType == typeof( IHostApplicationLifetime ) )
+                .Which.Should().Match<ServiceDescriptor>( d =>
+                    d.ImplementationType == typeof( ApplicationLifetime )
+                    && d.Lifetime == ServiceLifetime.Singleton );
 
             // Instance only - No Implementation
             serviceCollection.Should()
-                .HaveService<HostBuilderContext>()
-                .AsSingleton();
+                .ContainSingle( d => d.ServiceType == typeof( HostBuilderContext ) )
+                .Which.Lifetime.Should().Be( ServiceLifetime.Singleton );
 
             // Factory - No Implementation
             serviceCollection.Should()
-                .HaveService<IHost>()
-                .AsSingleton();
+                .ContainSingle( d => d.ServiceType == typeof( IHost ) )
+                .Which.Lifetime.Should().Be( ServiceLifetime.Singleton );
 
             // Multiple Implementations
-            serviceCollection.Should()
-                .HaveService<ILoggerProvider>()
-                .WithCount( 4 )
-                .WithImplementation<ConsoleLoggerProvider>()
-                .WithImplementation<DebugLoggerProvider>()
-                .WithImplementation<EventLogLoggerProvider>()
-                .WithImplementation<EventSourceLoggerProvider>()
-                .AsSingleton();
+            // NOTE: EventLogLoggerProvider is only registered by the Generic Host on Windows,
+            // so it's intentionally excluded here to keep this test cross-platform.
+            IEnumerable<ServiceDescriptor> loggerProviderDescriptors =
+                serviceCollection.Where( d => d.ServiceType == typeof( ILoggerProvider ) );
+
+            loggerProviderDescriptors.Should().HaveCount( 3 )
+                .And.OnlyContain( d => d.Lifetime == ServiceLifetime.Singleton );
+            loggerProviderDescriptors.Select( d => d.ImplementationType ).Should().BeEquivalentTo( new[]
+            {
+                typeof( ConsoleLoggerProvider ),
+                typeof( DebugLoggerProvider ),
+                typeof( EventSourceLoggerProvider ),
+            } );
 
             // Generic - No Implementation
             serviceCollection.Should()
-                .HaveService<IOptions<Animal>>()
-                .AsSingleton();
+                .ContainSingle( d => d.ServiceType == typeof( IOptions<Animal> ) )
+                .Which.Lifetime.Should().Be( ServiceLifetime.Singleton );
         }
     }
 }

@@ -1,25 +1,29 @@
-# FluentAssertions
+# AwesomeAssertions
 
 ## NuGet Packages Referenced
 
-- FluentAssertions https://fluentassertions.com/
+- AwesomeAssertions https://awesomeassertions.org/
 
-All examples are located in `UnitTestingCookbook.Test` -> [`FluentAssertionsTest`](../UnitTestingCookbook.Test/FluentAssertionsTest.cs)
+**NOTE:** AwesomeAssertions is a community-maintained (Apache-2.0) fork of FluentAssertions, created after
+FluentAssertions moved to a commercial license starting with v8. It kept the same fluent API (forked from
+FluentAssertions v7), so almost everything below applies equally to either library - only the package name,
+namespace, and a handful of renamed methods differ. See [Upgrading to v9](https://awesomeassertions.org/upgradingtov9)
+if you're migrating an existing FluentAssertions codebase.
+
+All examples are located in `UnitTestingCookbook.Test` -> [`AwesomeAssertionsTest`](../UnitTestingCookbook.Test/AwesomeAssertionsTest.cs)
 
 ---
 
-## What is FluentAssertions?
+## What is AwesomeAssertions?
 
-- "A very extensive set of extension methods that allow you to more naturally specify the expected outcome of a TDD or BDD-style unit tests." [^1]
+- A very extensive set of extension methods that allow you to more naturally specify the expected outcome of a TDD or BDD-style unit tests.
 - A Fluent coding approach that provides a more natural language explanation of the Assertion.
 
-[^1]: quote from https://fluentassertions.com/
-
 ---
 
-## What does an Assertion look like in FluentAssertions?
+## What does an Assertion look like in AwesomeAssertions?
 
-FluentAssertions uses `.Should()` as the fluent builder.
+AwesomeAssertions uses `.Should()` as the fluent builder.
 
 ```csharp
 public void A_Simple()
@@ -36,7 +40,7 @@ public void A_Simple()
 
 ---
 
-## Why are FluentAssertions better than traditional Asserts?
+## Why are AwesomeAssertions better than traditional Asserts?
 
 ### Answer 1
 
@@ -68,10 +72,10 @@ Expected fullName to be "Jane Doe", but "John Doe" differs near "ohn" (index 1).
 
 ### Answer 2
 
-With standard `Assert`...  
+With standard `Assert` (as of NUnit 4+, the classic assertions live in `NUnit.Framework.Legacy.ClassicAssert`)...  
 
 ```csharp
-public void C_Assert_Vs_FluentAssertion_ErrorMessage()
+public void C_Assert_Vs_AwesomeAssertion_ErrorMessage()
 {
     // Arrange
     string fullName = "John Doe";
@@ -79,7 +83,7 @@ public void C_Assert_Vs_FluentAssertion_ErrorMessage()
     // Act
 
     // Assert
-    Assert.AreEqual( "Jane Doe", fullName );
+    ClassicAssert.AreEqual( "Jane Doe", fullName );
 }
 ```
 
@@ -125,7 +129,7 @@ Expected value to be 99 because gas mileage should be 99, but found 100 (differe
 
 ## How do I batch multiple Assertions?
 
-Using the `AssertionScope` Object, all FluentAssertions in the block will be executed, regardless if a predecessor fails.  
+Using the `AssertionScope` Object, all AwesomeAssertions in the block will be executed, regardless if a predecessor fails.  
 
 ```csharp
 public void E_AssertionScope()
@@ -176,7 +180,7 @@ public void F_ChainAssertions()
 
 ## What Types can be asserted?
 
-https://fluentassertions.com/introduction
+https://awesomeassertions.org/introduction
 
 ---
 
@@ -220,7 +224,7 @@ public void H_Downcast()
     // Act
 
     // Assert
-    animals.[ 0 ].As<Whale>().Length.Should().Be( 100 );
+    animals[ 0 ].As<Whale>().Length.Should().Be( 100 );
 }
 ```
 
@@ -681,7 +685,9 @@ public void X_XML()
 
 ## How do I Assert HttpResponseMessage StatusCode?
 
-Using `.HaveStatusCode()` on `HttpResponseMessage` Objects.  
+FluentAssertions/AwesomeAssertions dropped the generic `.HaveStatusCode()` assertion on `HttpResponseMessage`
+(the [AwesomeAssertions Add-Ons](./README_AwesomeAssertionsAddOns.md) `AwesomeAssertions.Web` package only exposes
+status-specific methods like `.Be200Ok()`). For a simple StatusCode check, just assert the property directly.  
 
 ```csharp
 public void Y_HttpResponseMessage()
@@ -692,7 +698,7 @@ public void Y_HttpResponseMessage()
     // Act
 
     // Assert
-    httpResponseMessage.Should().HaveStatusCode( HttpStatusCode.OK );
+    httpResponseMessage.StatusCode.Should().Be( HttpStatusCode.OK );
 }
 ```
 

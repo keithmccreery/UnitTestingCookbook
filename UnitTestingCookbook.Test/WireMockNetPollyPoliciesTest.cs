@@ -20,7 +20,7 @@ using Serilog.Extensions.Logging;
 using UnitTestingCookbook.Support;
 using UnitTestingCookbook.Support.Services;
 
-using WireMock.FluentAssertions;
+using WireMock.AwesomeAssertions;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using WireMock.Server;

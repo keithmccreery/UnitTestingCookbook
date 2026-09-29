@@ -1,4 +1,6 @@
-﻿namespace UnitTestingCookbook.Test;
+﻿using NUnit.Framework.Legacy;
+
+namespace UnitTestingCookbook.Test;
 
 [Category( "unit" )]
 [Category( "analyzers" )]
@@ -6,11 +8,11 @@
 public class AnalyzersTest
 {
     //
-    // FluentAssertions.Analyzers
+    // AwesomeAssertions.Analyzers
     //
     [Test]
     [Category( "_passes" )]
-    public void A_FluentAssertions()
+    public void A_AwesomeAssertions()
     {
         // Arrange
         List<bool> list = new List<bool>() { true, true };
@@ -18,7 +20,7 @@ public class AnalyzersTest
         // Act
 
         // Assert
-        Assert.IsTrue( list.All( b => b ) );
+        ClassicAssert.IsTrue( list.All( b => b ) );
         Assert.That( list.All( b => b ) );
 
         list.All( b => b ).Should().BeTrue();

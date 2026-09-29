@@ -1,7 +1,9 @@
 using System.Net;
 using System.Xml.Linq;
 
-using FluentAssertions.Extensions;
+using AwesomeAssertions.Extensions;
+
+using NUnit.Framework.Legacy;
 
 using UnitTestingCookbook.Support;
 using UnitTestingCookbook.Support.Models;
@@ -9,12 +11,12 @@ using UnitTestingCookbook.Support.Models;
 namespace UnitTestingCookbook.Test;
 
 [Category( "unit" )]
-[Category( "fluentassertions" )]
+[Category( "awesomeassertions" )]
 [TestFixture]
-public class FluentAssertionsTest
+public class AwesomeAssertionsTest
 {
     //
-    // Q: What does an assertion look like in FluentAssertions?
+    // Q: What does an assertion look like in AwesomeAssertions?
     //
     [Test]
     [Category( "_passes" )]
@@ -30,7 +32,7 @@ public class FluentAssertionsTest
     }
 
     //
-    // Q: Why are FluentAssertions better than traditional Asserts (part 1)?
+    // Q: Why are AwesomeAssertions better than traditional Asserts (part 1)?
     //
     // Error Message...
     // Expected fullName to be "Jane Doe", but "John Doe" differs near "ohn" (index 1).
@@ -49,7 +51,7 @@ public class FluentAssertionsTest
     }
 
     //
-    // Q: Why are FluentAssertions better than traditional Asserts (part 2)?
+    // Q: Why are AwesomeAssertions better than traditional Asserts (part 2)?
     //
     // Assert Error Message...
     // String lengths are both 8. Strings differ at index 1.
@@ -57,12 +59,12 @@ public class FluentAssertionsTest
     // But was:  "John Doe"
     // ------------^
     //
-    // FluentAssertion Error Message...
+    // AwesomeAssertion Error Message...
     // Expected fullName to be "Jane Doe", but "John Doe" differs near "ohn" (index 1).
     //
     [Test]
     [Category( "_fails" )]
-    public void C_Assert_Vs_FluentAssertion_ErrorMessage()
+    public void C_Assert_Vs_AwesomeAssertion_ErrorMessage()
     {
         // Arrange
         const string fullName = "John Doe";
@@ -70,7 +72,7 @@ public class FluentAssertionsTest
         // Act
 
         // Assert
-        Assert.AreEqual( "Jane Doe", fullName );
+        ClassicAssert.AreEqual( "Jane Doe", fullName );
     }
 
     //
@@ -565,6 +567,11 @@ public class FluentAssertionsTest
     //
     // Q: How do I Assert HttpResponseMessage StatusCode?
     //
+    // NOTE: FluentAssertions/AwesomeAssertions dropped the generic HaveStatusCode() assertion on
+    // HttpResponseMessage; the AwesomeAssertions.Web addon (see AwesomeAssertionsAddOnsTest.cs) only
+    // exposes status-specific methods like Be200Ok(). Asserting the StatusCode property directly avoids
+    // the addon dependency for this simple case.
+    //
     [Test]
     [Category( "_passes" )]
     public void Y_HttpResponseMessage()
@@ -575,6 +582,6 @@ public class FluentAssertionsTest
         // Act
 
         // Assert
-        httpResponseMessage.Should().HaveStatusCode( HttpStatusCode.OK );
+        httpResponseMessage.StatusCode.Should().Be( HttpStatusCode.OK );
     }
 }
