@@ -74,6 +74,8 @@ and the explanation will follow.
 - [MinimalApi Integration Testing](./README/README_MinimalApi.md)
     - [MinimalApiTest.cs](./UnitTestingCookbook.Test/MinimalApiTest.cs)
     - [UnitTestingCookbook.MinimalApi](./UnitTestingCookbook.MinimalApi)
+- [NetArchTest](./README/README_NetArchTest.md)
+    - [NetArchTestTest.cs](./UnitTestingCookbook.Test/NetArchTestTest.cs)
 
 # Errata
 
@@ -87,7 +89,6 @@ and the explanation will follow.
 - Microsoft TestServer
 - More Extension Methods / Helper Classes for TestCorrelator and WireMock.Net Objects
 - Create Relative Code Snippet links in GitHub
-- More Architecture / Policy / Standards Tests using https://github.com/BenMorris/NetArchTest
 - Connection String Validation using https://khalidabuhakmeh.com/validating-connection-strings-on-dotnet-startup
 - `appsetting.json` Validation examples https://code-maze.com/aspnet-configuration-options-validation/
 - Prevent http requests to external services in unit tests https://www.meziantou.net/prevent-http-requests-to-external-services-in-unit-tests.htm
