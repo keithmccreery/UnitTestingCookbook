@@ -1,5 +1,7 @@
 # Unit Testing Cookbook
 
+[![CI](https://github.com/keithmccreery/UnitTestingCookbook/actions/workflows/ci.yml/badge.svg)](https://github.com/keithmccreery/UnitTestingCookbook/actions/workflows/ci.yml)
+
 ...with an introduction to **AwesomeAssertions**.  
 
 ## Why

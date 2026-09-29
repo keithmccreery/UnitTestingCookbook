@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore
+        run: dotnet restore UnitTestingCookbook.sln
+
+      - name: Build
+        run: dotnet build UnitTestingCookbook.sln --no-restore --configuration Release
+
+      # A handful of tests are tagged _fails / _false_negative and fail by design - they
+      # demonstrate assertion error messages and a deliberate test-isolation bug (see
+      # CLAUDE.md). Excluded here so CI's pass/fail reflects only tests meant to pass.
+      - name: Test
+        run: dotnet test UnitTestingCookbook.sln --no-build --configuration Release --filter "TestCategory!=_fails&TestCategory!=_false_negative" --logger "console;verbosity=normal"
