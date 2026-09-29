@@ -69,6 +69,8 @@ and the explanation will follow.
     - [AnalyzersTest.cs](./UnitTestingCookbook.Test/AnalyzersTest.cs)
 - [General Tips](./README/README_GeneralTips.md)
     - [GeneralTipsTest.cs](./UnitTestingCookbook.Test/GeneralTipsTest.cs)
+- [Bogus](./README/README_Bogus.md)
+    - [BogusTest.cs](./UnitTestingCookbook.Test/BogusTest.cs)
 
 # Errata
 
@@ -89,4 +91,3 @@ and the explanation will follow.
 - Prevent http requests to external services in unit tests https://www.meziantou.net/prevent-http-requests-to-external-services-in-unit-tests.htm
 - Add WireMockInspector Examples https://github.com/WireMock-Net/WireMockInspector
 - Test for HttpClient consumed by a Singleton, using `SocketsHttpHandler` via `.ConfigurePrimaryHttpMessageHandler()`, setting `PooledConnectionLifetime`, asserted directly against `IServiceCollection` (see [AwesomeAssertions Add-Ons](./README/README_AwesomeAssertionsAddOns.md) - there is no AwesomeAssertions equivalent of `FluentAssertions.Microsoft.Extensions.DependencyInjection`) and `GetPrivateField()`.
-- Fake Data (via Bogus https://github.com/bchavez/Bogus)
