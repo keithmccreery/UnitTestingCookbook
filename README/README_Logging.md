@@ -8,6 +8,10 @@
 
 All examples are located in `UnitTestingCookbook.Test` -> [`LoggingTest`](../UnitTestingCookbook.Test/LoggingTest.cs)  
 
+**NOTE:** The `ServiceCollection`/DI wiring below follows the same basic pattern as
+[Dependency Injection](./README_DependencyInjection.md) (the source of truth for that pattern) - repeated here
+inline so this chapter stands on its own.  
+
 ## Credits
 
 - [Mocking ILogger with Moq](https://adamstorr.azurewebsites.net/blog/mocking-ilogger-with-moq) for the basis of `.VerifyLogging()`

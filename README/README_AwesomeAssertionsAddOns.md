@@ -99,6 +99,11 @@ Asserts on `IServiceCollection` / `ServiceDescriptor`, directly - there is no Aw
 collection assertions (`.ContainSingle()`, `.Which`, LINQ `.Where()`) against the plain `IServiceCollection`
 instead.  
 
+**NOTE:** Unlike [Dependency Injection](./README_DependencyInjection.md) (the source of truth for the basic
+`ServiceCollection` setup pattern), this example builds a full Generic Host (`Host.CreateDefaultBuilder()`)
+rather than a bare `ServiceCollection`, because the point here is asserting on what the *Host* registers by
+default - a bare `ServiceCollection` wouldn't have any of that to assert on.  
+
 **NOTE:** the exact service count below is tied to what `Microsoft.Extensions.Hosting`'s `Host.CreateDefaultBuilder()`
 registers for the package version in use, and `EventLogLoggerProvider` is only registered on Windows - both will
 need adjusting if/when the `Microsoft.Extensions.*` packages are bumped again.  

@@ -6,6 +6,15 @@
 
 All examples are located in `UnitTestingCookbook.Test` -> [`SystemIoAbstractionsTest`](../UnitTestingCookbook.Test/SystemIoAbstractionsTest.cs)  
 
+**NOTE:** This chapter is intentionally minimal - one example (`IFileSystem.File.Exists()` via `MockFileSystem`)
+to establish the pattern, not a tour of the library's surface. `System.IO.Abstractions` covers far more than
+`File` (`IDirectory`, `IPath`, `IFileInfo`/`IDirectoryInfo`, streams, `IFileSystemWatcher`, ...) - once you have
+the pattern here, the rest follows the same shape. For the full surface and more testing recipes, see the
+project's own docs:
+- [Wiki](https://github.com/TestableIO/System.IO.Abstractions/wiki) - usage guide and design rationale
+- [Unit Testing wiki page](https://github.com/TestableIO/System.IO.Abstractions/wiki/Unit-Testing) - more
+  `MockFileSystem` recipes than are shown here
+
 ---
 
 ## How do I test a class/method containing System.IO Objects?
@@ -75,7 +84,7 @@ public void A_IFileSystem_Exist()
 In Production, use the default `FileSystem`, which calls `System.IO`.  
 
 ```csharp
-services.AddSingleton<IFileSystem,FileSystem>();
+services.AddSingleton<IFileSystem, FileSystem>();
 ```
 
 ---

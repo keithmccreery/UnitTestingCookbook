@@ -16,8 +16,7 @@ public class DockerTest
     {
         const ushort port = 80;
 
-        _container = new ContainerBuilder()
-            .WithImage("kennethreitz/httpbin:latest")
+        _container = new ContainerBuilder("kennethreitz/httpbin:latest")
             .WithName("httpbinorg")
             .WithCleanUp(false) // must be false - default or true will fail (BUG)
             .WithAutoRemove(true)

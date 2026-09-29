@@ -14,6 +14,12 @@
 
 All examples are located in `UnitTestingCookbook.Test` -> [`WireMockNetPollyPoliciesTest`](../UnitTestingCookbook.Test/WireMockNetPollyPoliciesTest.cs)  
 
+**NOTE:** The `IServiceCollection`/DI wiring below follows the same basic pattern as
+[Dependency Injection](./README_DependencyInjection.md) (the source of truth for that pattern), and the
+Serilog-to-`ILoggerFactory` bridging (`SerilogLoggerFactory`, `services.AddSingleton(typeof(ILogger<>), ...)`) is
+the same recipe shown in [Logging](./README_Logging.md#how-can-i-use-serilog-with-microsoftextensionslogging-ilogger-to-display-log-context-to-console)
+(the source of truth for that pattern). Both are repeated here inline so this chapter stands on its own.  
+
 ---
 
 ## How do I verify Polly Policies?
@@ -151,7 +157,7 @@ public void SetUp()
         .TimeoutAsync(
             TimeSpan.FromSeconds(2),
             TimeoutStrategy.Optimistic, // we are co-operative cancellation via CancellationToken
-            // onTimeout
+                                        // onTimeout
             (context, timespan, task, exception) =>
             {
                 context.GetLogger()?.LogWarning("{PolicyKey} at {OperationKey}: execution timed out after {TimeSpan}.", context.PolicyKey, context.OperationKey, timespan.Humanize());
@@ -190,7 +196,7 @@ public void SetUp()
         .WaitAndRetryAsync(
             2, // retries
             (duration) => TimeSpan.FromSeconds(3), // delay
-            // onRetry
+                                                   // onRetry
             (delegateResult, timespan, context) =>
             {
                 context.GetLogger()?.LogInformation("{PolicyKey} at {OperationKey}: execution is waiting for {TimeSpan} before retry.", context.PolicyKey, context.OperationKey, timespan.Humanize());

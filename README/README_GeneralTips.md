@@ -133,6 +133,13 @@ public void B_EnvironmentVariables_TestHelpers()
 
 ## How do I access a private Property?
 
+**CAUTION:** This section and the two that follow (private Field, private Method) use reflection to reach into a
+class's private implementation. This is useful as a last resort (e.g. testing legacy code you can't safely change
+the shape of), but reaching for it often is usually a sign the class needs a seam - a constructor parameter, an
+extracted interface, an internal member exposed via `InternalsVisibleTo` (see
+[Internal Constructor](#how-do-i-access-an-internal-constructor-for-unit-testing) below) - rather than a test that
+reaches past the public API.  
+
 Sometimes it is necessary to access a Private Property.  
 
 ```csharp

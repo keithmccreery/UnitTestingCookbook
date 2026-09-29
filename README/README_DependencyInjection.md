@@ -2,6 +2,14 @@
 
 All examples are located in `UnitTestingCookbook.Test` -> [`DependencyInjectionTest`](../UnitTestingCookbook.Test/DependencyInjectionTest.cs)   
 
+**NOTE:** This chapter is the source of truth for the basic `ServiceCollection` setup pattern used across the
+cookbook. A few other chapters wire up a `ServiceCollection` differently because they're solving a different
+problem, not because of drift - `Logging` and `WireMockNet`/`WireMockNetPollyPolicies` need an `IHttpBinOrgService`
+registered against a fake/local endpoint, and `AwesomeAssertionsAddOns`' `X_DependencyInjection` uses the Generic
+Host (`Host.CreateDefaultBuilder()`) specifically because it's asserting on what the *Host* registers by default,
+not on a bare `ServiceCollection`. Each of those chapters is self-contained (its full setup is inline, not just a
+link here), so you shouldn't need to bounce between READMEs to see any one demo work end to end.  
+
 ---
 
 ## How do I setup IConfiguration for testing?
@@ -13,7 +21,7 @@ public void A_IConfiguration()
     IConfiguration configuration = new ConfigurationBuilder()
         .AddJsonFile("appsettings.json")
         .AddEnvironmentVariables()
-        .AddInMemoryCollection(new Dictionary<string, string> { ["ASPNETCORE_ENVIRONMENT"] = "Development", })
+        .AddInMemoryCollection(new Dictionary<string, string?> { ["ASPNETCORE_ENVIRONMENT"] = "Development", })
         .AddJsonStream(new MemoryStream(Encoding.UTF8.GetBytes("{ \"key\": \"value\" }")))
         .Build();
 

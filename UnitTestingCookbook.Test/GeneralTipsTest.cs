@@ -124,6 +124,12 @@ public class GeneralTipsTest
     }
 
     //
+    // CAUTION: C_Private_Property, D_Private_Field, and E_Private_Method below use reflection to reach into a
+    // class's private implementation. This is useful as a last resort (e.g. testing legacy code you can't safely
+    // change the shape of), but reaching for it often is usually a sign the class needs a seam - a constructor
+    // parameter, an extracted interface, an internal member exposed via InternalsVisibleTo (see F_Internal_Constructor
+    // below) - rather than a test that reaches past the public API.
+    //
     // Q: How do I access a private Property?
     //
     [Test]

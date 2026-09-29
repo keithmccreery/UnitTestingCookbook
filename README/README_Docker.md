@@ -11,6 +11,23 @@ All examples are located in `UnitTestingCookbook.Test` -> [`DockerTest`](../Unit
 
 ---
 
+## Why httpbin?
+
+httpbin is used as the target service throughout this cookbook (this chapter runs a real instance in Docker;
+`HttpClientFactory` and `WireMockNetPollyPolicies` mock/stub against its URL shape without needing Docker) because
+its endpoints are a predictable **mirror** of the request: `/status/<code>` returns that status code, `/get`
+echoes back headers/query params as JSON, `/delay/<n>` waits `n` seconds before responding, etc. That
+determinism - "call this path, get exactly this back" - is what makes it a good stand-in for "some HTTP API" in
+a testing example, without needing a real backend.
+
+**NOTE:** httpbin.org itself is now maintained by Postman ([postmanlabs/httpbin](https://github.com/postmanlabs/httpbin))
+rather than by original author Kenneth Reitz. The `kennethreitz/httpbin` Docker Hub image this chapter runs is an
+older, separately-maintained image (last updated years ago) - it still works fine for this demo, but if it ever
+stops pulling/running, [`mccutchen/go-httpbin`](https://github.com/mccutchen/go-httpbin) is an actively maintained,
+drop-in-compatible reimplementation with its own published Docker image.
+
+---
+
 ## How do I execute a Docker container for testing?
 
 ### SetUp
@@ -20,8 +37,7 @@ public async Task OneTimeSetup()
 {
     const ushort port = 80;
 
-    _container = new ContainerBuilder()
-        .WithImage("kennethreitz/httpbin:latest")
+    _container = new ContainerBuilder("kennethreitz/httpbin:latest")
         .WithName("httpbinorg")
         .WithCleanUp(false) // must be false - default or true will fail (BUG)
         .WithAutoRemove(true)

@@ -148,7 +148,7 @@ public class WireMockNetPollyPoliciesTest
             .TimeoutAsync(
                 TimeSpan.FromSeconds(2),
                 TimeoutStrategy.Optimistic, // we are co-operative cancellation via CancellationToken
-                // onTimeout
+                                            // onTimeout
                 (context, timespan, task, exception) =>
                 {
                     context.GetLogger()?.LogWarning("{PolicyKey} at {OperationKey}: execution timed out after {TimeSpan}.", context.PolicyKey, context.OperationKey, timespan.Humanize());
@@ -187,7 +187,7 @@ public class WireMockNetPollyPoliciesTest
             .WaitAndRetryAsync(
                 2, // retries
                 (duration) => TimeSpan.FromSeconds(3), // delay
-                // onRetry
+                                                       // onRetry
                 (delegateResult, timespan, context) =>
                 {
                     context.GetLogger()?.LogInformation("{PolicyKey} at {OperationKey}: execution is waiting for {TimeSpan} before retry.", context.PolicyKey, context.OperationKey, timespan.Humanize());

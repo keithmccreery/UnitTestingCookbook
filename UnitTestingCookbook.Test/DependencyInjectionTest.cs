@@ -6,8 +6,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-using Org.BouncyCastle.Utilities;
-
 using UnitTestingCookbook.Support.Services;
 
 namespace UnitTestingCookbook.Test;
@@ -28,7 +26,7 @@ public class DependencyInjectionTest
         IConfiguration configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
             .AddEnvironmentVariables()
-            .AddInMemoryCollection(new Dictionary<string, string> { ["ASPNETCORE_ENVIRONMENT"] = "Development", })
+            .AddInMemoryCollection(new Dictionary<string, string?> { ["ASPNETCORE_ENVIRONMENT"] = "Development", })
             .AddJsonStream(new MemoryStream(Encoding.UTF8.GetBytes("{ \"key\": \"value\" }")))
             .Build();
 
