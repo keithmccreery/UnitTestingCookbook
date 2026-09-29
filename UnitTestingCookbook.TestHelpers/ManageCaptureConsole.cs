@@ -1,4 +1,4 @@
-﻿namespace UnitTestingCookbook.TestHelpers;
+namespace UnitTestingCookbook.TestHelpers;
 
 /// <summary>
 /// ManageCaptureConsole
@@ -13,20 +13,20 @@ public class ManageCaptureConsole : IDisposable
         _originalOutput = System.Console.Out;
 
         _capturedConsole = new StringWriter();
-        System.Console.SetOut( _capturedConsole );
+        System.Console.SetOut(_capturedConsole);
     }
 
     #region IDisposable
 
     private bool isDisposed;
 
-    protected virtual void Dispose( bool disposing )
+    protected virtual void Dispose(bool disposing)
     {
-        if ( !isDisposed )
+        if (!isDisposed)
         {
-            System.Console.SetOut( _originalOutput );
+            System.Console.SetOut(_originalOutput);
 
-            if ( disposing )
+            if (disposing)
             {
                 _capturedConsole?.Dispose();
                 _capturedConsole = null;
@@ -39,14 +39,14 @@ public class ManageCaptureConsole : IDisposable
     ~ManageCaptureConsole()
     {
         // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        Dispose( false );
+        Dispose(false);
     }
 
     public void Dispose()
     {
         // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        Dispose( true );
-        GC.SuppressFinalize( this );
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 
     #endregion

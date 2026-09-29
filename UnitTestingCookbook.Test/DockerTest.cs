@@ -1,10 +1,10 @@
-﻿using DotNet.Testcontainers.Builders;
+using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 
 namespace UnitTestingCookbook.Test;
 
-[Category( "unit" )]
-[Category( "docker" )]
+[Category("unit")]
+[Category("docker")]
 [TestFixture]
 public class DockerTest
 {
@@ -17,38 +17,38 @@ public class DockerTest
         const ushort port = 80;
 
         _container = new ContainerBuilder()
-            .WithImage( "kennethreitz/httpbin:latest" )
-            .WithName( "httpbinorg" )
-            .WithCleanUp( false ) // must be false - default or true will fail (BUG)
-            .WithAutoRemove( true )
-            .WithPortBinding( port, port )
-            .WithWaitStrategy( Wait.ForUnixContainer().UntilHttpRequestIsSucceeded( request => request.ForPath( "/" ) ) )
+            .WithImage("kennethreitz/httpbin:latest")
+            .WithName("httpbinorg")
+            .WithCleanUp(false) // must be false - default or true will fail (BUG)
+            .WithAutoRemove(true)
+            .WithPortBinding(port, port)
+            .WithWaitStrategy(Wait.ForUnixContainer().UntilHttpRequestIsSucceeded(request => request.ForPath("/")))
             .Build();
 
-        await _container.StartAsync().ConfigureAwait( false );
+        await _container.StartAsync().ConfigureAwait(false);
     }
 
     [OneTimeTearDown]
     public async Task OneTimeTearDown()
     {
-        await _container.StopAsync().ConfigureAwait( false );
-        await _container.DisposeAsync().ConfigureAwait( false );
+        await _container.StopAsync().ConfigureAwait(false);
+        await _container.DisposeAsync().ConfigureAwait(false);
     }
 
     //
     // Q: How do I execute a Docker container for testing?
     //
     [Test]
-    [Category( "_passes" )]
-    [Ignore( "Requires Docker" )]
+    [Category("_passes")]
+    [Ignore("Requires Docker")]
     public async Task A_Container()
     {
         // Arrange
-        using HttpRequestMessage request = new HttpRequestMessage( HttpMethod.Get, "http://localhost/status/201" );
+        using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/status/201");
         using HttpClient client = new HttpClient();
 
         // Act
-        using HttpResponseMessage response = await client.SendAsync( request );
+        using HttpResponseMessage response = await client.SendAsync(request);
 
         // Assert
         response.Should().Be201Created();

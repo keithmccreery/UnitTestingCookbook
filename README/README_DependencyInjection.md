@@ -11,17 +11,17 @@ public void A_IConfiguration()
 {
     // Arrange
     IConfiguration configuration = new ConfigurationBuilder()
-        .AddJsonFile( "appsettings.json" )
+        .AddJsonFile("appsettings.json")
         .AddEnvironmentVariables()
-        .AddInMemoryCollection( new Dictionary<string, string> { [ "ASPNETCORE_ENVIRONMENT" ] = "Development", } )
-        .AddJsonStream( new MemoryStream( Encoding.UTF8.GetBytes( "{ \"key\": \"value\" }" ) ) )
+        .AddInMemoryCollection(new Dictionary<string, string> { ["ASPNETCORE_ENVIRONMENT"] = "Development", })
+        .AddJsonStream(new MemoryStream(Encoding.UTF8.GetBytes("{ \"key\": \"value\" }")))
         .Build();
 
     // Assert
 
     // Act
-    configuration[ "Logging:LogLevel:Default" ].Should().Be( "Debug" );
-    configuration[ "key" ].Should().Be( "value" );
+    configuration["Logging:LogLevel:Default"].Should().Be("Debug");
+    configuration["key"].Should().Be("value");
 }
 ```
 
@@ -40,7 +40,7 @@ public void B_Scope()
     ServiceCollection services = new ServiceCollection();
     services.AddScoped<IScopedService, SampleScopedService>();
 
-    ServiceProvider serviceProvider = services.BuildServiceProvider( true );
+    ServiceProvider serviceProvider = services.BuildServiceProvider(true);
 
     // Assert
     IServiceScopeFactory? serviceScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
@@ -48,18 +48,18 @@ public void B_Scope()
     IScopedService scoped1;
     IScopedService scoped2;
 
-    using ( var scope = serviceScopeFactory.CreateScope() )
+    using (var scope = serviceScopeFactory.CreateScope())
     {
         scoped1 = scope.ServiceProvider.GetRequiredService<IScopedService>();
     }
 
-    using ( var scope = serviceScopeFactory.CreateScope() )
+    using (var scope = serviceScopeFactory.CreateScope())
     {
         scoped2 = scope.ServiceProvider.GetRequiredService<IScopedService>();
     }
 
     // Act
-    scoped1.Should().NotBeSameAs( scoped2 ); // same as ReferenceEquals( scoped1, scoped2 ).Should().BeFalse()
+    scoped1.Should().NotBeSameAs(scoped2); // same as ReferenceEquals( scoped1, scoped2 ).Should().BeFalse()
 }
 ```
 
@@ -71,14 +71,14 @@ public void B_Scope()
 public void C_IOptions()
 {
     // Arrange
-    IOptions<MemoryDistributedCacheOptions> options = Options.Create<MemoryDistributedCacheOptions>( new MemoryDistributedCacheOptions() );
+    IOptions<MemoryDistributedCacheOptions> options = Options.Create<MemoryDistributedCacheOptions>(new MemoryDistributedCacheOptions());
 
     // Assert
 
     // Act
     options.Should().NotBeNull();
     options.Value.Should().BeOfType<MemoryDistributedCacheOptions>()
-        .Which.SizeLimit.Should().Be( 200 * 1024 * 1024 );
+        .Which.SizeLimit.Should().Be(200 * 1024 * 1024);
 }
 ```
 

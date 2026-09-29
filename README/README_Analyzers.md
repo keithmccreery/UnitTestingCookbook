@@ -30,12 +30,12 @@ public void A_AwesomeAssertions()
     // Act
 
     // Assert
-    ClassicAssert.IsTrue( list.All( b => b ) ); // NUnit 4+: classic Assert.* moved to NUnit.Framework.Legacy.ClassicAssert
-    Assert.That( list.All( b => b ) );
+    ClassicAssert.IsTrue(list.All(b => b)); // NUnit 4+: classic Assert.* moved to NUnit.Framework.Legacy.ClassicAssert
+    Assert.That(list.All(b => b));
 
-    list.All( b => b ).Should().BeTrue();
+    list.All(b => b).Should().BeTrue();
 
-    list.Should().OnlyContain( b => b );
+    list.Should().OnlyContain(b => b);
 }
 ```
 
@@ -78,8 +78,8 @@ public async void FalsePositive()
     // Arrange
 
     // Act
-    await Task.Delay( 1000 );
-    throw new Exception( "This Exception will not be reported and the test will succeed, but block other tests." );
+    await Task.Delay(1000);
+    throw new Exception("This Exception will not be reported and the test will succeed, but block other tests.");
 
     // Assert
     true.Should().BeTrue(); // our failed test will be reported as passed

@@ -1,9 +1,9 @@
-﻿using NUnit.Framework.Legacy;
+using NUnit.Framework.Legacy;
 
 namespace UnitTestingCookbook.Test;
 
-[Category( "unit" )]
-[Category( "analyzers" )]
+[Category("unit")]
+[Category("analyzers")]
 [TestFixture]
 public class AnalyzersTest
 {
@@ -11,7 +11,7 @@ public class AnalyzersTest
     // AwesomeAssertions.Analyzers
     //
     [Test]
-    [Category( "_passes" )]
+    [Category("_passes")]
     public void A_AwesomeAssertions()
     {
         // Arrange
@@ -20,19 +20,19 @@ public class AnalyzersTest
         // Act
 
         // Assert
-        ClassicAssert.IsTrue( list.All( b => b ) );
-        Assert.That( list.All( b => b ) );
+        ClassicAssert.IsTrue(list.All(b => b));
+        Assert.That(list.All(b => b));
 
-        list.All( b => b ).Should().BeTrue();
+        list.All(b => b).Should().BeTrue();
 
-        list.Should().OnlyContain( b => b );
+        list.Should().OnlyContain(b => b);
     }
 
     //
     // False-Positive
     //
     [Test]
-    [Category( "_false_positive" )]
+    [Category("_false_positive")]
     public void B_False_Positive()
     {
         // Arrange

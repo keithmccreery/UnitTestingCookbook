@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 
 using Microsoft.Extensions.Logging;
 
@@ -20,20 +20,20 @@ public static class ExtensionMethods
     /// <param name="expectedLogLevel"></param>
     /// <param name="times"></param>
     /// <returns></returns>
-    public static Mock<ILogger<T>> VerifyLogging<T>( this Mock<ILogger<T>> logger, string expectedMessage, LogLevel expectedLogLevel = LogLevel.Debug, Times? times = null )
+    public static Mock<ILogger<T>> VerifyLogging<T>(this Mock<ILogger<T>> logger, string expectedMessage, LogLevel expectedLogLevel = LogLevel.Debug, Times? times = null)
     {
         times ??= Times.Once();
 
-        Func<object, Type, bool> state = ( v, t ) => v.ToString()?.CompareTo( expectedMessage ) == 0;
+        Func<object, Type, bool> state = (v, t) => v.ToString()?.CompareTo(expectedMessage) == 0;
 
         logger.Verify(
             x => x.Log(
-                It.Is<LogLevel>( l => l == expectedLogLevel ),
+                It.Is<LogLevel>(l => l == expectedLogLevel),
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>( ( v, t ) => state( v, t ) ),
+                It.Is<It.IsAnyType>((v, t) => state(v, t)),
                 It.IsAny<Exception>(),
-                It.Is<Func<It.IsAnyType, Exception?, string>>( ( v, t ) => true ) )
-            , ( Times ) times );
+                It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true))
+            , (Times) times);
 
         return logger;
     }
@@ -46,15 +46,15 @@ public static class ExtensionMethods
     /// <param name="propertyName"></param>
     /// <returns></returns>
     /// <exception cref="MissingMemberException"></exception>
-    public static T? GetPropertyValue<T>( this object @this, string propertyName )
+    public static T? GetPropertyValue<T>(this object @this, string propertyName)
     {
-        ArgumentNullException.ThrowIfNull( @this );
+        ArgumentNullException.ThrowIfNull(@this);
 
-        return ( T? ) ( @this
+        return (T?) (@this
             .GetType()
-            .GetProperty( propertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy )
-            ?? throw new MissingMemberException( @this.GetType().Name, propertyName ) )
-            .GetValue( @this, null );
+            .GetProperty(propertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy)
+            ?? throw new MissingMemberException(@this.GetType().Name, propertyName))
+            .GetValue(@this, null);
     }
 
     /// <summary>
@@ -65,15 +65,15 @@ public static class ExtensionMethods
     /// <param name="fieldName"></param>
     /// <returns></returns>
     /// <exception cref="MissingFieldException"></exception>
-    public static T? GetFieldValue<T>( this object @this, string fieldName )
+    public static T? GetFieldValue<T>(this object @this, string fieldName)
     {
-        ArgumentNullException.ThrowIfNull( @this );
+        ArgumentNullException.ThrowIfNull(@this);
 
-        return ( T? ) ( @this
+        return (T?) (@this
             .GetType()
-            .GetField( fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy )
-            ?? throw new MissingFieldException( @this.GetType().Name, fieldName ) )
-            .GetValue( @this );
+            .GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy)
+            ?? throw new MissingFieldException(@this.GetType().Name, fieldName))
+            .GetValue(@this);
     }
 
     /// <summary>
@@ -89,17 +89,17 @@ public static class ExtensionMethods
     /// <param name="args"></param>
     /// <returns></returns>
     /// <exception cref="MissingMethodException"></exception>
-    public static T? ExecuteMethod<T>( this object @this, string methodName, params object[] args )
+    public static T? ExecuteMethod<T>(this object @this, string methodName, params object[] args)
     {
-        ArgumentNullException.ThrowIfNull( @this );
+        ArgumentNullException.ThrowIfNull(@this);
 
-        return ( T? ) ( @this
+        return (T?) (@this
             .GetType()
             .GetMethod(
                 methodName,
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy,
-                args.Select( p => p.GetType() ).ToArray() )
-            ?? throw new MissingMethodException( @this.GetType().Name, methodName ) )
-            .Invoke( @this, args );
+                args.Select(p => p.GetType()).ToArray())
+            ?? throw new MissingMethodException(@this.GetType().Name, methodName))
+            .Invoke(@this, args);
     }
 }

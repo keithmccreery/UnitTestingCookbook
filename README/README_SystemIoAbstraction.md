@@ -32,15 +32,15 @@ public class SampleSystemIoAbstractions
 {
     private readonly IFileSystem fileSystem;
 
-    public SampleSystemIoAbstractions( IFileSystem fileSystem )
+    public SampleSystemIoAbstractions(IFileSystem fileSystem)
     {
         this.fileSystem = fileSystem;
     }
 
-    public bool DoesFileExist( string path )
+    public bool DoesFileExist(string path)
     {
         // was File.Exists( path )
-        return fileSystem.File.Exists( path );
+        return fileSystem.File.Exists(path);
     }
 }
 ```
@@ -55,16 +55,16 @@ public void A_IFileSystem_Exist()
     const string existsFilePath = "this_file_exists.txt";
     const string doesNotExistFilePath = "this_file_does_not_exist.txt";
 
-    IFileSystem fileSystem = new MockFileSystem( new Dictionary<string, MockFileData>()
+    IFileSystem fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>()
     {
-        { existsFilePath, new MockFileData( String.Empty ) },
+        { existsFilePath, new MockFileData(String.Empty) },
     });
 
-    SampleSystemIoAbstractions systemIoAbstractions = new SampleSystemIoAbstractions( fileSystem );
+    SampleSystemIoAbstractions systemIoAbstractions = new SampleSystemIoAbstractions(fileSystem);
 
     // Act
-    bool exists = systemIoAbstractions.DoesFileExist( existsFilePath );
-    bool doesNotExist = systemIoAbstractions.DoesFileExist( doesNotExistFilePath );
+    bool exists = systemIoAbstractions.DoesFileExist(existsFilePath);
+    bool doesNotExist = systemIoAbstractions.DoesFileExist(doesNotExistFilePath);
 
     // Assert
     exists.Should().BeTrue();

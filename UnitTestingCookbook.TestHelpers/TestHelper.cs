@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 
 namespace UnitTestingCookbook.TestHelpers;
 
@@ -18,11 +18,11 @@ public static class TestHelper
     /// <param name="args"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    public static T InstantiateInternalConstructor<T>( params object[] args )
+    public static T InstantiateInternalConstructor<T>(params object[] args)
     {
-        return ( T ) ( typeof( T )
-            .GetConstructor( BindingFlags.NonPublic | BindingFlags.Instance, null, args.Select( p => p.GetType() ).ToArray(), null )
-            ?? throw new NotImplementedException( "No internal constructor matches the parameters." ) )
-            .Invoke( args );
+        return (T) (typeof(T)
+            .GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, args.Select(p => p.GetType()).ToArray(), null)
+            ?? throw new NotImplementedException("No internal constructor matches the parameters."))
+            .Invoke(args);
     }
 }

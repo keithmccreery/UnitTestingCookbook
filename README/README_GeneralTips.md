@@ -17,28 +17,28 @@ Capturing `System.Console.*` requires redirecting Standard Output.
 ```csharp
 public void A_CaptureConsole()
 {
-    using ( StringWriter capturedConsole = new StringWriter() )
+    using (StringWriter capturedConsole = new StringWriter())
     {
         TextWriter originalOutput = System.Console.Out;
 
         try
         {
-            System.Console.SetOut( capturedConsole );
+            System.Console.SetOut(capturedConsole);
 
             // Arrange
             string expected = "Hello World" + System.Environment.NewLine;
 
             // Act
-            System.Console.WriteLine( "Hello World" );
+            System.Console.WriteLine("Hello World");
 
             string result = capturedConsole.ToString();
 
             // Assert
-            result.Should().Be( expected );
+            result.Should().Be(expected);
         }
         finally
         {
-            System.Console.SetOut( originalOutput );
+            System.Console.SetOut(originalOutput);
         }
     }
 }
@@ -57,12 +57,12 @@ public void A_CaptureConsole_TestHelpers()
     string expected = "Hello World" + System.Environment.NewLine;
 
     // Act
-    System.Console.WriteLine( "Hello World" );
+    System.Console.WriteLine("Hello World");
 
     string? result = capturedConsole.ToString();
 
     // Assert
-    result.Should().Be( expected );
+    result.Should().Be(expected);
 }
 ```
 
@@ -78,17 +78,17 @@ public void B_EnvironmentVariables()
     const string ASPNETCORE_ENVIRONMENT = "ASPNETCORE_ENVIRONMENT";
     const string AWS_DEFAULT_REGION = "AWS_DEFAULT_REGION";
 
-    Dictionary<string,string?> originalValues = new Dictionary<string,string?>();
+    Dictionary<string, string?> originalValues = new Dictionary<string, string?>();
 
     try
     {
         // Arrange
-        originalValues[ ASPNETCORE_ENVIRONMENT ] = Environment.GetEnvironmentVariable( ASPNETCORE_ENVIRONMENT );
-        originalValues[ AWS_DEFAULT_REGION ] = Environment.GetEnvironmentVariable( AWS_DEFAULT_REGION );
+        originalValues[ASPNETCORE_ENVIRONMENT] = Environment.GetEnvironmentVariable(ASPNETCORE_ENVIRONMENT);
+        originalValues[AWS_DEFAULT_REGION] = Environment.GetEnvironmentVariable(AWS_DEFAULT_REGION);
 
         // Act
-        Environment.SetEnvironmentVariable( ASPNETCORE_ENVIRONMENT, "QA" );
-        Environment.SetEnvironmentVariable( AWS_DEFAULT_REGION, "us-east-1" );
+        Environment.SetEnvironmentVariable(ASPNETCORE_ENVIRONMENT, "QA");
+        Environment.SetEnvironmentVariable(AWS_DEFAULT_REGION, "us-east-1");
 
         const bool result = true; // Do some work
 
@@ -100,7 +100,7 @@ public void B_EnvironmentVariables()
         // If value is null, the environment variable will be deleted.
         originalValues
             .ToList()
-            .ForEach( kvp => Environment.SetEnvironmentVariable( kvp.Key, kvp.Value ) );
+            .ForEach(kvp => Environment.SetEnvironmentVariable(kvp.Key, kvp.Value));
     }
 }
 ```
@@ -119,7 +119,7 @@ public void B_EnvironmentVariables_TestHelpers()
         { "AWS_DEFAULT_REGION", "us-east-1" }
     };
 
-    using ManageEnvironmentVariables manageEnvironmentVariables = new ManageEnvironmentVariables( environmentVariables );
+    using ManageEnvironmentVariables manageEnvironmentVariables = new ManageEnvironmentVariables(environmentVariables);
 
     // Act
     const bool result = true; // Do some work
@@ -142,25 +142,25 @@ public void C_Private_Property()
     Miscellaneous miscellaneous = new Miscellaneous();
 
     // Act
-    string? result = miscellaneous.GetPropertyValue<string>( "PrivateProperty" );
+    string? result = miscellaneous.GetPropertyValue<string>("PrivateProperty");
 
     // Assert
-    result.Should().Be( "private_property" );
+    result.Should().Be("private_property");
 }
 ```
 
 This solution uses an Extension Method `.GetPropertyValue<T>()`, located in `ExtensionMethods.cs` in `UnitTestingCookbook.TestHelpers` project.  
 
 ```csharp
-public static T? GetPropertyValue<T>( this object @this, string propertyName )
+public static T? GetPropertyValue<T>(this object @this, string propertyName)
 {
-    ArgumentNullException.ThrowIfNull( @this );
+    ArgumentNullException.ThrowIfNull(@this);
 
-    return ( T? ) ( @this
+    return (T?) (@this
         .GetType()
-        .GetProperty( propertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy )
-        ?? throw new MissingMemberException( @this.GetType().Name, propertyName ) )
-        .GetValue( @this, null );
+        .GetProperty(propertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy)
+        ?? throw new MissingMemberException(@this.GetType().Name, propertyName))
+        .GetValue(@this, null);
 }
 ```
 
@@ -177,10 +177,10 @@ public void D_Private_Field()
     Miscellaneous miscellaneous = new Miscellaneous();
 
     // Act
-    string? result = miscellaneous.GetFieldValue<string>( "privateField" );
+    string? result = miscellaneous.GetFieldValue<string>("privateField");
 
     // Assert
-    result.Should().Be( "private_field" );
+    result.Should().Be("private_field");
 }
 ```
 
@@ -188,15 +188,15 @@ This solution uses an Extension Method `.GetFieldValue<T>()`, located in `Extens
 
 
 ```csharp
-public static T? GetFieldValue<T>( this object @this, string fieldName )
+public static T? GetFieldValue<T>(this object @this, string fieldName)
 {
-    ArgumentNullException.ThrowIfNull( @this );
+    ArgumentNullException.ThrowIfNull(@this);
 
-    return ( T? ) ( @this
+    return (T?) (@this
         .GetType()
-        .GetField( fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy )
-        ?? throw new MissingFieldException( @this.GetType().Name, fieldName ) )
-        .GetValue( @this );
+        .GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy)
+        ?? throw new MissingFieldException(@this.GetType().Name, fieldName))
+        .GetValue(@this);
 }
 ```
 
@@ -210,17 +210,17 @@ The Private Field `_handler` holds the chain of handlers.
 
 ```csharp
 // Act
-DelegatingHandler lifetimeTrackingHttpMessageHandler = httpClient.GetFieldValue<DelegatingHandler>( "_handler" );
+DelegatingHandler lifetimeTrackingHttpMessageHandler = httpClient.GetFieldValue<DelegatingHandler>("_handler");
 
 List<DelegatingHandler> delegatingHandlers = new List<DelegatingHandler>
 {
     lifetimeTrackingHttpMessageHandler
 };
  
-while ( delegatingHandlers.Last() is not null
-    && delegatingHandlers.Last().InnerHandler is DelegatingHandler delegateHandler )
+while (delegatingHandlers.Last() is not null
+    && delegatingHandlers.Last().InnerHandler is DelegatingHandler delegateHandler)
 {
-    delegatingHandlers.Add( delegateHandler );
+    delegatingHandlers.Add(delegateHandler);
 }
 
 SocketsHttpHandler socketsHttpHandler = delegatingHandlers.Last().InnerHandler as SocketsHttpHandler;
@@ -241,7 +241,7 @@ public void E_Private_Method()
     Miscellaneous miscellaneous = new Miscellaneous();
 
     // Act
-    bool result = miscellaneous.ExecuteMethod<bool>( "PrivateMethod", "a message" );
+    bool result = miscellaneous.ExecuteMethod<bool>("PrivateMethod", "a message");
 
     // Assert
     result.Should().BeTrue();
@@ -255,18 +255,18 @@ This solution uses an Extension Method `.ExecuteMethod<T>()`, located in `Extens
 Please see this StackOverflow Question [GetMethod for generic method](https://stackoverflow.com/questions/4035719/getmethod-for-generic-method) on how to implement `.GetMethodExt()` to handle additional parameter types.  
 
 ```csharp
-public static T? ExecuteMethod<T>( this object @this, string methodName, params object[] args )
+public static T? ExecuteMethod<T>(this object @this, string methodName, params object[] args)
 {
-    ArgumentNullException.ThrowIfNull( @this );
+    ArgumentNullException.ThrowIfNull(@this);
 
-    return ( T? ) ( @this
+    return (T?) (@this
         .GetType()
         .GetMethod(
             methodName,
             BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy,
-            args.Select( p => p.GetType() ).ToArray() )
-        ?? throw new MissingMethodException( @this.GetType().Name, methodName ) )
-        .Invoke( @this, args );
+            args.Select(p => p.GetType()).ToArray())
+        ?? throw new MissingMethodException(@this.GetType().Name, methodName))
+        .Invoke(@this, args);
 }
 ```
 
@@ -282,7 +282,7 @@ public void F_Internal_Constructor()
     // Arrange
 
     // Act
-    Miscellaneous miscellaneous = TestHelper.InstantiateInternalConstructor<Miscellaneous>( "default_private_property_value" );
+    Miscellaneous miscellaneous = TestHelper.InstantiateInternalConstructor<Miscellaneous>("default_private_property_value");
 
     // Assert
     miscellaneous.Should().NotBeNull();
@@ -296,12 +296,12 @@ Please see this StackOverflow Question [GetMethod for generic method](https://st
 
 
 ```csharp
-public static T InstantiateInternalConstructor<T>( params object[] args )
+public static T InstantiateInternalConstructor<T>(params object[] args)
 {
-    return ( T ) ( typeof( T )
-        .GetConstructor( BindingFlags.NonPublic | BindingFlags.Instance, null, args.Select( p => p.GetType() ).ToArray(), null )
-        ?? throw new NotImplementedException( "No internal constructor matches the parameters." ) )
-        .Invoke( args );
+    return (T) (typeof(T)
+        .GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, args.Select(p => p.GetType()).ToArray(), null)
+        ?? throw new NotImplementedException("No internal constructor matches the parameters."))
+        .Invoke(args);
 }
 ```
 
@@ -314,7 +314,7 @@ File: `GlobalAttributes.cs` located in the `UnitTestingCookbook.Support` project
 ```csharp
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleToAttribute( "UnitTestingCookbook.Test" )]
+[assembly: InternalsVisibleToAttribute("UnitTestingCookbook.Test")]
 ```
 
 ---
@@ -331,16 +331,16 @@ public void G_Demystifier()
     {
         false.Should().BeTrue();
     }
-    catch ( Exception ex )
+    catch (Exception ex)
     {
-        System.Console.WriteLine( "Before..." );
-        System.Console.WriteLine( ex.ToString() );
+        System.Console.WriteLine("Before...");
+        System.Console.WriteLine(ex.ToString());
 
         ex.Demystify();
         System.Console.WriteLine();
 
-        System.Console.WriteLine( "After..." );
-        System.Console.WriteLine( ex.ToString() );
+        System.Console.WriteLine("After...");
+        System.Console.WriteLine(ex.ToString());
     }
 
     // Assert

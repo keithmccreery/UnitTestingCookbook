@@ -1,4 +1,4 @@
-﻿namespace UnitTestingCookbook.Support.Models;
+namespace UnitTestingCookbook.Support.Models;
 
 public static class TestValues
 {

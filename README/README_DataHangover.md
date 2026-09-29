@@ -21,8 +21,8 @@ not the data within the Objects, creating Data Hangover (from the previous test)
 ### Data Hangover
 
 ```csharp
-[Test, Order( 1 )]
-[Category( "_passes" )]
+[Test, Order(1)]
+[Category("_passes")]
 public void First_Test_Lease_Passes()
 {
     // Arrange
@@ -37,11 +37,11 @@ public void First_Test_Lease_Passes()
     // Act
 
     // Assert
-    offer.Finance.PaymentType.Should().Be( "L" );
+    offer.Finance.PaymentType.Should().Be("L");
 }
 
-[Test, Order( 2 )]
-[Category( "_false_negative" )]
+[Test, Order(2)]
+[Category("_false_negative")]
 public void Second_Test_Payment_Fails()
 {
     // Arrange
@@ -55,7 +55,7 @@ public void Second_Test_Payment_Fails()
     // Act
 
     // Assert
-    offer.Finance.PaymentType.Should().Be( "P" );
+    offer.Finance.PaymentType.Should().Be("P");
 }
 ```
 
@@ -74,8 +74,8 @@ private readonly Offer _originalOffer = new Offer()
     Finance = TestValues.FinanceValues,
 };
 
-[Test, Order( 1 )]
-[Category( "_passes" )]
+[Test, Order(1)]
+[Category("_passes")]
 public void First_Test_Lease_Passes()
 {
     // Arrange
@@ -85,11 +85,11 @@ public void First_Test_Lease_Passes()
     // Act
 
     // Assert
-    offer.Finance.PaymentType.Should().Be( "L" );
+    offer.Finance.PaymentType.Should().Be("L");
 }
 
-[Test, Order( 2 )]
-[Category( "_passes" )]
+[Test, Order(2)]
+[Category("_passes")]
 public void Second_Test_Payment_Passes()
 {
     // Arrange
@@ -98,7 +98,7 @@ public void Second_Test_Payment_Passes()
     // Act
 
     // Assert
-    offer.Finance.PaymentType.Should().Be( "P" );
+    offer.Finance.PaymentType.Should().Be("P");
 }
 ```
 

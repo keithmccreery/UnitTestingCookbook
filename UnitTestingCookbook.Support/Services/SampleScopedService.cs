@@ -1,4 +1,4 @@
-﻿namespace UnitTestingCookbook.Support.Services;
+namespace UnitTestingCookbook.Support.Services;
 
 public class SampleScopedService : IScopedService
 {

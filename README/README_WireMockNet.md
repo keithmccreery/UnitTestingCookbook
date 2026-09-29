@@ -69,19 +69,19 @@ public void OneTimeSetUp()
     // WireMock
     //
     _wireMockServer = WireMockServer.Start();
-    _baseUrl = _wireMockServer.Urls[ 0 ];
+    _baseUrl = _wireMockServer.Urls[0];
 
     // status endpoint
     _wireMockServer
         .Given(
             Request.Create()
-                .WithPath( ENDPOINT_STATUS_OK )
+                .WithPath(ENDPOINT_STATUS_OK)
                 .UsingGet()
         )
         .RespondWith(
             Response.Create()
-                .WithHeader( "Authorization", "valid" )
-                .WithStatusCode( HttpStatusCode.OK )
+                .WithHeader("Authorization", "valid")
+                .WithStatusCode(HttpStatusCode.OK)
         );
 }
 ```
@@ -101,12 +101,12 @@ public void SetUp()
     //
     IServiceCollection services = new ServiceCollection();
     services.AddScoped<IHttpBinOrgService, HttpBinOrgService>();
-    services.AddHttpClient( "HttpBinOrg", client =>
+    services.AddHttpClient("HttpBinOrg", client =>
     {
-        client.BaseAddress = new Uri( _baseUrl! ); // setup capture of URLs
-    } );
+        client.BaseAddress = new Uri(_baseUrl!); // setup capture of URLs
+    });
 
-    _serviceProvider = services.BuildServiceProvider( true );
+    _serviceProvider = services.BuildServiceProvider(true);
 }
 ```
 
@@ -116,7 +116,7 @@ public void SetUp()
 [TearDown]
 public void TearDown()
 {
-    ( _serviceProvider as IDisposable )?.Dispose();
+    (_serviceProvider as IDisposable)?.Dispose();
 }
 ```
 
@@ -150,18 +150,18 @@ public async Task A_WireMockNet()
     IHttpBinOrgService service = scope!.ServiceProvider.GetRequiredService<IHttpBinOrgService>();
 
     // Act
-    await service.GetStatusAsync( HttpStatusCode.OK );
+    await service.GetStatusAsync(HttpStatusCode.OK);
 
     // Assert
     _wireMockServer.Should()
         .HaveReceivedACall()
-        .AtUrl( $"{_baseUrl}{ENDPOINT_STATUS_OK}" );
+        .AtUrl($"{_baseUrl}{ENDPOINT_STATUS_OK}");
 
     _wireMockServer.LogEntries.Should().ContainSingle()
         .Which
         .ResponseMessage
-        .Headers!.FirstOrDefault( h => h.Key.Equals( "Authorization" ) )
-        .Value.FirstOrDefault().Should().Be( "valid" );
+        .Headers!.FirstOrDefault(h => h.Key.Equals("Authorization"))
+        .Value.FirstOrDefault().Should().Be("valid");
 }
 ```
 

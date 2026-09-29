@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 
 using Microsoft.Extensions.Logging;
 
@@ -18,15 +18,15 @@ public static class PollyContextExtensions
 {
     private static readonly string LoggerKey = "ILogger";
 
-    public static Context WithLogger<T>( this Context context, ILogger logger )
+    public static Context WithLogger<T>(this Context context, ILogger logger)
     {
-        context[ LoggerKey ] = logger;
+        context[LoggerKey] = logger;
         return context;
     }
 
-    public static ILogger? GetLogger( this Context context )
+    public static ILogger? GetLogger(this Context context)
     {
-        if ( context.TryGetValue( LoggerKey, out object logger ) )
+        if (context.TryGetValue(LoggerKey, out object logger))
         {
             return logger as ILogger;
         }
@@ -34,13 +34,13 @@ public static class PollyContextExtensions
         return null;
     }
 
-    public static HttpRequestMessage AddPollyContext<T>( this HttpRequestMessage @this, ILogger<T> logger, [CallerMemberName] string memberName = "" )
+    public static HttpRequestMessage AddPollyContext<T>(this HttpRequestMessage @this, ILogger<T> logger, [CallerMemberName] string memberName = "")
     {
-        Context context = new Context( $"{typeof( T ).Name}.{memberName}" );
+        Context context = new Context($"{typeof(T).Name}.{memberName}");
 
-        context.WithLogger<T>( logger );
+        context.WithLogger<T>(logger);
 
-        @this.SetPolicyExecutionContext( context );
+        @this.SetPolicyExecutionContext(context);
 
         return @this;
     }

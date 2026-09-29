@@ -1,4 +1,4 @@
-﻿namespace UnitTestingCookbook.Support;
+namespace UnitTestingCookbook.Support;
 
 /// <summary>
 /// Miscellaneous
@@ -7,7 +7,7 @@ public class Miscellaneous
 {
     public Miscellaneous() { }
 
-    internal Miscellaneous( string @default )
+    internal Miscellaneous(string @default)
     {
         PrivateProperty = @default;
     }
@@ -15,9 +15,9 @@ public class Miscellaneous
     private string PrivateProperty { get; set; } = "private_property";
     private string privateField = "private_field";
 
-    private bool PrivateMethod( string message )
+    private bool PrivateMethod(string message)
     {
-        System.Console.WriteLine( message + privateField );
+        System.Console.WriteLine(message + privateField);
 
         return true;
     }
@@ -28,7 +28,7 @@ public class Miscellaneous
     /// <exception cref="InvalidOperationException"></exception>
     public void ThrowsAnExceptionWithInnerException()
     {
-        throw new InvalidOperationException( "original exception", new NullReferenceException( "inner exception" ) );
+        throw new InvalidOperationException("original exception", new NullReferenceException("inner exception"));
     }
 
     /// <summary>
@@ -36,27 +36,27 @@ public class Miscellaneous
     /// </summary>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public async Task ThrowsAnExceptionWithInnerExceptionAsync( CancellationToken cancellationToken = default )
+    public async Task ThrowsAnExceptionWithInnerExceptionAsync(CancellationToken cancellationToken = default)
     {
-        await Task.Delay( 1, cancellationToken );
+        await Task.Delay(1, cancellationToken);
 
-        throw new InvalidOperationException( "original exception", new NullReferenceException( "inner exception" ) );
+        throw new InvalidOperationException("original exception", new NullReferenceException("inner exception"));
     }
 
     public event EventHandler? SomethingHappenedEvent;
 
-    protected virtual void OnSomethingHappened( EventArgs e )
+    protected virtual void OnSomethingHappened(EventArgs e)
     {
-        SomethingHappenedEvent?.Invoke( this, e );
+        SomethingHappenedEvent?.Invoke(this, e);
     }
 
     public void RaiseDoSomethingHappened()
     {
-        OnSomethingHappened( EventArgs.Empty );
+        OnSomethingHappened(EventArgs.Empty);
     }
 
     public void SlowRunningMethod()
     {
-        Thread.Sleep( 100 );
+        Thread.Sleep(100);
     }
 }

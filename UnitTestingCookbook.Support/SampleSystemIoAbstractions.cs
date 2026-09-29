@@ -1,4 +1,4 @@
-﻿using System.IO.Abstractions;
+using System.IO.Abstractions;
 
 namespace UnitTestingCookbook.Support;
 
@@ -15,14 +15,14 @@ public class SampleSystemIoAbstractions
 {
     private readonly IFileSystem fileSystem;
 
-    public SampleSystemIoAbstractions( IFileSystem fileSystem )
+    public SampleSystemIoAbstractions(IFileSystem fileSystem)
     {
         this.fileSystem = fileSystem;
     }
 
-    public bool DoesFileExist( string path )
+    public bool DoesFileExist(string path)
     {
         // was File.Exists( path )
-        return fileSystem.File.Exists( path );
+        return fileSystem.File.Exists(path);
     }
 }

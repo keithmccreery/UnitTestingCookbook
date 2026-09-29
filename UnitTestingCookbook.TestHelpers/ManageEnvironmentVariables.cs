@@ -1,4 +1,4 @@
-﻿namespace UnitTestingCookbook.TestHelpers;
+namespace UnitTestingCookbook.TestHelpers;
 
 /// <summary>
 /// ManageEnvironmentVariables
@@ -9,25 +9,25 @@ public class ManageEnvironmentVariables : IDisposable
 
     public ManageEnvironmentVariables() { }
 
-    public ManageEnvironmentVariables( Dictionary<string, string?> environmentVariables )
+    public ManageEnvironmentVariables(Dictionary<string, string?> environmentVariables)
     {
-        SetEnvironmentVariables( environmentVariables );
+        SetEnvironmentVariables(environmentVariables);
     }
 
-    public void SetEnvironmentVariables( Dictionary<string, string?> environmentVariables )
+    public void SetEnvironmentVariables(Dictionary<string, string?> environmentVariables)
     {
         environmentVariables
             .ToList()
-            .ForEach( kvp => SetEnvironmentVariable( kvp.Key, kvp.Value ) );
+            .ForEach(kvp => SetEnvironmentVariable(kvp.Key, kvp.Value));
     }
 
-    public void SetEnvironmentVariable( string key, string? value )
+    public void SetEnvironmentVariable(string key, string? value)
     {
         // overwrite if already present
-        _originalEnvironmentVariables[ key ] = Environment.GetEnvironmentVariable( key );
+        _originalEnvironmentVariables[key] = Environment.GetEnvironmentVariable(key);
 
         // set
-        Environment.SetEnvironmentVariable( key, value );
+        Environment.SetEnvironmentVariable(key, value);
     }
 
     private void RestoreEnvironmentVariables()
@@ -35,16 +35,16 @@ public class ManageEnvironmentVariables : IDisposable
         // restore
         _originalEnvironmentVariables
             ?.ToList()
-            .ForEach( kvp => SetEnvironmentVariable( kvp.Key, kvp.Value ) );
+            .ForEach(kvp => SetEnvironmentVariable(kvp.Key, kvp.Value));
     }
 
     #region IDisposable
 
     private bool isDisposed;
 
-    protected virtual void Dispose( bool disposing )
+    protected virtual void Dispose(bool disposing)
     {
-        if ( !isDisposed )
+        if (!isDisposed)
         {
             RestoreEnvironmentVariables();
 
@@ -55,8 +55,8 @@ public class ManageEnvironmentVariables : IDisposable
     public void Dispose()
     {
         // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        Dispose( true );
-        GC.SuppressFinalize( this );
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 
     #endregion

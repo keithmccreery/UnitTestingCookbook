@@ -14,11 +14,11 @@ NOTE: For value type data driven tests, it is best NOT to use a TestName.
 Using TestName, especially with VS TestExplorer doesn't lend well to the visual appearance of the test names.  
 
 ```csharp
-[TestCase( 1, 1, 2 )]
-[TestCase( 0, 0, 0 )]
-[TestCase( -1, 1, 0 )]
-[Category( "_passes" )]
-public void A_DataDrivenTest_TestCase( int a, int b, int expected)
+[TestCase(1, 1, 2)]
+[TestCase(0, 0, 0)]
+[TestCase(-1, 1, 0)]
+[Category("_passes")]
+public void A_DataDrivenTest_TestCase(int a, int b, int expected)
 {
     // Arrange
 
@@ -26,7 +26,7 @@ public void A_DataDrivenTest_TestCase( int a, int b, int expected)
     int result = a + b;
 
     // Assert
-    result.Should().Be( expected );
+    result.Should().Be(expected);
 }
 ```
 
@@ -35,17 +35,17 @@ public void A_DataDrivenTest_TestCase( int a, int b, int expected)
 Using `TestCaseSourceAttribute`.  
 
 ```csharp
-[TestCaseSource( typeof( DataDrivenTestData ), nameof( DataDrivenTestData.TestCaseSourceData ) )]
-[Category( "_passes" )]
-public void B_DataDrivenTest_TestCaseSource( Whale whale, bool expected )
+[TestCaseSource(typeof(DataDrivenTestData), nameof(DataDrivenTestData.TestCaseSourceData))]
+[Category("_passes")]
+public void B_DataDrivenTest_TestCaseSource(Whale whale, bool expected)
 {
     // Arrange
 
     // Act
-    bool result = ( whale?.Length ?? 0 ) > 0;
+    bool result = (whale?.Length ?? 0) > 0;
 
     // Assert
-    result.Should().Be( expected );
+    result.Should().Be(expected);
 }
 ```
 
@@ -60,14 +60,14 @@ public static class DataDrivenTestData
     {
         get
         {
-            yield return new TestCaseData( new Whale() { Species = "Blue", Length = 60 }, true )
-                .SetName( "{m}[ Blue Whale, Length of 60 ]" );
-            yield return new TestCaseData( new Whale() { Species = "Beluga", Length = 10 }, true )
-                .SetName( "{m}[ Beluga Whale, Length of 10 ]" );
-            yield return new TestCaseData( new Whale() { Species = "Unicorn", Length = 0 }, false )
-                .SetName( "{m}[ Unicorn Whale, Length of 0 ]" );
-            yield return new TestCaseData( null, false )
-                .SetName( "{m}[ Null ]" );
+            yield return new TestCaseData(new Whale() { Species = "Blue", Length = 60 }, true)
+                .SetName("{m}[Blue Whale, Length of 60]");
+            yield return new TestCaseData(new Whale() { Species = "Beluga", Length = 10 }, true)
+                .SetName("{m}[Beluga Whale, Length of 10]");
+            yield return new TestCaseData(new Whale() { Species = "Unicorn", Length = 0 }, false)
+                .SetName("{m}[Unicorn Whale, Length of 0]");
+            yield return new TestCaseData(null, false)
+                .SetName("{m}[Null]");
         }
     }
 }

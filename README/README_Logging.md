@@ -19,7 +19,7 @@ All examples are located in `UnitTestingCookbook.Test` -> [`LoggingTest`](../Uni
 Given a Class Constructor...  
 
 ```csharp
-public SampleWithLogging( ILogger<SampleWithLogging> logger )
+public SampleWithLogging(ILogger<SampleWithLogging> logger)
 {
     this.logger = logger;
 }
@@ -32,12 +32,12 @@ public void A_ILogger_Via_NullLoggerFactory()
 {
     // Arrange
     ILoggerFactory nullLoggerFactory = new NullLoggerFactory();
-    ILogger<SampleWithLogging> logger = new Logger<SampleWithLogging>( nullLoggerFactory );
+    ILogger<SampleWithLogging> logger = new Logger<SampleWithLogging>(nullLoggerFactory);
 
-    SampleWithLogging sampleWithLogging = new SampleWithLogging( logger );
+    SampleWithLogging sampleWithLogging = new SampleWithLogging(logger);
 
     // Act
-    sampleWithLogging.LogInformationMessage( "anything" );
+    sampleWithLogging.LogInformationMessage("anything");
 
     // Assert
     logger.Should().NotBeNull();
@@ -54,10 +54,10 @@ public void B_ILogger_Via_NullLogger()
     // Arrange
     ILogger<SampleWithLogging> logger = new NullLogger<SampleWithLogging>();
 
-    SampleWithLogging sampleWithLogging = new SampleWithLogging( logger );
+    SampleWithLogging sampleWithLogging = new SampleWithLogging(logger);
 
     // Act
-    sampleWithLogging.LogInformationMessage( "anything" );
+    sampleWithLogging.LogInformationMessage("anything");
 
     // Assert
     logger.Should().NotBeNull();
@@ -74,13 +74,13 @@ public void C_ILogger_Via_DependencyInjection_NullLoggerFactory()
     // Arrange
     ServiceCollection services = new ServiceCollection();
     services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
-    services.AddSingleton<ILogger<SampleWithLogging>>( x => x.GetRequiredService<ILoggerFactory>().CreateLogger<SampleWithLogging>() );
+    services.AddSingleton<ILogger<SampleWithLogging>>(x => x.GetRequiredService<ILoggerFactory>().CreateLogger<SampleWithLogging>());
     services.AddSingleton<SampleWithLogging>();
-    ServiceProvider serviceProvider = services.BuildServiceProvider( true );
+    ServiceProvider serviceProvider = services.BuildServiceProvider(true);
 
     // Act
     SampleWithLogging sampleWithLogging = serviceProvider.GetRequiredService<SampleWithLogging>();
-    sampleWithLogging.LogInformationMessage( "anything" );
+    sampleWithLogging.LogInformationMessage("anything");
 
     // Assert
     sampleWithLogging.Should().NotBeNull();
@@ -99,13 +99,13 @@ public void D_ILogger_Via_DependencyInjection_NullLogger()
 {
     // Arrange
     ServiceCollection services = new ServiceCollection();
-    services.AddSingleton( typeof( ILogger<> ), typeof( NullLogger<> ) ); // handles all generics
+    services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>)); // handles all generics
     services.AddSingleton<SampleWithLogging>();
-    ServiceProvider serviceProvider = services.BuildServiceProvider( true );
+    ServiceProvider serviceProvider = services.BuildServiceProvider(true);
 
     // Act
     SampleWithLogging sampleWithLogging = serviceProvider.GetRequiredService<SampleWithLogging>();
-    sampleWithLogging.LogInformationMessage( "anything" );
+    sampleWithLogging.LogInformationMessage("anything");
 
     // Assert
     sampleWithLogging.Should().NotBeNull();
@@ -129,20 +129,20 @@ public class SampleWithLoggingFactory
 {
     private readonly ILogger<SampleWithLoggingFactory> logger;
 
-    public SampleWithLoggingFactory() : this( NullLoggerFactory.Instance )
+    public SampleWithLoggingFactory() : this(NullLoggerFactory.Instance)
     {
     }
 
-    public SampleWithLoggingFactory( ILoggerFactory loggerFactory )
+    public SampleWithLoggingFactory(ILoggerFactory loggerFactory)
     {
         logger = loggerFactory.CreateLogger<SampleWithLoggingFactory>();
     }
 
-    public void LogInformationMessage( string? message )
+    public void LogInformationMessage(string? message)
     {
-        logger.LogInformation( "This is the template with a {Message}.", message );
+        logger.LogInformation("This is the template with a {Message}.", message);
 
-        System.Console.WriteLine( logger.GetType().FullName );
+        System.Console.WriteLine(logger.GetType().FullName);
     }
 }
 ```
@@ -156,11 +156,11 @@ public void E_ILoggerFactory_Via_DependencyInjection_NullLoggerFactory()
     ServiceCollection services = new ServiceCollection();
     services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
     services.AddSingleton<SampleWithLoggingFactory>();
-    ServiceProvider serviceProvider = services.BuildServiceProvider( true );
+    ServiceProvider serviceProvider = services.BuildServiceProvider(true);
 
     // Act
     SampleWithLoggingFactory sampleWithLoggingFactory = serviceProvider.GetRequiredService<SampleWithLoggingFactory>();
-    sampleWithLoggingFactory.LogInformationMessage( "anything" );
+    sampleWithLoggingFactory.LogInformationMessage("anything");
 
     // Assert
     sampleWithLoggingFactory.Should().NotBeNull();
@@ -181,11 +181,11 @@ public void F_Serilog_To_ILoggerFactory()
     ServiceCollection services = new ServiceCollection();
     services.AddSingleton<ILoggerFactory, SerilogLoggerFactory>();
     services.AddSingleton<SampleWithLoggingFactory>();
-    ServiceProvider serviceProvider = services.BuildServiceProvider( true );
+    ServiceProvider serviceProvider = services.BuildServiceProvider(true);
 
     // Act
     SampleWithLoggingFactory sampleWithLoggingFactory = serviceProvider.GetRequiredService<SampleWithLoggingFactory>();
-    sampleWithLoggingFactory.LogInformationMessage( "anything" );
+    sampleWithLoggingFactory.LogInformationMessage("anything");
 
     // Assert
     sampleWithLoggingFactory.Should().NotBeNull();
@@ -202,13 +202,13 @@ public void G_Serilog_To_ILogger()
     // Arrange
     ServiceCollection services = new ServiceCollection();
     services.AddSingleton<ILoggerFactory, SerilogLoggerFactory>();
-    services.AddSingleton( typeof( ILogger<> ), typeof( Logger<> ) ); // handles all generics
+    services.AddSingleton(typeof(ILogger<>), typeof(Logger<>)); // handles all generics
     services.AddSingleton<SampleWithLogging>();
-    ServiceProvider serviceProvider = services.BuildServiceProvider( true );
+    ServiceProvider serviceProvider = services.BuildServiceProvider(true);
 
     // Act
     SampleWithLogging sampleWithLogging = serviceProvider.GetRequiredService<SampleWithLogging>();
-    sampleWithLogging.LogInformationMessage( "anything" );
+    sampleWithLogging.LogInformationMessage("anything");
 
     // Assert
     sampleWithLogging.Should().NotBeNull();
@@ -230,19 +230,19 @@ public void H_Serilog_To_ILogger_Context_To_Console()
     // Arrange
     Serilog.ILogger serilogLogger = new LoggerConfiguration()
         .MinimumLevel.Verbose()
-        .WriteTo.Console( outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{Properties:j}] {Message:lj}{NewLine}{Exception}" )
+        .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{Properties:j}] {Message:lj}{NewLine}{Exception}")
         .Enrich.FromLogContext()
         .CreateLogger();
 
     ServiceCollection services = new ServiceCollection();
-    services.AddSingleton<ILoggerFactory>( new SerilogLoggerFactory( serilogLogger ) ); // Consume Serilog.ILogger
-    services.AddSingleton( typeof( ILogger<> ), typeof( Logger<> ) ); // handles all generics
+    services.AddSingleton<ILoggerFactory>(new SerilogLoggerFactory(serilogLogger)); // Consume Serilog.ILogger
+    services.AddSingleton(typeof(ILogger<>), typeof(Logger<>)); // handles all generics
     services.AddSingleton<SampleWithLogging>();
-    ServiceProvider serviceProvider = services.BuildServiceProvider( true );
+    ServiceProvider serviceProvider = services.BuildServiceProvider(true);
 
     // Act
     SampleWithLogging sampleWithLogging = serviceProvider.GetRequiredService<SampleWithLogging>();
-    sampleWithLogging.LogInformationMessage( "message" );
+    sampleWithLogging.LogInformationMessage("message");
 
     // Assert
     sampleWithLogging.Should().NotBeNull();
@@ -266,32 +266,32 @@ public void I_Serilog_TestCorrelator()
         .CreateLogger();
 
     ServiceCollection services = new ServiceCollection();
-    services.AddSingleton<ILoggerFactory>( new SerilogLoggerFactory( serilogLogger ) ); // Consume Serilog.ILogger
-    services.AddSingleton( typeof( ILogger<> ), typeof( Logger<> ) ); // handles all generics
+    services.AddSingleton<ILoggerFactory>(new SerilogLoggerFactory(serilogLogger)); // Consume Serilog.ILogger
+    services.AddSingleton(typeof(ILogger<>), typeof(Logger<>)); // handles all generics
     services.AddSingleton<SampleWithLogging>();
-    ServiceProvider serviceProvider = services.BuildServiceProvider( true );
+    ServiceProvider serviceProvider = services.BuildServiceProvider(true);
 
     const string message = "anything";
 
-    using ( TestCorrelator.CreateContext() )
+    using (TestCorrelator.CreateContext())
     {
         // Act
         SampleWithLogging sampleWithLogging = serviceProvider.GetRequiredService<SampleWithLogging>();
-        sampleWithLogging.LogInformationMessage( message );
+        sampleWithLogging.LogInformationMessage(message);
 
         IEnumerable<LogEvent> logs = TestCorrelator.GetLogEventsFromCurrentContext();
 
         // Assert
         logs.Should()
             .ContainSingle()
-            .Which.MessageTemplate.Text.Should().Be( "This is the template with a {Message}." );
+            .Which.MessageTemplate.Text.Should().Be("This is the template with a {Message}.");
 
         // simple strings
         logs.Should()
             .ContainSingle()
-            .Which.Properties[ "Message" ] // LogEventPropertyValue
-            .As<ScalarValue>() // ScalarValue
-            .Value.Should().Be( message );
+            .Which.Properties["Message"] // LogEventPropertyValue
+            .As<ScalarValue>() // ScalarValue (use for string)
+            .Value.Should().Be(message);
     }
 }
 ```
@@ -311,10 +311,10 @@ public void J_Serilog_TestCorrelator_Structured()
         .CreateLogger();
 
     ServiceCollection services = new ServiceCollection();
-    services.AddSingleton<ILoggerFactory>( new SerilogLoggerFactory( serilogLogger ) ); // Consume Serilog.ILogger
-    services.AddSingleton( typeof( ILogger<> ), typeof( Logger<> ) ); // handles all generics
+    services.AddSingleton<ILoggerFactory>(new SerilogLoggerFactory(serilogLogger)); // Consume Serilog.ILogger
+    services.AddSingleton(typeof(ILogger<>), typeof(Logger<>)); // handles all generics
     services.AddSingleton<SampleWithLogging>();
-    ServiceProvider serviceProvider = services.BuildServiceProvider( true );
+    ServiceProvider serviceProvider = services.BuildServiceProvider(true);
 
     var @object = new
     {
@@ -322,25 +322,25 @@ public void J_Serilog_TestCorrelator_Structured()
         Age = 21,
     };
 
-    using ( TestCorrelator.CreateContext() )
+    using (TestCorrelator.CreateContext())
     {
         // Act
         SampleWithLogging sampleWithLogging = serviceProvider.GetRequiredService<SampleWithLogging>();
-        sampleWithLogging.LogInformationStructuredMessage( @object );
+        sampleWithLogging.LogInformationStructuredMessage(@object);
 
         IEnumerable<LogEvent> logs = TestCorrelator.GetLogEventsFromCurrentContext();
 
         // Assert
         logs.Should()
             .ContainSingle()
-            .Which.MessageTemplate.Text.Should().Be( "This is the template with a {@Object}." );
+            .Which.MessageTemplate.Text.Should().Be("This is the template with a {@Object}.");
 
         logs.Should()
             .ContainSingle()
-            .Which.Properties[ "Object" ] // LogEventPropertyValue
+            .Which.Properties["Object"] // LogEventPropertyValue
             .As<StructureValue>() // StructureValue (use for object)
             .ToString()
-            .Should().Be( "{ Name: \"John\", Age: 21 }" );
+            .Should().Be("{ Name: \"John\", Age: 21 }");
         // StructureValue has a property named 'Properties' which is an array of LogEventProperty
         // LogEventProperty is a key/value object as 'Name' and 'Value'
     }
@@ -362,21 +362,21 @@ public void K_Mock_ILogger_Good()
     var loggerMock = new Mock<ILogger<SampleWithLogging>>();
     ILogger<SampleWithLogging> logger = loggerMock.Object;
 
-    SampleWithLogging sample = new SampleWithLogging( logger );
+    SampleWithLogging sample = new SampleWithLogging(logger);
 
     const string message = "anything";
 
     // Act
-    sample.LogInformationMessage( message );
+    sample.LogInformationMessage(message);
 
     // Assert
     loggerMock.Verify(
     x => x.Log(
         It.IsAny<LogLevel>(),
         It.IsAny<EventId>(),
-        It.Is<It.IsAnyType>( ( v, t ) => true ),
+        It.Is<It.IsAnyType>((v, t) => true),
         It.IsAny<Exception>(),
-        It.Is<Func<It.IsAnyType, Exception?, string>>( ( v, t ) => true ) ) );
+        It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)));
 }
 ```
 
@@ -391,21 +391,21 @@ public void L_Mock_ILogger_Better()
     var loggerMock = new Mock<ILogger<SampleWithLogging>>();
     ILogger<SampleWithLogging> logger = loggerMock.Object;
 
-    SampleWithLogging sample = new SampleWithLogging( logger );
+    SampleWithLogging sample = new SampleWithLogging(logger);
 
     const string message = "anything";
 
     // Act
-    sample.LogInformationMessage( message );
+    sample.LogInformationMessage(message);
 
     // Assert
     loggerMock.Verify(
     x => x.Log(
-        It.Is<LogLevel>( l => l == LogLevel.Information ), // severity
+        It.Is<LogLevel>(l => l == LogLevel.Information), // severity
         It.IsAny<EventId>(),
-        It.Is<It.IsAnyType>( ( v, t ) => v.ToString()!.Contains( message ) ), // message (substring)
+        It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains(message)), // message (substring)
         It.IsAny<Exception>(),
-        It.Is<Func<It.IsAnyType, Exception?, string>>( ( v, t ) => true ) ) );
+        It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)));
 }
 ```
 
@@ -418,20 +418,20 @@ To verify any log and every log, we can implement an Extension Method.
 **NOTE:** This Extension Method could be parameterized further to include `EventId`, and `Exception`.  
 
 ```csharp
-public static Mock<ILogger<T>> VerifyLogging<T>( this Mock<ILogger<T>> logger, string expectedMessage, LogLevel expectedLogLevel = LogLevel.Debug, Times? times = null )
+public static Mock<ILogger<T>> VerifyLogging<T>(this Mock<ILogger<T>> logger, string expectedMessage, LogLevel expectedLogLevel = LogLevel.Debug, Times? times = null)
 {
     times ??= Times.Once();
 
-    Func<object, Type, bool> state = ( v, t ) => v.ToString()?.CompareTo( expectedMessage ) == 0;
+    Func<object, Type, bool> state = (v, t) => v.ToString()?.CompareTo(expectedMessage) == 0;
 
     logger.Verify(
         x => x.Log(
-            It.Is<LogLevel>( l => l == expectedLogLevel ),
+            It.Is<LogLevel>(l => l == expectedLogLevel),
             It.IsAny<EventId>(),
-            It.Is<It.IsAnyType>( ( v, t ) => state( v, t ) ),
+            It.Is<It.IsAnyType>((v, t) => state(v, t)),
             It.IsAny<Exception>(),
-            It.Is<Func<It.IsAnyType, Exception?, string>>( ( v, t ) => true ) )
-        , ( Times ) times );
+            It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true))
+        , (Times) times);
 
     return logger;
 }
@@ -446,15 +446,15 @@ public void M_Mock_ILogger_Best()
     var loggerMock = new Mock<ILogger<SampleWithLogging>>();
     ILogger<SampleWithLogging> logger = loggerMock.Object;
 
-    SampleWithLogging sample = new SampleWithLogging( logger );
+    SampleWithLogging sample = new SampleWithLogging(logger);
 
     const string message = "anything";
 
     // Act
-    sample.LogInformationMessage( message );
+    sample.LogInformationMessage(message);
 
     // Assert
-    loggerMock.VerifyLogging( $"This is the template with a {message}.", LogLevel.Information, Times.Once() );
+    loggerMock.VerifyLogging($"This is the template with a {message}.", LogLevel.Information, Times.Once());
 }
 ```
 

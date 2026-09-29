@@ -36,16 +36,16 @@ public void A_Json()
 ""gender"": ""male"",
 }
 ";
-    JToken jToken = JToken.Parse( json );
+    JToken jToken = JToken.Parse(json);
 
     // Act
 
     // Assert
-    using ( new AssertionScope() )
+    using (new AssertionScope())
     {
-        jToken.Should().HaveCount( 3 );
-        jToken.Should().HaveElement( "name" );
-        jToken.Should().NotHaveElement( "bozo" );
+        jToken.Should().HaveCount(3);
+        jToken.Should().HaveElement("name");
+        jToken.Should().NotHaveElement("bozo");
     }
 }
 ```
@@ -68,23 +68,23 @@ public void B_Web()
 ""gender"": ""male"",
 }
 ";
-    HttpResponseMessage response = new HttpResponseMessage( HttpStatusCode.OK );
-    response.Headers.Add( "X-Correlation-ID", Guid.NewGuid().ToString() );
-    response.Content = new StringContent( json );
+    HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+    response.Headers.Add("X-Correlation-ID", Guid.NewGuid().ToString());
+    response.Content = new StringContent(json);
 
     // Act
 
     // Assert
-    using ( new AssertionScope() )
+    using (new AssertionScope())
     {
         response.Should().Be200Ok()
-            .And.BeAs( new
+            .And.BeAs(new
             {
                 name = "John",
                 age = 22,
                 gender = "male",
-            } );
-        response.Should().HaveHeader( "X-Correlation-ID" ).And.NotBeEmpty();
+            });
+        response.Should().HaveHeader("X-Correlation-ID").And.NotBeEmpty();
     }
 }
 ```
@@ -111,55 +111,55 @@ public void X_DependencyInjection()
     IHost host = Host.CreateDefaultBuilder()
         .UseConsoleLifetime()
         .UseContentRoot(
-            Path.GetDirectoryName( Assembly.GetExecutingAssembly().Location ) )
-        .ConfigureServices( ( hostContext, services ) =>
+            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
+        .ConfigureServices((hostContext, services) =>
         {
-            services.AddSingleton<IOptions<Animal>>( Options.Create<Animal>( new Animal() ) );
+            services.AddSingleton<IOptions<Animal>>(Options.Create<Animal>(new Animal()));
             serviceCollection = services; // HACK: To get IServiceCollection
-        } )
+        })
         .Build();
 
     // Act
 
     // Assert
-    using ( new AssertionScope() )
+    using (new AssertionScope())
     {
-        serviceCollection.Should().HaveCount( 52 );
+        serviceCollection.Should().HaveCount(52);
 
         // With Implementation
         serviceCollection!.Should()
-            .ContainSingle( d => d.ServiceType == typeof( IHostApplicationLifetime ) )
-            .Which.Should().Match<ServiceDescriptor>( d =>
-                d.ImplementationType == typeof( ApplicationLifetime )
-                && d.Lifetime == ServiceLifetime.Singleton );
+            .ContainSingle(d => d.ServiceType == typeof(IHostApplicationLifetime))
+            .Which.Should().Match<ServiceDescriptor>(d =>
+                d.ImplementationType == typeof(ApplicationLifetime)
+                && d.Lifetime == ServiceLifetime.Singleton);
 
         // Instance only - No Implementation
         serviceCollection.Should()
-            .ContainSingle( d => d.ServiceType == typeof( HostBuilderContext ) )
-            .Which.Lifetime.Should().Be( ServiceLifetime.Singleton );
+            .ContainSingle(d => d.ServiceType == typeof(HostBuilderContext))
+            .Which.Lifetime.Should().Be(ServiceLifetime.Singleton);
 
         // Factory - No Implementation
         serviceCollection.Should()
-            .ContainSingle( d => d.ServiceType == typeof( IHost ) )
-            .Which.Lifetime.Should().Be( ServiceLifetime.Singleton );
+            .ContainSingle(d => d.ServiceType == typeof(IHost))
+            .Which.Lifetime.Should().Be(ServiceLifetime.Singleton);
 
         // Multiple Implementations (Console/Debug/EventSource only - EventLog is Windows-only)
         IEnumerable<ServiceDescriptor> loggerProviderDescriptors =
-            serviceCollection.Where( d => d.ServiceType == typeof( ILoggerProvider ) );
+            serviceCollection.Where(d => d.ServiceType == typeof(ILoggerProvider));
 
-        loggerProviderDescriptors.Should().HaveCount( 3 )
-            .And.OnlyContain( d => d.Lifetime == ServiceLifetime.Singleton );
-        loggerProviderDescriptors.Select( d => d.ImplementationType ).Should().BeEquivalentTo( new[]
+        loggerProviderDescriptors.Should().HaveCount(3)
+            .And.OnlyContain(d => d.Lifetime == ServiceLifetime.Singleton);
+        loggerProviderDescriptors.Select(d => d.ImplementationType).Should().BeEquivalentTo(new[]
         {
-            typeof( ConsoleLoggerProvider ),
-            typeof( DebugLoggerProvider ),
-            typeof( EventSourceLoggerProvider ),
-        } );
+            typeof(ConsoleLoggerProvider),
+            typeof(DebugLoggerProvider),
+            typeof(EventSourceLoggerProvider),
+        });
 
         // Generic - No Implementation
         serviceCollection.Should()
-            .ContainSingle( d => d.ServiceType == typeof( IOptions<Animal> ) )
-            .Which.Lifetime.Should().Be( ServiceLifetime.Singleton );
+            .ContainSingle(d => d.ServiceType == typeof(IOptions<Animal>))
+            .Which.Lifetime.Should().Be(ServiceLifetime.Singleton);
     }
 }
 ```
