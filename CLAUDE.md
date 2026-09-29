@@ -1,0 +1,92 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## What this repository is
+
+A personal "Unit Testing Cookbook" - a reference/presentation, not a library or service. Each topic (AwesomeAssertions,
+Data Driven tests, DI, Docker, HttpClientFactory, Logging, Polly Policies, System.IO.Abstractions, WireMock.Net,
+etc.) is a paired **README chapter + NUnit test file**: `README/README_<Topic>.md` explains the pattern with prose
+and an embedded copy of the code, and `UnitTestingCookbook.Test/<Topic>Test.cs` is the actual, runnable version of
+that same code. See `README.md` for the full chapter list and the project's stated non-goals (it's explicitly not a
+theory-of-testing document, and it deliberately includes a few "don't do that, but here's why" anti-pattern examples
+- see `README_DataHangover.md` and the "BUG" comments in `WireMockNetPollyPoliciesTest.cs`).
+
+**The READMEs are hand-maintained copies, not generated.** There is no tooling that keeps a README's fenced
+` ```csharp ` blocks in sync with the real source file. Any change to a test method's code, or to its surrounding
+setup/teardown, must be re-copied into the corresponding README section by hand, or the two drift (this has
+happened before - see git history for fixes to README/source drift).
+
+## Commands
+
+Build the whole solution:
+```
+dotnet build UnitTestingCookbook.sln
+```
+
+Run the full test suite:
+```
+dotnet test UnitTestingCookbook.Test/UnitTestingCookbook.Test.csproj
+```
+
+Run a single test by name:
+```
+dotnet test UnitTestingCookbook.Test/UnitTestingCookbook.Test.csproj --filter "FullyQualifiedName~MethodName"
+```
+
+Run/exclude by NUnit category (categories are assigned via `[Category("...")]`; every test also carries one of
+`_passes` / `_fails` / `_false_positive` / `_false_negative` marking its **intended** outcome - a test tagged
+`_fails` or `_false_negative` failing is expected, not a regression):
+```
+dotnet test UnitTestingCookbook.Test/UnitTestingCookbook.Test.csproj --filter "TestCategory=wiremocknet_pollypolicies"
+dotnet test UnitTestingCookbook.Test/UnitTestingCookbook.Test.csproj --filter "TestCategory!=wiremocknet_pollypolicies"
+```
+
+Check/apply formatting per `.editorconfig`:
+```
+dotnet format UnitTestingCookbook.sln --verify-no-changes
+dotnet format UnitTestingCookbook.sln
+```
+
+Notes on running tests:
+- `WireMockNetPollyPoliciesTest.cs` exercises real Polly wait/retry/circuit-breaker delays against a local
+  WireMock.Net server - the full suite takes roughly a minute, dominated by this file.
+- `DockerTest.cs`'s one test is permanently `[Ignore("Requires Docker")]`; it's not run even when Docker is
+  available. It documents the Testcontainers pattern but was never wired into normal CI-style runs.
+- After changing package versions, `dotnet build`/`dotnet restore` may print `NU1608` warnings for
+  `Humanizer.Core.<locale>` satellite packages - these come from WireMock.Net's own transitive dependency on an
+  older Humanizer and are resolved correctly (the repo's direct reference wins); they're noise, not a real conflict.
+
+## Architecture
+
+Three projects, referenced by the test project:
+- **UnitTestingCookbook.Support** - the "production" code every chapter's tests exercise (`HttpBinOrgService`,
+  `Miscellaneous`, sample logging/IO wrapper classes, `PollyContextExtensions`). Not a real product; exists purely
+  to give the test chapters something realistic to test against.
+- **UnitTestingCookbook.TestHelpers** - a small reusable test-helper library (`ManageCaptureConsole`,
+  `ManageEnvironmentVariables`, `TestHelper.CreateInstanceInternal` for invoking non-public constructors). Some
+  chapters (e.g. `GeneralTipsTest.A_CaptureConsole` vs `A_CaptureConsole_TestHelpers`) deliberately show the same
+  technique implemented inline *and* via this shared library, back to back, as a comparison.
+- **UnitTestingCookbook.Test** - the cookbook itself: one test fixture per README chapter, using NUnit +
+  AwesomeAssertions.
+
+Version/property management is centralized at the repo root: `Directory.Build.props` holds the
+`TargetFramework`/`ImplicitUsings`/`Nullable` settings shared by all three projects, and `Directory.Packages.props`
+centrally manages every `PackageReference` version (`ManagePackageVersionsCentrally=true`) - individual `.csproj`
+files reference packages by name only, no `Version=` attribute.
+
+### Conventions specific to this repo
+
+- **Test methods are prefixed `A_`, `B_`, `C_`, ...** so their alphabetical/declaration order matches the order
+  the corresponding README walks through them. When adding a new example to an existing chapter, pick the next
+  free letter rather than a descriptive name.
+- **No space-inside-parens** (`Should().Be("x")`, not `Should().Be( "x" )`) is the enforced C# style, per
+  `.editorconfig`'s `csharp_space_between_*_parentheses = false`. This was a deliberate one-time repo-wide
+  reformat; don't reintroduce the old spaced style in new code.
+- **AwesomeAssertions, not FluentAssertions.** This repo migrated off FluentAssertions (commercial license as of
+  v8) to the AwesomeAssertions community fork. A few FluentAssertions add-on packages have no AwesomeAssertions
+  equivalent yet (`FluentAssertions.AspNetCore.Mvc`, `.Reactive`, `.Microsoft.Extensions.DependencyInjection`) -
+  see `README_AwesomeAssertionsAddOns.md` for what was dropped vs. rewritten without an add-on.
+- Classic NUnit asserts (where a chapter deliberately contrasts them with fluent assertions, e.g.
+  `AwesomeAssertionsTest.C_Assert_Vs_AwesomeAssertion_ErrorMessage`) use `NUnit.Framework.Legacy.ClassicAssert`,
+  not bare `Assert.AreEqual`/`Assert.IsTrue` - those were removed from `Assert` itself in NUnit 4+.
