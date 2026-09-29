@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 		README\README_Analyzers.md = README\README_Analyzers.md
 		README\README_AwesomeAssertions.md = README\README_AwesomeAssertions.md
+		README\README_AppSettingsValidation.md = README\README_AppSettingsValidation.md
 		README\README_AwesomeAssertionsAddOns.md = README\README_AwesomeAssertionsAddOns.md
 		README\README_Bogus.md = README\README_Bogus.md
 		README\README_DataDriven.md = README\README_DataDriven.md
