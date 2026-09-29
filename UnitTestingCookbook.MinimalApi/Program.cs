@@ -1,4 +1,5 @@
 using System.Data.Common;
+using System.Globalization;
 
 using FluentValidation;
 
@@ -55,7 +56,7 @@ app.MapGet("/animals/{id:int}", (int id, AnimalStore store) =>
 app.MapPost("/animals", (AnimalRecord animal, AnimalStore store) =>
 {
     AnimalRecord created = store.Add(animal);
-    return Results.Created($"/animals/{created.Id}", created);
+    return Results.Created($"/animals/{created.Id.ToString(CultureInfo.InvariantCulture)}", created);
 });
 
 app.Run();

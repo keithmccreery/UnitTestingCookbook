@@ -571,7 +571,7 @@ Setup with `Func<Task<T>> work = () =>` and `await` the `action` and Assert with
 public async Task U_CompleteWithinAsyncWithResult()
 {
     // Arrange
-    Func<Task<int>> work = () => { Task.Delay(100); return Task.FromResult<int>(-1); };
+    Func<Task<int>> work = () => Task.FromResult<int>(-1);
 
     // Act
 

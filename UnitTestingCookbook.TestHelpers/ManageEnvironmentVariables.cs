@@ -5,7 +5,7 @@ namespace UnitTestingCookbook.TestHelpers;
 /// </summary>
 public class ManageEnvironmentVariables : IDisposable
 {
-    private readonly Dictionary<string, string?> _originalEnvironmentVariables = new Dictionary<string, string?>();
+    private readonly Dictionary<string, string?> _originalEnvironmentVariables = new Dictionary<string, string?>(StringComparer.Ordinal);
 
     public ManageEnvironmentVariables() { }
 

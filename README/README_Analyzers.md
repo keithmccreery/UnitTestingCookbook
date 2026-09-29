@@ -9,6 +9,34 @@ All examples are located in `UnitTestingCookbook.Test` -> [`AnalyzersTest`](../U
 
 ---
 
+## What about repo-wide code quality analyzers - not test-specific ones?
+
+The two packages above are about testing specifically. `Directory.Build.props` also references a set of
+general-purpose analyzers, applied to **every project** in the solution (not just the test project) - there are
+no NUnit tests for these, since a code-quality analyzer isn't something you unit test, but they're as much a part
+of "how do I write good tests (and the code around them)" as anything else here:
+
+- Meziantou.Analyzer https://github.com/meziantou/Meziantou.Analyzer (`MA*`)
+- ErrorProne.NET https://github.com/SergeyTeplyakov/ErrorProne.NET (`EPC*`/`EPS*`)
+- AsyncFixer https://github.com/semihokur/AsyncFixer (`AsyncFixerNN`)
+- IDisposableAnalyzers https://github.com/DotNetAnalyzers/IDisposableAnalyzers (`IDISP*`)
+- Microsoft.VisualStudio.Threading.Analyzers https://github.com/microsoft/vs-threading (`VSTHRD*`)
+- Roslynator.Analyzers https://github.com/dotnet/roslynator (`RCS*`)
+- StyleCop.Analyzers https://github.com/DotNetAnalyzers/StyleCopAnalyzers (`SA*`/`SX*`)
+
+`.editorconfig` sets every one of these to `suggestion` severity by default (visible in the IDE and
+`dotnet format analyzers`, never a build break) and promotes a short, deliberately curated list to `warning`
+(`dotnet_diagnostic.severity = warning` overrides, grep `.editorconfig` for the exact set) - the idea being to
+adopt individual rules over time rather than turning everything on at once and drowning in noise.
+
+**NOTE:** installing the *analyzer* packages and setting a diagnostic ID's severity in `.editorconfig` are two
+separate steps - `.editorconfig` can reference a diagnostic ID like `VSTHRD200` all day, but nothing produces that
+diagnostic unless `Microsoft.VisualStudio.Threading.Analyzers` is actually referenced somewhere the compiler sees
+it. This repo went a while with the severities configured but the packages never added - worth checking for if
+you copy this `.editorconfig` into another repo without also copying `Directory.Build.props`.  
+
+---
+
 ## How do I improve Assertions?
 
 This example shows both `NUnit` and the transition to `AwesomeAssertions`.  

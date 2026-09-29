@@ -13,7 +13,7 @@ public class SampleWithLogging
 
     public void LogInformationMessage(string? message)
     {
-        using (logger.BeginScope(new Dictionary<string, object>() { { "WrappedContext", "sample" } }))
+        using (logger.BeginScope(new Dictionary<string, object>(StringComparer.Ordinal) { { "WrappedContext", "sample" } }))
         {
             logger.LogInformation("This is the template with a {Message}.", message);
         }

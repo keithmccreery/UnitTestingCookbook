@@ -368,7 +368,13 @@ dotnet_diagnostic.EXTEXP0001.severity = suggestion
 # Foo.UnitTests, Foo.IntegrationTests, Foo.Test -- not tied to this repo's
 # specific project name, so this section is portable across repos.
 #
-[**/*{Test,Tests}/**.cs]
+# NOTE: intentionally `**{Test,Tests}/**.cs`, not `**/*{Test,Tests}/**.cs` -- Roslyn's glob engine
+# requires `**/` to consume at least one path segment, so a leading `**/` fails to match a project
+# folder that sits directly under the .editorconfig itself (e.g. UnitTestingCookbook.Test/Foo.cs,
+# one level deep from repo root) even though the pattern reads like it should. Verified empirically
+# against both a depth-1 and a depth-3+ nested test folder before landing on this form.
+#
+[**{Test,Tests}/**.cs]
 # SA1600: Elements should be documented -- test classes/methods aren't public API and don't need XML doc comments.
 dotnet_diagnostic.SA1600.severity = none
 

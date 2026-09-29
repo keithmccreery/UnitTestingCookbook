@@ -4,6 +4,23 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
 
+  <!--
+    These are pure analyzer packages (no runtime component) - the diagnostic IDs they produce
+    (MA/Meziantou, EPC+EPS/ErrorProne.NET, AsyncFixerNN, IDISP/IDisposableAnalyzers, VSTHRD/VS
+    Threading, RCS/Roslynator, SA+SX/StyleCop) are what .editorconfig's severity overrides target.
+    Referenced globally via Directory.Build.props so every project gets the same analysis.
+  -->
+  <ItemGroup Label="Analyzers">
+    <PackageVersion Include="AsyncFixer" Version="2.1.0" />
+    <PackageVersion Include="ErrorProne.NET.CoreAnalyzers" Version="0.9.0-beta.4" />
+    <PackageVersion Include="ErrorProne.NET.Structs" Version="0.6.1-beta.1" />
+    <PackageVersion Include="IDisposableAnalyzers" Version="4.0.8" />
+    <PackageVersion Include="Meziantou.Analyzer" Version="3.0.290" />
+    <PackageVersion Include="Microsoft.VisualStudio.Threading.Analyzers" Version="18.7.23" />
+    <PackageVersion Include="Roslynator.Analyzers" Version="5.0.0" />
+    <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageVersion Include="AwesomeAssertions" Version="9.6.0" />
     <PackageVersion Include="AwesomeAssertions.Analyzers" Version="9.0.8" />
