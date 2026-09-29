@@ -11,9 +11,10 @@ separate ASP.NET Core project (not folded into `UnitTestingCookbook.Support`, si
 `Microsoft.NET.Sdk.Web` SDK and a real app host, unlike the plain POCOs the rest of that project holds).
 
 **NOTE:** This same project also hosts [AppSettings Validation](./README_AppSettingsValidation.md)'s
-`AnimalApiOptions`/`NotificationOptions` - that chapter has no NUnit tests of its own (see it for why), but its
-`.ValidateOnStart()` calls run every time a test here creates a `WebApplicationFactory<Program>`, so
-`appsettings.json` has to stay valid or every test in *this* chapter starts failing too.  
+`AnimalApiOptions`/`NotificationOptions` and [Connection String Validation](./README_ConnectionStringValidation.md)'s
+`ConnectionStringOptions` - those chapters' `.ValidateOnStart()` calls run every time a test here creates a
+`WebApplicationFactory<Program>`, so `appsettings.json` has to stay valid or every test in *this* chapter starts
+failing too.  
 
 ---
 

@@ -1,8 +1,13 @@
+using System.Data.Common;
+
 using FluentValidation;
 
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Options;
 
 using UnitTestingCookbook.MinimalApi;
+
+DbProviderFactories.RegisterFactory(ConnectionStringValidator.ProviderName, SqliteFactory.Instance);
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +25,13 @@ builder.Services.AddScoped<IValidator<NotificationOptions>, NotificationOptionsV
 builder.Services.AddOptions<NotificationOptions>()
     .Bind(builder.Configuration.GetSection(NotificationOptions.SectionName))
     .ValidateFluentValidation()
+    .ValidateOnStart();
+
+// Connection String Validation: the only options here validated by actually opening a real
+// connection (see ConnectionStringValidator.cs) rather than checking the string's shape.
+builder.Services.AddSingleton<IValidateOptions<ConnectionStringOptions>, ConnectionStringValidator>();
+builder.Services.AddOptions<ConnectionStringOptions>()
+    .Bind(builder.Configuration.GetSection(ConnectionStringOptions.SectionName))
     .ValidateOnStart();
 
 WebApplication app = builder.Build();

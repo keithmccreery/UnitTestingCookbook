@@ -19,6 +19,9 @@ still exercise this indirectly: every `WebApplicationFactory<Program>` it create
 means `appsettings.json`'s values have to stay valid or every test in that chapter starts failing at
 factory-creation time.
 
+See [Connection String Validation](./README_ConnectionStringValidation.md) for the same `.ValidateOnStart()`
+idea applied to a resource that *can* be tested deterministically - and does have NUnit tests as a result.  
+
 ---
 
 ## Why validate configuration at startup?

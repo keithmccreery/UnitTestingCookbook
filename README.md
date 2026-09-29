@@ -80,6 +80,8 @@ and the explanation will follow.
     - [NetArchTestTest.cs](./UnitTestingCookbook.Test/NetArchTestTest.cs)
 - [AppSettings Validation](./README/README_AppSettingsValidation.md)
     - No NUnit tests - see the README (code lives in [UnitTestingCookbook.MinimalApi](./UnitTestingCookbook.MinimalApi))
+- [Connection String Validation](./README/README_ConnectionStringValidation.md)
+    - [ConnectionStringValidationTest.cs](./UnitTestingCookbook.Test/ConnectionStringValidationTest.cs)
 
 # Errata
 
@@ -93,7 +95,6 @@ and the explanation will follow.
 - Microsoft TestServer
 - More Extension Methods / Helper Classes for TestCorrelator and WireMock.Net Objects
 - Create Relative Code Snippet links in GitHub
-- Connection String Validation using https://khalidabuhakmeh.com/validating-connection-strings-on-dotnet-startup
 - Prevent http requests to external services in unit tests https://www.meziantou.net/prevent-http-requests-to-external-services-in-unit-tests.htm
 - Add WireMockInspector Examples https://github.com/WireMock-Net/WireMockInspector
 - Test for HttpClient consumed by a Singleton, using `SocketsHttpHandler` via `.ConfigurePrimaryHttpMessageHandler()`, setting `PooledConnectionLifetime`, asserted directly against `IServiceCollection` (see [AwesomeAssertions Add-Ons](./README/README_AwesomeAssertionsAddOns.md) - there is no AwesomeAssertions equivalent of `FluentAssertions.Microsoft.Extensions.DependencyInjection`) and `GetPrivateField()`.
