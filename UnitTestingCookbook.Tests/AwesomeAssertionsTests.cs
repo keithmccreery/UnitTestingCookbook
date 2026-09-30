@@ -465,7 +465,10 @@ public class AwesomeAssertionsTests
         // Act
 
         // Assert
-        await work.Should().CompleteWithinAsync(500.Microseconds()).WithResult(-1);
+        // 500ms, not e.g. 500 microseconds: a shared CI runner under load can blow through a sub-millisecond
+        // bound on pure scheduling jitter alone, even for an already-completed Task like this one - this
+        // flaked intermittently in CI before being loosened.
+        await work.Should().CompleteWithinAsync(500.Milliseconds()).WithResult(-1);
     }
 
     //
