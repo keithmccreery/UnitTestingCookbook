@@ -93,7 +93,7 @@ and the explanation will follow.
 - Moq Examples
 - AWS via LocalStack
 - Microsoft TestServer
-- More Extension Methods / Helper Classes for TestCorrelator and WireMock.Net Objects
+- More Extension Methods / Helper Classes for WireMock.Net Objects (TestCorrelator's done - see `TestCorrelatorExtensions` in [Logging](./README/README_Logging.md))
 - Create Relative Code Snippet links in GitHub
 - Prevent http requests to external services in unit tests https://www.meziantou.net/prevent-http-requests-to-external-services-in-unit-tests.htm
 - Add WireMockInspector Examples https://github.com/WireMock-Net/WireMockInspector

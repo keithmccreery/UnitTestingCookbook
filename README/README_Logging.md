@@ -6,6 +6,10 @@
 - Serilog.Extensions.Logging https://github.com/serilog/serilog-extensions-logging
 - Serilog.Sinks.TestCorrelator https://github.com/MitchBodmer/serilog-sinks-testcorrelator
 
+`UnitTestingCookbook.TestHelpers`'s [`TestCorrelatorExtensions`](../UnitTestingCookbook.TestHelpers/TestCorrelatorExtensions.cs)
+adds a handful of extension methods over `IEnumerable<LogEvent>` (what `TestCorrelator.GetLogEventsFromCurrentContext()`
+returns) - see below.  
+
 All examples are located in `UnitTestingCookbook.Test` -> [`LoggingTest`](../UnitTestingCookbook.Test/LoggingTest.cs)  
 
 **NOTE:** The `ServiceCollection`/DI wiring below follows the same basic pattern as
@@ -461,6 +465,151 @@ public void M_Mock_ILogger_Best()
     loggerMock.VerifyLogging($"This is the template with a {message}.", LogLevel.Information, Times.Once());
 }
 ```
+
+---
+
+## How do I count TestCorrelator log events - overall, by severity, or by message template?
+
+`TestCorrelatorExtensions.CountAtLevel()` / `.CountWithMessageTemplate()` - a plain count of everything is just
+`logs.Count()` (LINQ, nothing TestCorrelator-specific needed).
+
+```csharp
+public void N_TestCorrelator_Count()
+{
+    // Arrange
+    Serilog.ILogger serilogLogger = new LoggerConfiguration()
+        .Enrich.FromLogContext()
+        .MinimumLevel.Verbose()
+        .WriteTo.TestCorrelator()
+        .CreateLogger();
+
+    ServiceCollection services = new ServiceCollection();
+    services.AddSingleton<ILoggerFactory>(new SerilogLoggerFactory(serilogLogger));
+    services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
+    services.AddSingleton<SampleWithLogging>();
+    ServiceProvider serviceProvider = services.BuildServiceProvider(true);
+
+    using (TestCorrelator.CreateContext())
+    {
+        // Act
+        SampleWithLogging sampleWithLogging = serviceProvider.GetRequiredService<SampleWithLogging>();
+        sampleWithLogging.LogInformationMessage("first");
+        sampleWithLogging.LogInformationMessage("second");
+        sampleWithLogging.LogInformationStructuredMessage(new { Name = "John" });
+
+        IEnumerable<LogEvent> logs = TestCorrelator.GetLogEventsFromCurrentContext();
+
+        // Assert
+        using (new AssertionScope())
+        {
+            logs.Count().Should().Be(3); // total - plain LINQ, nothing TestCorrelator-specific needed
+            logs.CountAtLevel(LogEventLevel.Information).Should().Be(3);
+            logs.CountAtLevel(LogEventLevel.Error).Should().Be(0);
+            logs.CountWithMessageTemplate("This is the template with a {Message}.").Should().Be(2);
+            logs.CountWithMessageTemplate("This is the template with a {@Object}.").Should().Be(1);
+        }
+    }
+}
+```
+
+---
+
+## How do I check whether a particular message was logged, without pulling it out and asserting on it manually?
+
+`TestCorrelatorExtensions.HasMessageTemplate()` matches the raw template; `.HasMessage()` matches the fully
+*rendered* message (template with property values substituted in - note the string property comes out
+double-quoted, since that's how Serilog renders a scalar string by default). `.GetPropertyValue<T>()` unwraps a
+scalar property without the caller needing to know about `LogEventPropertyValue`/`ScalarValue` (compare to
+`I_Serilog_TestCorrelator` above, which does that unwrapping by hand).
+
+```csharp
+public void O_TestCorrelator_HasMessage()
+{
+    // Arrange
+    Serilog.ILogger serilogLogger = new LoggerConfiguration()
+        .Enrich.FromLogContext()
+        .MinimumLevel.Verbose()
+        .WriteTo.TestCorrelator()
+        .CreateLogger();
+
+    ServiceCollection services = new ServiceCollection();
+    services.AddSingleton<ILoggerFactory>(new SerilogLoggerFactory(serilogLogger));
+    services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
+    services.AddSingleton<SampleWithLogging>();
+    ServiceProvider serviceProvider = services.BuildServiceProvider(true);
+
+    const string message = "anything";
+
+    using (TestCorrelator.CreateContext())
+    {
+        // Act
+        SampleWithLogging sampleWithLogging = serviceProvider.GetRequiredService<SampleWithLogging>();
+        sampleWithLogging.LogInformationMessage(message);
+
+        IEnumerable<LogEvent> logs = TestCorrelator.GetLogEventsFromCurrentContext();
+
+        // Assert
+        using (new AssertionScope())
+        {
+            logs.HasMessageTemplate("This is the template with a {Message}.").Should().BeTrue();
+            logs.HasMessageTemplate("This template was never logged.").Should().BeFalse();
+
+            logs.HasMessage($"This is the template with a \"{message}\".").Should().BeTrue();
+            logs.HasMessage("This message was never logged.").Should().BeFalse();
+
+            logs.Single().GetPropertyValue<string>("Message").Should().Be(message);
+        }
+    }
+}
+```
+
+---
+
+## How do I compare a whole list of expected log events at once?
+
+`TestCorrelatorExtensions.ToSummaries()` projects `LogEvent`s into a simple, comparable `LogEventSummary` record
+(`Level`/`MessageTemplate`/`RenderedMessage`) for use with AwesomeAssertions' `.Should().BeEquivalentTo()` -
+`LogEvent` itself isn't practical to compare directly (its `Timestamp` and `Properties` dictionary make an
+equality/equivalency comparison noisy or impossible).
+
+```csharp
+public void P_TestCorrelator_CompareList()
+{
+    // Arrange
+    Serilog.ILogger serilogLogger = new LoggerConfiguration()
+        .Enrich.FromLogContext()
+        .MinimumLevel.Verbose()
+        .WriteTo.TestCorrelator()
+        .CreateLogger();
+
+    ServiceCollection services = new ServiceCollection();
+    services.AddSingleton<ILoggerFactory>(new SerilogLoggerFactory(serilogLogger));
+    services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
+    services.AddSingleton<SampleWithLogging>();
+    ServiceProvider serviceProvider = services.BuildServiceProvider(true);
+
+    using (TestCorrelator.CreateContext())
+    {
+        // Act
+        SampleWithLogging sampleWithLogging = serviceProvider.GetRequiredService<SampleWithLogging>();
+        sampleWithLogging.LogInformationMessage("first");
+        sampleWithLogging.LogInformationMessage("second");
+
+        IEnumerable<LogEvent> logs = TestCorrelator.GetLogEventsFromCurrentContext();
+
+        // Assert
+        logs.ToSummaries().Should().BeEquivalentTo(new[]
+        {
+            new LogEventSummary(LogEventLevel.Information, "This is the template with a {Message}.", "This is the template with a \"first\"."),
+            new LogEventSummary(LogEventLevel.Information, "This is the template with a {Message}.", "This is the template with a \"second\"."),
+        });
+    }
+}
+```
+
+**NOTE:** `TestCorrelatorExtensions` also has `.WithLevel()` and `.WithMessageTemplate()` (filter to a matching
+subset, for chaining into further assertions) - not shown above, but useful once a test logs more events than it
+wants to assert on all at once.  
 
 ---
 
