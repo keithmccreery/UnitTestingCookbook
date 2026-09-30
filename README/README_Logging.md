@@ -10,7 +10,7 @@
 adds a handful of extension methods over `IEnumerable<LogEvent>` (what `TestCorrelator.GetLogEventsFromCurrentContext()`
 returns) - see below.  
 
-All examples are located in `UnitTestingCookbook.Test` -> [`LoggingTest`](../UnitTestingCookbook.Test/LoggingTest.cs)  
+All examples are located in `UnitTestingCookbook.Tests` -> [`LoggingTests`](../UnitTestingCookbook.Tests/LoggingTests.cs)  
 
 **NOTE:** The `ServiceCollection`/DI wiring below follows the same basic pattern as
 [Dependency Injection](./README_DependencyInjection.md) (the source of truth for that pattern) - repeated here

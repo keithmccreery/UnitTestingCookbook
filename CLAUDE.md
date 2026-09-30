@@ -7,10 +7,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 A personal "Unit Testing Cookbook" - a reference/presentation, not a library or service. Each topic (AwesomeAssertions,
 Data Driven tests, DI, Docker, HttpClientFactory, Logging, Polly Policies, System.IO.Abstractions, WireMock.Net,
 etc.) is a paired **README chapter + NUnit test file**: `README/README_<Topic>.md` explains the pattern with prose
-and an embedded copy of the code, and `UnitTestingCookbook.Test/<Topic>Test.cs` is the actual, runnable version of
+and an embedded copy of the code, and `UnitTestingCookbook.Tests/<Topic>Tests.cs` is the actual, runnable version of
 that same code. See `README.md` for the full chapter list and the project's stated non-goals (it's explicitly not a
 theory-of-testing document, and it deliberately includes a few "don't do that, but here's why" anti-pattern examples
-- see `README_DataHangover.md` and the "BUG" comments in `WireMockNetPollyPoliciesTest.cs`).
+- see `README_DataHangover.md` and the "BUG" comments in `WireMockNetPollyPoliciesTests.cs`).
 
 **The READMEs are hand-maintained copies, not generated.** There is no tooling that keeps a README's fenced
 ` ```csharp ` blocks in sync with the real source file. Any change to a test method's code, or to its surrounding
@@ -26,20 +26,20 @@ dotnet build UnitTestingCookbook.sln
 
 Run the full test suite:
 ```
-dotnet test UnitTestingCookbook.Test/UnitTestingCookbook.Test.csproj
+dotnet test UnitTestingCookbook.Tests/UnitTestingCookbook.Tests.csproj
 ```
 
 Run a single test by name:
 ```
-dotnet test UnitTestingCookbook.Test/UnitTestingCookbook.Test.csproj --filter "FullyQualifiedName~MethodName"
+dotnet test UnitTestingCookbook.Tests/UnitTestingCookbook.Tests.csproj --filter "FullyQualifiedName~MethodName"
 ```
 
 Run/exclude by NUnit category (categories are assigned via `[Category("...")]`; every test also carries one of
 `_passes` / `_fails` / `_false_positive` / `_false_negative` marking its **intended** outcome - a test tagged
 `_fails` or `_false_negative` failing is expected, not a regression):
 ```
-dotnet test UnitTestingCookbook.Test/UnitTestingCookbook.Test.csproj --filter "TestCategory=wiremocknet_pollypolicies"
-dotnet test UnitTestingCookbook.Test/UnitTestingCookbook.Test.csproj --filter "TestCategory!=wiremocknet_pollypolicies"
+dotnet test UnitTestingCookbook.Tests/UnitTestingCookbook.Tests.csproj --filter "TestCategory=wiremocknet_pollypolicies"
+dotnet test UnitTestingCookbook.Tests/UnitTestingCookbook.Tests.csproj --filter "TestCategory!=wiremocknet_pollypolicies"
 ```
 
 Check/apply formatting per `.editorconfig`:
@@ -54,9 +54,9 @@ dotnet test UnitTestingCookbook.sln --filter "TestCategory!=_fails&TestCategory!
 ```
 
 Notes on running tests:
-- `WireMockNetPollyPoliciesTest.cs` exercises real Polly wait/retry/circuit-breaker delays against a local
+- `WireMockNetPollyPoliciesTests.cs` exercises real Polly wait/retry/circuit-breaker delays against a local
   WireMock.Net server - the full suite takes roughly a minute, dominated by this file.
-- `DockerTest.cs`'s one test is permanently `[Ignore("Requires Docker")]`; it's not run even when Docker is
+- `DockerTests.cs`'s one test is permanently `[Ignore("Requires Docker")]`; it's not run even when Docker is
   available. It documents the Testcontainers pattern but was never wired into normal CI-style runs.
 - After changing package versions, `dotnet build`/`dotnet restore` may print `NU1608` warnings for
   `Humanizer.Core.<locale>` satellite packages - these come from WireMock.Net's own transitive dependency on an
@@ -73,7 +73,7 @@ Four projects:
   to give the test chapters something realistic to test against.
 - **UnitTestingCookbook.TestHelpers** - a small reusable test-helper library (`ManageCaptureConsole`,
   `ManageEnvironmentVariables`, `TestHelper.CreateInstanceInternal` for invoking non-public constructors). Some
-  chapters (e.g. `GeneralTipsTest.A_CaptureConsole` vs `A_CaptureConsole_TestHelpers`) deliberately show the same
+  chapters (e.g. `GeneralTipsTests.A_CaptureConsole` vs `A_CaptureConsole_TestHelpers`) deliberately show the same
   technique implemented inline *and* via this shared library, back to back, as a comparison. Note: this project's
   name ends in "Helpers", not "Test"/"Tests", so it does **not** match `.editorconfig`'s test-project exemption
   glob (see below) - it's held to the same analyzer bar as Support, deliberately.
@@ -81,9 +81,9 @@ Four projects:
   Support since it needs a real app host. Hosts both the MinimalApi Integration Testing chapter's "animal store"
   endpoints and the AppSettings/Connection String Validation chapters' `.ValidateOnStart()` options wiring - the
   latter two have no NUnit tests of their own (see their READMEs for why), but every
-  `WebApplicationFactory<Program>` created in `MinimalApiTest.cs` boots this app for real, so `appsettings.json`
+  `WebApplicationFactory<Program>` created in `MinimalApiTests.cs` boots this app for real, so `appsettings.json`
   has to stay valid for *any* of these three chapters' tests to pass.
-- **UnitTestingCookbook.Test** - the cookbook itself: one test fixture per README chapter, using NUnit +
+- **UnitTestingCookbook.Tests** - the cookbook itself: one test fixture per README chapter, using NUnit +
   AwesomeAssertions.
 
 Version/property management is centralized at the repo root: `Directory.Build.props` holds the
@@ -103,7 +103,7 @@ sides are present when working with `.editorconfig` in a repo you don't fully re
 
 **Gotcha if you ever touch the test-project-exemption glob** (`[**{Test,Tests}/**.cs]`, near the bottom of
 `.editorconfig`): a leading `**/` (i.e. `**/*{Test,Tests}/**.cs`) looks more "correct" but silently fails to match
-a project folder sitting directly under the repo root (one level deep, e.g. `UnitTestingCookbook.Test/Foo.cs`) -
+a project folder sitting directly under the repo root (one level deep, e.g. `UnitTestingCookbook.Tests/Foo.cs`) -
 Roslyn's glob engine requires `**/` to consume at least one path segment, so it can't match "zero directories."
 Verified empirically (see the comment above that section in `.editorconfig`) against both a depth-1 and a
 deeper-nested test folder before landing on the current form.
@@ -121,5 +121,5 @@ deeper-nested test folder before landing on the current form.
   equivalent yet (`FluentAssertions.AspNetCore.Mvc`, `.Reactive`, `.Microsoft.Extensions.DependencyInjection`) -
   see `README_AwesomeAssertionsAddOns.md` for what was dropped vs. rewritten without an add-on.
 - Classic NUnit asserts (where a chapter deliberately contrasts them with fluent assertions, e.g.
-  `AwesomeAssertionsTest.C_Assert_Vs_AwesomeAssertion_ErrorMessage`) use `NUnit.Framework.Legacy.ClassicAssert`,
+  `AwesomeAssertionsTests.C_Assert_Vs_AwesomeAssertion_ErrorMessage`) use `NUnit.Framework.Legacy.ClassicAssert`,
   not bare `Assert.AreEqual`/`Assert.IsTrue` - those were removed from `Assert` itself in NUnit 4+.

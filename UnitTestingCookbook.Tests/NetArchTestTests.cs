@@ -4,7 +4,7 @@ using NetArchTest.Rules;
 
 using UnitTestingCookbook.Support;
 
-namespace UnitTestingCookbook.Test;
+namespace UnitTestingCookbook.Tests;
 
 //
 // NetArchTest.Rules https://github.com/BenMorris/NetArchTest
@@ -17,7 +17,7 @@ namespace UnitTestingCookbook.Test;
 [Category("unit")]
 [Category("netarchtest")]
 [TestFixture]
-public class NetArchTestTest
+public class NetArchTestTests
 {
     private static readonly Assembly SupportAssembly = typeof(Miscellaneous).Assembly;
 

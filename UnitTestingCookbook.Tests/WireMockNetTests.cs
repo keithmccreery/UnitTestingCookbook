@@ -9,12 +9,12 @@ using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using WireMock.Server;
 
-namespace UnitTestingCookbook.Test;
+namespace UnitTestingCookbook.Tests;
 
 [Category("unit")]
 [Category("wiremocknet")]
 [TestFixture]
-public class WireMockNetTest
+public class WireMockNetTests
 {
     private static WireMockServer _wireMockServer;
     private string? _baseUrl;

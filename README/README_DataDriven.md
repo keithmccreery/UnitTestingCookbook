@@ -2,7 +2,7 @@
 
 ## NuGet Packages Referenced
 
-All examples are located in `UnitTestingCookbook.Test` -> [`DataDrivenTest`](../UnitTestingCookbook.Test/DataDrivenTest.cs)  
+All examples are located in `UnitTestingCookbook.Tests` -> [`DataDrivenTests`](../UnitTestingCookbook.Tests/DataDrivenTests.cs)  
 
 ---
 

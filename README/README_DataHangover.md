@@ -4,7 +4,7 @@
 
 - DeepCloner https://github.com/force-net/DeepCloner
 
-All examples are located in `UnitTestingCookbook.Test` -> [`DataHangoverFailureTest`](../UnitTestingCookbook.Test/DataHangoverFailureTest.cs) and [`DataHangoverRighteousTest`](../UnitTestingCookbook.Test/DataHangoverRighteousTest.cs)  
+All examples are located in `UnitTestingCookbook.Tests` -> [`DataHangoverFailureTests`](../UnitTestingCookbook.Tests/DataHangoverFailureTests.cs) and [`DataHangoverRighteousTests`](../UnitTestingCookbook.Tests/DataHangoverRighteousTests.cs)  
 
 ---
 

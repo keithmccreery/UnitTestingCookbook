@@ -4,7 +4,7 @@
 
 - NetArchTest.Rules https://github.com/BenMorris/NetArchTest
 
-All examples are located in `UnitTestingCookbook.Test` -> [`NetArchTestTest`](../UnitTestingCookbook.Test/NetArchTestTest.cs)
+All examples are located in `UnitTestingCookbook.Tests` -> [`NetArchTestTests`](../UnitTestingCookbook.Tests/NetArchTestTests.cs)
 
 ---
 

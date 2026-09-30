@@ -7,7 +7,7 @@
 
 **NOTE:** Requires Docker
 
-All examples are located in `UnitTestingCookbook.Test` -> [`DockerTest`](../UnitTestingCookbook.Test/DockerTest.cs)   
+All examples are located in `UnitTestingCookbook.Tests` -> [`DockerTests`](../UnitTestingCookbook.Tests/DockerTests.cs)   
 
 ---
 

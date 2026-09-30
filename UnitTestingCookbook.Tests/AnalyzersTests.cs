@@ -1,11 +1,11 @@
 using NUnit.Framework.Legacy;
 
-namespace UnitTestingCookbook.Test;
+namespace UnitTestingCookbook.Tests;
 
 [Category("unit")]
 [Category("analyzers")]
 [TestFixture]
-public class AnalyzersTest
+public class AnalyzersTests
 {
     //
     // AwesomeAssertions.Analyzers

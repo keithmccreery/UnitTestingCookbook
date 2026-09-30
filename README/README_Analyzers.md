@@ -5,7 +5,7 @@
 - AwesomeAssertions.Analyzers https://github.com/awesomeassertions/awesomeassertions.analyzers
 - nunit.analyzers https://github.com/nunit/nunit.analyzers
 
-All examples are located in `UnitTestingCookbook.Test` -> [`AnalyzersTest`](../UnitTestingCookbook.Test/AnalyzersTest.cs)
+All examples are located in `UnitTestingCookbook.Tests` -> [`AnalyzersTests`](../UnitTestingCookbook.Tests/AnalyzersTests.cs)
 
 ---
 

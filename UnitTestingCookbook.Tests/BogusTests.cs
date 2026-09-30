@@ -4,7 +4,7 @@ using Bogus;
 
 using UnitTestingCookbook.Support.Models;
 
-namespace UnitTestingCookbook.Test;
+namespace UnitTestingCookbook.Tests;
 
 //
 // Bogus https://github.com/bchavez/Bogus
@@ -12,7 +12,7 @@ namespace UnitTestingCookbook.Test;
 [Category("unit")]
 [Category("bogus")]
 [TestFixture]
-public class BogusTest
+public class BogusTests
 {
     internal static readonly string[] Species = ["Blue", "Humpback", "Beluga", "Orca"];
 
@@ -98,7 +98,7 @@ public static class BogusTestData
         {
             Faker<Whale> whaleFaker = new Faker<Whale>()
                 .UseSeed(42)
-                .RuleFor(w => w.Species, f => f.PickRandom(BogusTest.Species))
+                .RuleFor(w => w.Species, f => f.PickRandom(BogusTests.Species))
                 .RuleFor(w => w.Length, f => f.Random.Int(10, 100));
 
             foreach (Whale whale in whaleFaker.Generate(3))

@@ -5,7 +5,7 @@
 - AwesomeAssertions.Json https://github.com/AwesomeAssertions/AwesomeAssertions.Json
 - AwesomeAssertions.Web https://github.com/adrianiftode/FluentAssertions.Web
 
-All examples are located in `UnitTestingCookbook.Test` -> [`AwesomeAssertionsAddOnsTest`](../UnitTestingCookbook.Test/AwesomeAssertionsAddOnsTest.cs)
+All examples are located in `UnitTestingCookbook.Tests` -> [`AwesomeAssertionsAddOnsTests`](../UnitTestingCookbook.Tests/AwesomeAssertionsAddOnsTests.cs)
 
 ## No longer covered (FluentAssertions-only add-ons)
 

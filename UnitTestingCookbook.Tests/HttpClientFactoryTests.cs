@@ -8,12 +8,12 @@ using Moq.Protected;
 
 using UnitTestingCookbook.Support.Services;
 
-namespace UnitTestingCookbook.Test;
+namespace UnitTestingCookbook.Tests;
 
 [Category("unit")]
 [Category("httpclientfactory")]
 [TestFixture]
-public class HttpClientFactoryTest
+public class HttpClientFactoryTests
 {
     //
     // Q: How do I Mock HttpClient? - Good

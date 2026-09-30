@@ -8,12 +8,12 @@ using NUnit.Framework.Legacy;
 using UnitTestingCookbook.Support;
 using UnitTestingCookbook.Support.Models;
 
-namespace UnitTestingCookbook.Test;
+namespace UnitTestingCookbook.Tests;
 
 [Category("unit")]
 [Category("awesomeassertions")]
 [TestFixture]
-public class AwesomeAssertionsTest
+public class AwesomeAssertionsTests
 {
     //
     // Q: What does an assertion look like in AwesomeAssertions?

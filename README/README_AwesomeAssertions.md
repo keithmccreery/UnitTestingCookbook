@@ -10,7 +10,7 @@ FluentAssertions v7), so almost everything below applies equally to either libra
 namespace, and a handful of renamed methods differ. See [Upgrading to v9](https://awesomeassertions.org/upgradingtov9)
 if you're migrating an existing FluentAssertions codebase.
 
-All examples are located in `UnitTestingCookbook.Test` -> [`AwesomeAssertionsTest`](../UnitTestingCookbook.Test/AwesomeAssertionsTest.cs)
+All examples are located in `UnitTestingCookbook.Tests` -> [`AwesomeAssertionsTests`](../UnitTestingCookbook.Tests/AwesomeAssertionsTests.cs)
 
 ---
 

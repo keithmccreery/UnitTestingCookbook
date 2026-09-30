@@ -3,12 +3,12 @@ using System.Diagnostics;
 using UnitTestingCookbook.Support;
 using UnitTestingCookbook.TestHelpers;
 
-namespace UnitTestingCookbook.Test;
+namespace UnitTestingCookbook.Tests;
 
 [Category("unit")]
 [Category("general_tips")]
 [TestFixture]
-public class GeneralTipsTest
+public class GeneralTipsTests
 {
     //
     // Q: How do I Capture Console to test?

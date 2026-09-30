@@ -16,12 +16,12 @@ using Newtonsoft.Json.Linq;
 
 using UnitTestingCookbook.Support.Models;
 
-namespace UnitTestingCookbook.Test;
+namespace UnitTestingCookbook.Tests;
 
 [Category("unit")]
 [Category("awesomeassertions_addons")]
 [TestFixture]
-public class AwesomeAssertionsAddOnsTest
+public class AwesomeAssertionsAddOnsTests
 {
     //
     // AwesomeAssertions.Json

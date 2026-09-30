@@ -4,7 +4,7 @@
 
 - Ben.Demystifier https://github.com/benaadams/Ben.Demystifier
 
-All examples are located in `UnitTestingCookbook.Test` -> [`GeneralTipsTest`](../UnitTestingCookbook.Test/GeneralTipsTest.cs)  
+All examples are located in `UnitTestingCookbook.Tests` -> [`GeneralTipsTests`](../UnitTestingCookbook.Tests/GeneralTipsTests.cs)  
 
 ---
 
@@ -321,7 +321,7 @@ File: `GlobalAttributes.cs` located in the `UnitTestingCookbook.Support` project
 ```csharp
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleToAttribute("UnitTestingCookbook.Test")]
+[assembly: InternalsVisibleToAttribute("UnitTestingCookbook.Tests")]
 ```
 
 ---
@@ -361,13 +361,13 @@ Before...
 NUnit.Framework.AssertionException: Expected boolean to be True, but found False.
    at AwesomeAssertions.Execution.LateBoundTestFramework.Throw(String message)
    at AwesomeAssertions.Primitives.BooleanAssertions`1.BeTrue(String because, Object[] becauseArgs)
-   at UnitTestingCookbook.Test.GeneralTipsTest.G_Demystifier() in C:\git\keithmccreery\UnitTestingCookbook\UnitTestingCookbook.Test\GeneralTipsTest.cs:line 205
+   at UnitTestingCookbook.Tests.GeneralTipsTests.G_Demystifier() in C:\git\keithmccreery\UnitTestingCookbook\UnitTestingCookbook.Tests\GeneralTipsTests.cs:line 205
 
 After...
 NUnit.Framework.AssertionException: Expected boolean to be True, but found False.
    at void AwesomeAssertions.Execution.LateBoundTestFramework.Throw(string message)
    at AndConstraint<TAssertions> AwesomeAssertions.Primitives.BooleanAssertions<TAssertions>.BeTrue(string because, params object[] becauseArgs)
-   at void UnitTestingCookbook.Test.GeneralTipsTest.G_Demystifier() in C:/git/keithmccreery/UnitTestingCookbook/UnitTestingCookbook.Test/GeneralTipsTest.cs:line 205
+   at void UnitTestingCookbook.Tests.GeneralTipsTests.G_Demystifier() in C:/git/keithmccreery/UnitTestingCookbook/UnitTestingCookbook.Tests/GeneralTipsTests.cs:line 205
 ```
 
 **NOTE:** AwesomeAssertions' internal call stack is noticeably shallower than FluentAssertions' was (no more

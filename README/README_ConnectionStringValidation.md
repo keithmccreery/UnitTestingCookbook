@@ -8,7 +8,7 @@
 
 - [Validating Connection Strings on .NET Startup](https://khalidabuhakmeh.com/validating-connection-strings-on-dotnet-startup), the source of this technique
 
-All examples are located in `UnitTestingCookbook.Test` -> [`ConnectionStringValidationTest`](../UnitTestingCookbook.Test/ConnectionStringValidationTest.cs).
+All examples are located in `UnitTestingCookbook.Tests` -> [`ConnectionStringValidationTests`](../UnitTestingCookbook.Tests/ConnectionStringValidationTests.cs).
 The validator under test lives in [`UnitTestingCookbook.MinimalApi`](../UnitTestingCookbook.MinimalApi)
 (`ConnectionStringOptions.cs`, `ConnectionStringValidator.cs`), alongside
 [AppSettings Validation](./README_AppSettingsValidation.md)'s options classes.

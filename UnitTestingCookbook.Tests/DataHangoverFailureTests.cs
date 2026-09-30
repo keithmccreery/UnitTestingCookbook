@@ -1,11 +1,11 @@
 using UnitTestingCookbook.Support.Models;
 
-namespace UnitTestingCookbook.Test;
+namespace UnitTestingCookbook.Tests;
 
 [Category("unit")]
 [Category("datahangover")]
 [TestFixture, Order(2)]
-public class DataHangoverFailureTest
+public class DataHangoverFailureTests
 {
     [Test, Order(1)]
     [Category("_passes")]

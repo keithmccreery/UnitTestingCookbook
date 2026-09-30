@@ -14,7 +14,7 @@ The code is in [`UnitTestingCookbook.MinimalApi`](../UnitTestingCookbook.Minimal
 `Program.cs`) - **there are no NUnit tests for this chapter.** The validation runs at *host startup*
 (`.ValidateOnStart()`), not in response to a method call, so there's nothing to unit test in the usual sense; what
 there is to demonstrate is what happens when the app boots with bad configuration, which is what this README
-shows (captured by actually running the app with bad config - see below). `MinimalApiTest.cs`'s existing tests do
+shows (captured by actually running the app with bad config - see below). `MinimalApiTests.cs`'s existing tests do
 still exercise this indirectly: every `WebApplicationFactory<Program>` it creates boots the app for real, which
 means `appsettings.json`'s values have to stay valid or every test in that chapter starts failing at
 factory-creation time.

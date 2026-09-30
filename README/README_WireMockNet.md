@@ -8,7 +8,7 @@
 Honorable Mentions...
 - TestServer
 
-All examples are located in `UnitTestingCookbook.Test` -> [`WireMockNetTest`](../UnitTestingCookbook.Test/WireMockNetTest.cs)  
+All examples are located in `UnitTestingCookbook.Tests` -> [`WireMockNetTests`](../UnitTestingCookbook.Tests/WireMockNetTests.cs)  
 
 **NOTE:** The `IServiceCollection`/DI wiring below follows the same basic pattern as
 [Dependency Injection](./README_DependencyInjection.md) (the source of truth for that pattern) - it's declared as

@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 using UnitTestingCookbook.Support.Models;
 
-namespace UnitTestingCookbook.Test;
+namespace UnitTestingCookbook.Tests;
 
 //
 // NUnit Documentation
@@ -18,7 +18,7 @@ namespace UnitTestingCookbook.Test;
 [Category("unit")]
 [Category("datadriven")]
 [TestFixture]
-public class DataDrivenTest
+public class DataDrivenTests
 {
     //
     // Q: How do I create a Data Driven test for value types?

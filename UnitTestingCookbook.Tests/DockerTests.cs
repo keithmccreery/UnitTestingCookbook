@@ -1,12 +1,12 @@
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 
-namespace UnitTestingCookbook.Test;
+namespace UnitTestingCookbook.Tests;
 
 [Category("unit")]
 [Category("docker")]
 [TestFixture]
-public class DockerTest
+public class DockerTests
 {
     IContainer _container;
 

@@ -4,7 +4,7 @@
 
 - Microsoft.AspNetCore.Mvc.Testing https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests
 
-All examples are located in `UnitTestingCookbook.Test` -> [`MinimalApiTest`](../UnitTestingCookbook.Test/MinimalApiTest.cs)
+All examples are located in `UnitTestingCookbook.Tests` -> [`MinimalApiTests`](../UnitTestingCookbook.Tests/MinimalApiTests.cs)
 
 The API under test is [`UnitTestingCookbook.MinimalApi`](../UnitTestingCookbook.MinimalApi) - a small,
 separate ASP.NET Core project (not folded into `UnitTestingCookbook.Support`, since it needs the

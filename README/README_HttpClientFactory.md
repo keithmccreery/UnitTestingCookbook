@@ -12,7 +12,7 @@ Honorable Mentions...
 
 - HttpBin.org https://httpbin.org
 
-All examples are located in `UnitTestingCookbook.Test` -> [`HttpClientFactoryTest`](../UnitTestingCookbook.Test/HttpClientFactoryTest.cs)  
+All examples are located in `UnitTestingCookbook.Tests` -> [`HttpClientFactoryTests`](../UnitTestingCookbook.Tests/HttpClientFactoryTests.cs)  
 
 ---
 

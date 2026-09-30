@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 using UnitTestingCookbook.MinimalApi;
 
-namespace UnitTestingCookbook.Test;
+namespace UnitTestingCookbook.Tests;
 
 //
 // Microsoft.AspNetCore.Mvc.Testing https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests
@@ -14,7 +14,7 @@ namespace UnitTestingCookbook.Test;
 [Category("unit")]
 [Category("minimalapi")]
 [TestFixture]
-public class MinimalApiTest
+public class MinimalApiTests
 {
     private WebApplicationFactory<Program> _factory;
     private HttpClient _client;

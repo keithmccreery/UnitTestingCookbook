@@ -2,12 +2,12 @@ using Force.DeepCloner;
 
 using UnitTestingCookbook.Support.Models;
 
-namespace UnitTestingCookbook.Test;
+namespace UnitTestingCookbook.Tests;
 
 [Category("unit")]
 [Category("datahangover")]
 [TestFixture, Order(1)]
-public class DataHangoverRighteousTest
+public class DataHangoverRighteousTests
 {
     private readonly Offer _originalOffer = new Offer()
     {

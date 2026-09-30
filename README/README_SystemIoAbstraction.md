@@ -4,7 +4,7 @@
 
 - System.IO.Abstractions https://github.com/TestableIO/System.IO.Abstractions
 
-All examples are located in `UnitTestingCookbook.Test` -> [`SystemIoAbstractionsTest`](../UnitTestingCookbook.Test/SystemIoAbstractionsTest.cs)  
+All examples are located in `UnitTestingCookbook.Tests` -> [`SystemIoAbstractionsTests`](../UnitTestingCookbook.Tests/SystemIoAbstractionsTests.cs)  
 
 **NOTE:** This chapter is intentionally minimal - one example (`IFileSystem.File.Exists()` via `MockFileSystem`)
 to establish the pattern, not a tour of the library's surface. `System.IO.Abstractions` covers far more than

@@ -12,7 +12,7 @@
 
 - HttpBin.org https://httpbin.org
 
-All examples are located in `UnitTestingCookbook.Test` -> [`WireMockNetPollyPoliciesTest`](../UnitTestingCookbook.Test/WireMockNetPollyPoliciesTest.cs)  
+All examples are located in `UnitTestingCookbook.Tests` -> [`WireMockNetPollyPoliciesTests`](../UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs)  
 
 **NOTE:** The `IServiceCollection`/DI wiring below follows the same basic pattern as
 [Dependency Injection](./README_DependencyInjection.md) (the source of truth for that pattern), and the

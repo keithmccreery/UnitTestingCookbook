@@ -8,12 +8,12 @@ using Microsoft.Extensions.Options;
 
 using UnitTestingCookbook.Support.Services;
 
-namespace UnitTestingCookbook.Test;
+namespace UnitTestingCookbook.Tests;
 
 [Category("unit")]
 [Category("dependencyinjection")]
 [TestFixture]
-public class DependencyInjectionTest
+public class DependencyInjectionTests
 {
     //
     // Q: How do I setup IConfiguration for testing?

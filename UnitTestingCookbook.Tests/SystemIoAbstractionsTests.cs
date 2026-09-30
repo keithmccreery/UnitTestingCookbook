@@ -3,12 +3,12 @@ using System.IO.Abstractions.TestingHelpers;
 
 using UnitTestingCookbook.Support;
 
-namespace UnitTestingCookbook.Test;
+namespace UnitTestingCookbook.Tests;
 
 [Category("unit")]
 [Category("system_io_abstractions")]
 [TestFixture]
-public class SystemIoAbstractionsTest
+public class SystemIoAbstractionsTests
 {
     //
     // Q: How do I test a class/method containing System.IO Objects?

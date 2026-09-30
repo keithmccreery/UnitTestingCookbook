@@ -1,6 +1,6 @@
 # Dependency Injection
 
-All examples are located in `UnitTestingCookbook.Test` -> [`DependencyInjectionTest`](../UnitTestingCookbook.Test/DependencyInjectionTest.cs)   
+All examples are located in `UnitTestingCookbook.Tests` -> [`DependencyInjectionTests`](../UnitTestingCookbook.Tests/DependencyInjectionTests.cs)   
 
 **NOTE:** This chapter is the source of truth for the basic `ServiceCollection` setup pattern used across the
 cookbook. A few other chapters wire up a `ServiceCollection` differently because they're solving a different

@@ -12,12 +12,12 @@ using Serilog.Sinks.TestCorrelator;
 using UnitTestingCookbook.Support;
 using UnitTestingCookbook.TestHelpers;
 
-namespace UnitTestingCookbook.Test;
+namespace UnitTestingCookbook.Tests;
 
 [Category("unit")]
 [Category("logging")]
 [TestFixture]
-public class LoggingTest
+public class LoggingTests
 {
     //
     // Q: How do I Instantiate a Class with Microsoft.Extensions.Logging ILogger via NullLoggerFactory?

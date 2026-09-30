@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 
 using UnitTestingCookbook.MinimalApi;
 
-namespace UnitTestingCookbook.Test;
+namespace UnitTestingCookbook.Tests;
 
 //
 // Connection String Validation https://khalidabuhakmeh.com/validating-connection-strings-on-dotnet-startup
@@ -18,7 +18,7 @@ namespace UnitTestingCookbook.Test;
 [Category("unit")]
 [Category("connectionstringvalidation")]
 [TestFixture]
-public class ConnectionStringValidationTest
+public class ConnectionStringValidationTests
 {
     [OneTimeSetUp]
     public void OneTimeSetUp()
