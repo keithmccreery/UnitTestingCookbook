@@ -8,6 +8,13 @@
 Honorable Mentions...
 - TestServer
 
+## See Also
+
+- [WireMockInspector](https://github.com/WireMock-Net/WireMockInspector) - a standalone desktop app for visually
+  inspecting a running WireMock.Net server's request/response log while debugging a test. It's a debugging tool,
+  not a testing technique, so there's no dedicated example here - just point it at the same server your test
+  spins up via `WireMockServer.Start()`.
+
 All examples are located in `UnitTestingCookbook.Tests` -> [`WireMockNetTests`](../UnitTestingCookbook.Tests/WireMockNetTests.cs)  
 
 **NOTE:** The `IServiceCollection`/DI wiring below follows the same basic pattern as

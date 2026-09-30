@@ -156,20 +156,28 @@ public void C_Private_Property()
 }
 ```
 
-This solution uses an Extension Method `.GetPropertyValue<T>()`, located in `ReflectionExtensions.cs` in `UnitTestingCookbook.TestHelpers` project.  
+This solution uses an Extension Method `.GetPropertyValue<T>()`, located in `ReflectionExtensions.cs` in `UnitTestingCookbook.TestHelpers` project. Written using C# 14's `extension` block syntax (see
+[Logging](./README_Logging.md) for the first use of this syntax in the repo).  
 
 ```csharp
-public static T? GetPropertyValue<T>(this object @this, string propertyName)
+extension(object @this)
 {
-    ArgumentNullException.ThrowIfNull(@this);
+    public T? GetPropertyValue<T>(string propertyName)
+    {
+        ArgumentNullException.ThrowIfNull(@this);
 
-    return (T?) (@this
-        .GetType()
-        .GetProperty(propertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy)
-        ?? throw new MissingMemberException(@this.GetType().Name, propertyName))
-        .GetValue(@this, null);
+        return (T?) (FindMember(@this.GetType(), t => t.GetProperty(propertyName, MEMBER_BINDING_FLAGS))
+            ?? throw new MissingMemberException(@this.GetType().Name, propertyName))
+            .GetValue(@this, null);
+    }
 }
 ```
+
+**NOTE:** `FindMember` walks `Type.BaseType` itself rather than relying on `BindingFlags.FlattenHierarchy` -
+that flag only reaches public/protected *static* members up the hierarchy, not private instance members
+declared on a base class (e.g. `HttpClient`'s private `_handler` field, declared on its base type
+`HttpMessageInvoker` - see [Singleton HttpClient](./README_SingletonHttpClient.md)). See the full source for
+`MEMBER_BINDING_FLAGS`/`FindMember`.
 
 ---
 
@@ -193,47 +201,23 @@ public void D_Private_Field()
 
 This solution uses an Extension Method `.GetFieldValue<T>()`, located in `ReflectionExtensions.cs` in `UnitTestingCookbook.TestHelpers` project.  
 
-
 ```csharp
-public static T? GetFieldValue<T>(this object @this, string fieldName)
+extension(object @this)
 {
-    ArgumentNullException.ThrowIfNull(@this);
+    public T? GetFieldValue<T>(string fieldName)
+    {
+        ArgumentNullException.ThrowIfNull(@this);
 
-    return (T?) (@this
-        .GetType()
-        .GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy)
-        ?? throw new MissingFieldException(@this.GetType().Name, fieldName))
-        .GetValue(@this);
+        return (T?) (FindMember(@this.GetType(), t => t.GetField(fieldName, MEMBER_BINDING_FLAGS))
+            ?? throw new MissingFieldException(@this.GetType().Name, fieldName))
+            .GetValue(@this);
+    }
 }
 ```
 
-Example...  
-
-When writing a Decorator that adds a `DelegatingHandler` to an `HttpClient`,
-and you want to verify the handler was added and added in the correct order of the chain.
-The Private Field `_handler` holds the chain of handlers.  
-
-**NOTE:** Any time a `SocketsHttpHandler` is added, it should be the last item on the chain.  
-
-```csharp
-// Act
-DelegatingHandler lifetimeTrackingHttpMessageHandler = httpClient.GetFieldValue<DelegatingHandler>("_handler");
-
-List<DelegatingHandler> delegatingHandlers = new List<DelegatingHandler>
-{
-    lifetimeTrackingHttpMessageHandler
-};
- 
-while (delegatingHandlers.Last() is not null
-    && delegatingHandlers.Last().InnerHandler is DelegatingHandler delegateHandler)
-{
-    delegatingHandlers.Add(delegateHandler);
-}
-
-SocketsHttpHandler socketsHttpHandler = delegatingHandlers.Last().InnerHandler as SocketsHttpHandler;
-
-// Assert
-```
+For a real, fully worked example of `GetFieldValue<T>()` reaching a private field declared on a *base* class -
+`HttpClient`'s `_handler`, walking a chain of `DelegatingHandler`s down to a `SocketsHttpHandler` - see
+[Singleton HttpClient](./README_SingletonHttpClient.md).
 
 ---
 
@@ -262,18 +246,16 @@ This solution uses an Extension Method `.ExecuteMethod<T>()`, located in `Reflec
 Please see this StackOverflow Question [GetMethod for generic method](https://stackoverflow.com/questions/4035719/getmethod-for-generic-method) on how to implement `.GetMethodExt()` to handle additional parameter types.  
 
 ```csharp
-public static T? ExecuteMethod<T>(this object @this, string methodName, params object[] args)
+extension(object @this)
 {
-    ArgumentNullException.ThrowIfNull(@this);
+    public T? ExecuteMethod<T>(string methodName, params object[] args)
+    {
+        ArgumentNullException.ThrowIfNull(@this);
 
-    return (T?) (@this
-        .GetType()
-        .GetMethod(
-            methodName,
-            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy,
-            args.Select(p => p.GetType()).ToArray())
-        ?? throw new MissingMethodException(@this.GetType().Name, methodName))
-        .Invoke(@this, args);
+        return (T?) (FindMember(@this.GetType(), t => t.GetMethod(methodName, MEMBER_BINDING_FLAGS, args.Select(p => p.GetType()).ToArray()))
+            ?? throw new MissingMethodException(@this.GetType().Name, methodName))
+            .Invoke(@this, args);
+    }
 }
 ```
 

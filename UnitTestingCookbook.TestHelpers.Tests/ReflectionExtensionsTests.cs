@@ -14,6 +14,18 @@ public class ReflectionExtensionsTests
         private string PrivateMethod(string message) => $"method_{message}";
     }
 
+    private class SubjectBase
+    {
+        private string PrivateBaseProperty { get; set; } = "base_property_value";
+#pragma warning disable CS0414 // read via reflection in the tests below, not directly
+        private string privateBaseField = "base_field_value";
+#pragma warning restore CS0414
+
+        private string PrivateBaseMethod(string message) => $"base_method_{message}";
+    }
+
+    private class DerivedSubject : SubjectBase;
+
     [Test]
     [Category("_passes")]
     public void A_GetPropertyValue_ReturnsPrivatePropertyValue()
@@ -96,5 +108,47 @@ public class ReflectionExtensionsTests
 
         // Assert
         action.Should().Throw<MissingMethodException>();
+    }
+
+    [Test]
+    [Category("_passes")]
+    public void G_GetPropertyValue_ReachesPropertyDeclaredOnBaseClass()
+    {
+        // Arrange
+        DerivedSubject subject = new DerivedSubject();
+
+        // Act
+        string? result = subject.GetPropertyValue<string>("PrivateBaseProperty");
+
+        // Assert
+        result.Should().Be("base_property_value");
+    }
+
+    [Test]
+    [Category("_passes")]
+    public void H_GetFieldValue_ReachesFieldDeclaredOnBaseClass()
+    {
+        // Arrange
+        DerivedSubject subject = new DerivedSubject();
+
+        // Act
+        string? result = subject.GetFieldValue<string>("privateBaseField");
+
+        // Assert
+        result.Should().Be("base_field_value");
+    }
+
+    [Test]
+    [Category("_passes")]
+    public void I_ExecuteMethod_InvokesMethodDeclaredOnBaseClass()
+    {
+        // Arrange
+        DerivedSubject subject = new DerivedSubject();
+
+        // Act
+        string? result = subject.ExecuteMethod<string>("PrivateBaseMethod", "anything");
+
+        // Assert
+        result.Should().Be("base_method_anything");
     }
 }

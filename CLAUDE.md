@@ -73,7 +73,8 @@ Five projects:
   to give the test chapters something realistic to test against.
 - **UnitTestingCookbook.TestHelpers** - a small reusable test-helper library (`ManageCaptureConsole`,
   `ManageEnvironmentVariables`, `TestHelper.CreateInstanceInternal` for invoking non-public constructors,
-  `ReflectionExtensions`, `MockLoggerExtensions`, `TestCorrelatorExtensions`). Some chapters (e.g.
+  `ReflectionExtensions`, `MockLoggerExtensions`, `TestCorrelatorExtensions`, `HttpClientExtensions`,
+  `HttpRequestsDetector`). Some chapters (e.g.
   `GeneralTipsTests.A_CaptureConsole` vs `A_CaptureConsole_TestHelpers`) deliberately show the same technique
   implemented inline *and* via this shared library, back to back, as a comparison. Note: this project's name ends
   in "Helpers", not "Test"/"Tests", so it does **not** match `.editorconfig`'s test-project exemption glob (see

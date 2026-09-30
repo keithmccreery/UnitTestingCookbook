@@ -82,6 +82,10 @@ and the explanation will follow.
     - No NUnit tests - see the README (code lives in [UnitTestingCookbook.MinimalApi](./UnitTestingCookbook.MinimalApi))
 - [Connection String Validation](./README/README_ConnectionStringValidation.md)
     - [ConnectionStringValidationTests.cs](./UnitTestingCookbook.Tests/ConnectionStringValidationTests.cs)
+- [Singleton HttpClient](./README/README_SingletonHttpClient.md)
+    - [SingletonHttpClientTests.cs](./UnitTestingCookbook.Tests/SingletonHttpClientTests.cs)
+- [Preventing HTTP Requests to External Services in Unit Tests](./README/README_PreventHttpRequests.md)
+    - [PreventHttpRequestsTests.cs](./UnitTestingCookbook.Tests/PreventHttpRequestsTests.cs)
 
 # Errata
 
@@ -95,6 +99,3 @@ and the explanation will follow.
 - Microsoft TestServer
 - More Extension Methods / Helper Classes for WireMock.Net Objects (TestCorrelator's done - see `TestCorrelatorExtensions` in [Logging](./README/README_Logging.md))
 - Create Relative Code Snippet links in GitHub
-- Prevent http requests to external services in unit tests https://www.meziantou.net/prevent-http-requests-to-external-services-in-unit-tests.htm
-- Add WireMockInspector Examples https://github.com/WireMock-Net/WireMockInspector
-- Test for HttpClient consumed by a Singleton, using `SocketsHttpHandler` via `.ConfigurePrimaryHttpMessageHandler()`, setting `PooledConnectionLifetime`, asserted directly against `IServiceCollection` (see [AwesomeAssertions Add-Ons](./README/README_AwesomeAssertionsAddOns.md) - there is no AwesomeAssertions equivalent of `FluentAssertions.Microsoft.Extensions.DependencyInjection`) and `GetPrivateField()`.

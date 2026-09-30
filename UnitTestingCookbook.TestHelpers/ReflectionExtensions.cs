@@ -7,6 +7,8 @@ namespace UnitTestingCookbook.TestHelpers;
 /// </summary>
 public static class ReflectionExtensions
 {
+    private const BindingFlags MEMBER_BINDING_FLAGS = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance;
+
     extension(object @this)
     {
         /// <summary>
@@ -20,9 +22,7 @@ public static class ReflectionExtensions
         {
             ArgumentNullException.ThrowIfNull(@this);
 
-            return (T?) (@this
-                .GetType()
-                .GetProperty(propertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy)
+            return (T?) (FindMember(@this.GetType(), t => t.GetProperty(propertyName, MEMBER_BINDING_FLAGS))
                 ?? throw new MissingMemberException(@this.GetType().Name, propertyName))
                 .GetValue(@this, null);
         }
@@ -38,9 +38,7 @@ public static class ReflectionExtensions
         {
             ArgumentNullException.ThrowIfNull(@this);
 
-            return (T?) (@this
-                .GetType()
-                .GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy)
+            return (T?) (FindMember(@this.GetType(), t => t.GetField(fieldName, MEMBER_BINDING_FLAGS))
                 ?? throw new MissingFieldException(@this.GetType().Name, fieldName))
                 .GetValue(@this);
         }
@@ -61,14 +59,24 @@ public static class ReflectionExtensions
         {
             ArgumentNullException.ThrowIfNull(@this);
 
-            return (T?) (@this
-                .GetType()
-                .GetMethod(
-                    methodName,
-                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy,
-                    args.Select(p => p.GetType()).ToArray())
+            return (T?) (FindMember(@this.GetType(), t => t.GetMethod(methodName, MEMBER_BINDING_FLAGS, args.Select(p => p.GetType()).ToArray()))
                 ?? throw new MissingMethodException(@this.GetType().Name, methodName))
                 .Invoke(@this, args);
         }
+    }
+
+    // BindingFlags.FlattenHierarchy only reaches public/protected *static* members up the hierarchy - it does
+    // not find private instance members declared on a base class (e.g. HttpClient's private _handler field,
+    // declared on its base type HttpMessageInvoker) - confirmed empirically. Walk BaseType ourselves instead.
+    private static TMember? FindMember<TMember>(Type? type, Func<Type, TMember?> lookup) where TMember : MemberInfo
+    {
+        for (; type is not null; type = type.BaseType)
+        {
+            TMember? member = lookup(type);
+            if (member is not null)
+                return member;
+        }
+
+        return null;
     }
 }
