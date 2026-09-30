@@ -171,8 +171,7 @@ public async Task A_WireMockNet()
 
     _wireMockServer.LogEntries.Should().ContainSingle()
         .Which
-        .ResponseMessage
-        .Headers!.FirstOrDefault(h => h.Key.Equals("Authorization"))
+        .ResponseMessage!.Headers!.FirstOrDefault(h => h.Key.Equals("Authorization"))
         .Value.FirstOrDefault().Should().Be("valid");
 }
 ```

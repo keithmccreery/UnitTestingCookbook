@@ -347,7 +347,7 @@ public class LoggingTests
         x => x.Log(
             It.Is<LogLevel>(l => l == LogLevel.Information), // severity
             It.IsAny<EventId>(),
-            It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains(message)), // message (substring)
+            It.Is<It.IsAnyType>((v, t) => v != null && v.ToString()!.Contains(message)), // message (substring)
             It.IsAny<Exception>(),
             It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)));
     }

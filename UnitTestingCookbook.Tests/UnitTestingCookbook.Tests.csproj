@@ -3,6 +3,9 @@
   <PropertyGroup>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <!-- WireMock.Net's own transitive Humanizer.Core reference is older than this repo's direct one; the
+         repo's direct reference wins at restore time, so this is noise, not a real version conflict. -->
+    <NoWarn>$(NoWarn);NU1608</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

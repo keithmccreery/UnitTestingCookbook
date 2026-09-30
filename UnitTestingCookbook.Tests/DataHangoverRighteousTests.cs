@@ -6,6 +6,10 @@ namespace UnitTestingCookbook.Tests;
 
 [Category("unit")]
 [Category("datahangover")]
+// OrderAttribute is obsolete in favor of DependsOnTest/DependsOnFixture, but this chapter's whole point is
+// demonstrating a bug that depends on forced, deterministic execution order - kept deliberately, warning
+// suppressed below.
+#pragma warning disable CS0618
 [TestFixture, Order(1)]
 public class DataHangoverRighteousTests
 {
@@ -43,3 +47,4 @@ public class DataHangoverRighteousTests
         offer.Finance.PaymentType.Should().Be("P");
     }
 }
+#pragma warning restore CS0618

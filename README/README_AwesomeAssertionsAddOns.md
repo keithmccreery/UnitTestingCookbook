@@ -116,7 +116,7 @@ public void X_DependencyInjection()
     IHost host = Host.CreateDefaultBuilder()
         .UseConsoleLifetime()
         .UseContentRoot(
-            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
+            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!) // never null - a running test assembly always has a real file location
         .ConfigureServices((hostContext, services) =>
         {
             services.AddSingleton<IOptions<Animal>>(Options.Create<Animal>(new Animal()));

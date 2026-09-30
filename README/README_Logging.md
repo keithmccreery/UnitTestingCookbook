@@ -411,7 +411,7 @@ public void L_Mock_ILogger_Better()
     x => x.Log(
         It.Is<LogLevel>(l => l == LogLevel.Information), // severity
         It.IsAny<EventId>(),
-        It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains(message)), // message (substring)
+        It.Is<It.IsAnyType>((v, t) => v != null && v.ToString()!.Contains(message)), // message (substring)
         It.IsAny<Exception>(),
         It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)));
 }
@@ -419,29 +419,31 @@ public void L_Mock_ILogger_Better()
 
 ### Answer 3 - Best
 
-This solution uses an Extension Method `.VerifyLogging<T>()`, located in `MockLoggerExtensions.cs` in `UnitTestingCookbook.TestHelpers` project.  
+This solution uses an Extension Method `.VerifyLogging<T>()`, located in `MockLoggerExtensions.cs` in `UnitTestingCookbook.TestHelpers` project. Written using C# 14's `extension` block syntax, same as
+`TestCorrelatorExtensions` further down this same chapter (the first use of this syntax in the repo).  
 
 To verify any log and every log, we can implement an Extension Method.  
 
 **NOTE:** This Extension Method could be parameterized further to include `EventId`, and `Exception`.  
 
 ```csharp
-public static Mock<ILogger<T>> VerifyLogging<T>(this Mock<ILogger<T>> logger, string expectedMessage, LogLevel expectedLogLevel = LogLevel.Debug, Times? times = null)
+extension<T>(Mock<ILogger<T>> logger)
 {
-    times ??= Times.Once();
+    public Mock<ILogger<T>> VerifyLogging(string expectedMessage, LogLevel expectedLogLevel = LogLevel.Debug, Times? times = null)
+    {
+        times ??= Times.Once();
 
-    Func<object, Type, bool> state = (v, t) => v.ToString()?.CompareTo(expectedMessage) == 0;
+        logger.Verify(
+            x => x.Log(
+                It.Is<LogLevel>(l => l == expectedLogLevel),
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((v, _) => v != null && v.ToString() == expectedMessage),
+                It.IsAny<Exception>(),
+                It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true))
+            , (Times) times);
 
-    logger.Verify(
-        x => x.Log(
-            It.Is<LogLevel>(l => l == expectedLogLevel),
-            It.IsAny<EventId>(),
-            It.Is<It.IsAnyType>((v, t) => state(v, t)),
-            It.IsAny<Exception>(),
-            It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true))
-        , (Times) times);
-
-    return logger;
+        return logger;
+    }
 }
 ```
 
