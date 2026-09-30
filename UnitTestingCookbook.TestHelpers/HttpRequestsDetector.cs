@@ -16,6 +16,12 @@ namespace UnitTestingCookbook.TestHelpers;
 /// </summary>
 public sealed class HttpRequestsDetector : IDisposable
 {
+    /// <summary>
+    /// The hostnames real outbound HTTP requests are allowed to reach while this detector is
+    /// <see cref="Subscribe"/>d. Defaults to just <c>"localhost"</c>. Matched case-insensitively against each
+    /// request's URI host - add to this set (before subscribing, to avoid a race with in-flight requests)
+    /// for any other host a test legitimately needs to call.
+    /// </summary>
     public HashSet<string> AllowedHosts { get; } = new(StringComparer.OrdinalIgnoreCase) { "localhost" };
 
     private readonly DiagnosticSourceSubscriber subscriber;
@@ -25,8 +31,14 @@ public sealed class HttpRequestsDetector : IDisposable
         subscriber = new DiagnosticSourceSubscriber(AllowedHosts);
     }
 
+    /// <summary>
+    /// Starts intercepting real outbound HTTP requests - call once, typically in <c>[SetUp]</c>/<c>[OneTimeSetUp]</c>.
+    /// </summary>
     public void Subscribe() => subscriber.Subscribe();
 
+    /// <summary>
+    /// Stops intercepting real outbound HTTP requests, restoring normal behavior.
+    /// </summary>
     public void Dispose() => subscriber.Dispose();
 
     private sealed class DiagnosticSourceSubscriber : IObserver<DiagnosticListener>, IDisposable

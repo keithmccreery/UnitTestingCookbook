@@ -1,7 +1,9 @@
 namespace UnitTestingCookbook.TestHelpers;
 
 /// <summary>
-/// ManageCaptureConsole
+/// Redirects <see cref="Console.Out"/> to an in-memory buffer for the lifetime of this instance, so a test can
+/// assert on what a piece of code wrote to the console. Restores the original <see cref="Console.Out"/> on
+/// <see cref="Dispose()"/>.
 /// </summary>
 public class ManageCaptureConsole : IDisposable
 {
@@ -36,6 +38,10 @@ public class ManageCaptureConsole : IDisposable
         }
     }
 
+    // Not strictly necessary - this class wraps only managed resources - but deliberately kept as a defensive
+    // safety net: if a test forgets to Dispose() this instance, the finalizer still restores the real
+    // Console.Out on the next GC, rather than leaving Console output silently redirected into later,
+    // unrelated tests.
     ~ManageCaptureConsole()
     {
         // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
@@ -52,9 +58,9 @@ public class ManageCaptureConsole : IDisposable
     #endregion
 
     /// <summary>
-    /// ToString
+    /// Returns everything written to the console while this instance has been active.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The captured console output.</returns>
     public override string? ToString()
     {
         return _capturedConsole?.ToString();

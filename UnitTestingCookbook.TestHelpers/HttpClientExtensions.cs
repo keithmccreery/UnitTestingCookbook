@@ -1,7 +1,9 @@
 namespace UnitTestingCookbook.TestHelpers;
 
 /// <summary>
-/// HttpClientExtensions
+/// Extension for walking an <see cref="HttpClient"/>'s internal handler chain - reaching configuration (e.g. a
+/// primary handler set via <c>IHttpClientBuilder.ConfigurePrimaryHttpMessageHandler()</c>) that has no public
+/// API to read back out of a built client.
 /// </summary>
 public static class HttpClientExtensions
 {
@@ -14,9 +16,9 @@ public static class HttpClientExtensions
         /// public API to get a configured primary handler (e.g. one set via
         /// IHttpClientBuilder.ConfigurePrimaryHttpMessageHandler()) back out of a built HttpClient.
         /// </summary>
-        /// <typeparam name="THandler"></typeparam>
-        /// <returns></returns>
-        /// <exception cref="MissingMemberException"></exception>
+        /// <typeparam name="THandler">The specific <see cref="HttpMessageHandler"/> type to find in the chain (e.g. <see cref="SocketsHttpHandler"/>).</typeparam>
+        /// <returns>The first handler in the chain assignable to <typeparamref name="THandler"/>.</returns>
+        /// <exception cref="MissingMemberException">No handler assignable to <typeparamref name="THandler"/> was found anywhere in the chain.</exception>
         public THandler GetPrimaryHttpMessageHandler<THandler>() where THandler : HttpMessageHandler
         {
             HttpMessageHandler? current = httpClient.GetFieldValue<HttpMessageHandler>("_handler");
