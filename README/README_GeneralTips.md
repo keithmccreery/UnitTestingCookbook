@@ -156,7 +156,7 @@ public void C_Private_Property()
 }
 ```
 
-This solution uses an Extension Method `.GetPropertyValue<T>()`, located in `ExtensionMethods.cs` in `UnitTestingCookbook.TestHelpers` project.  
+This solution uses an Extension Method `.GetPropertyValue<T>()`, located in `ReflectionExtensions.cs` in `UnitTestingCookbook.TestHelpers` project.  
 
 ```csharp
 public static T? GetPropertyValue<T>(this object @this, string propertyName)
@@ -191,7 +191,7 @@ public void D_Private_Field()
 }
 ```
 
-This solution uses an Extension Method `.GetFieldValue<T>()`, located in `ExtensionMethods.cs` in `UnitTestingCookbook.TestHelpers` project.  
+This solution uses an Extension Method `.GetFieldValue<T>()`, located in `ReflectionExtensions.cs` in `UnitTestingCookbook.TestHelpers` project.  
 
 
 ```csharp
@@ -255,7 +255,7 @@ public void E_Private_Method()
 }
 ```
 
-This solution uses an Extension Method `.ExecuteMethod<T>()`, located in `ExtensionMethods.cs` in `UnitTestingCookbook.TestHelpers` project.  
+This solution uses an Extension Method `.ExecuteMethod<T>()`, located in `ReflectionExtensions.cs` in `UnitTestingCookbook.TestHelpers` project.  
 
 **NOTE:** DOES NOT HANDLE argument values as null - unable to .GetType() on null.
 

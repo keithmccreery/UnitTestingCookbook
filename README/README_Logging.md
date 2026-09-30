@@ -419,7 +419,7 @@ public void L_Mock_ILogger_Better()
 
 ### Answer 3 - Best
 
-This solution uses an Extension Method `.VerifyLogging<T>()`, located in `ExtensionMethods.cs` in `UnitTestingCookbook.TestHelpers` project.  
+This solution uses an Extension Method `.VerifyLogging<T>()`, located in `MockLoggerExtensions.cs` in `UnitTestingCookbook.TestHelpers` project.  
 
 To verify any log and every log, we can implement an Extension Method.  
 
