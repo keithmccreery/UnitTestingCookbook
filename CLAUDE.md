@@ -56,8 +56,13 @@ dotnet test UnitTestingCookbook.sln --filter "TestCategory!=_fails&TestCategory!
 Notes on running tests:
 - `WireMockNetPollyPoliciesTests.cs` exercises real Polly wait/retry/circuit-breaker delays against a local
   WireMock.Net server - the full suite takes roughly a minute, dominated by this file.
-- `DockerTests.cs`'s one test is permanently `[Ignore("Requires Docker")]`; it's not run even when Docker is
-  available. It documents the Testcontainers pattern but was never wired into normal CI-style runs.
+- `DockerTests.cs`'s one test is permanently `[Ignore]`d - not because the technique doesn't work (verified to
+  pass locally, Docker running, attribute temporarily removed), but as a deliberate development-speed tradeoff:
+  a real container adds real wall-clock time to every full test-suite run. See `README_Docker.md`.
+- `UnitTestingCookbook.Tests/GlobalAttributes.cs` sets `[assembly: LevelOfParallelism(4)]` - this has no effect
+  on any fixture except `ParallelProcessingSafeTests`, the only one marked `[Parallelizable]`. Every other
+  fixture keeps running sequentially exactly as before; see `README_ParallelProcessing.md` for why most of this
+  repo's `TestHelpers` (env vars, console capture) are unsafe to parallelize as-is.
 - After changing package versions, `dotnet build`/`dotnet restore` may print `NU1608` warnings for
   `Humanizer.Core.<locale>` satellite packages - these come from WireMock.Net's own transitive dependency on an
   older Humanizer and are resolved correctly (the repo's direct reference wins); they're noise, not a real conflict.
@@ -97,6 +102,14 @@ Version/property management is centralized at the repo root: `Directory.Build.pr
 code-quality analyzer `PackageReference`s - see below), and `Directory.Packages.props` centrally manages every
 package version (`ManagePackageVersionsCentrally=true`) - individual `.csproj` files reference packages by name
 only, no `Version=` attribute.
+
+**Gotcha with `dotnet add package`**: it inserts the new `<PackageVersion>` entry into `Directory.Packages.props`
+purely by alphabetical proximity to whatever's nearby - it doesn't know the file has two separate `<ItemGroup>`s
+(one `Label="Analyzers"` for pure analyzer packages, one for everything else), so a package like `NSubstitute`
+or `Microsoft.EntityFrameworkCore` reliably lands in the wrong (`Analyzers`) group if its name happens to sort
+near an analyzer package. It also strips the file's blank-line formatting and trailing newline as a side effect.
+Always diff `Directory.Packages.props` after running `dotnet add package` and fix both before committing -
+happened repeatedly (four separate packages) in one session before this was caught and documented.
 
 ### Analyzers: two separate things that both have to be true
 

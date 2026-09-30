@@ -93,6 +93,15 @@ and the explanation will follow.
     - [SingletonHttpClientTests.cs](./UnitTestingCookbook.Tests/SingletonHttpClientTests.cs)
 - [Preventing HTTP Requests to External Services in Unit Tests](./README/README_PreventHttpRequests.md)
     - [PreventHttpRequestsTests.cs](./UnitTestingCookbook.Tests/PreventHttpRequestsTests.cs)
+- [TimeProvider](./README/README_TimeProvider.md)
+    - [TimeProviderTests.cs](./UnitTestingCookbook.Tests/TimeProviderTests.cs)
+- [Testing IHostedService / BackgroundService](./README/README_HostedService.md)
+    - [HostedServiceTests.cs](./UnitTestingCookbook.Tests/HostedServiceTests.cs)
+- [Entity Framework Core](./README/README_EntityFrameworkCore.md)
+    - [EntityFrameworkCoreTests.cs](./UnitTestingCookbook.Tests/EntityFrameworkCoreTests.cs)
+- [Parallel Processing](./README/README_ParallelProcessing.md)
+    - [ParallelProcessingSafeTests.cs](./UnitTestingCookbook.Tests/ParallelProcessingSafeTests.cs)
+    - [ParallelProcessingUnsafeTests.cs](./UnitTestingCookbook.Tests/ParallelProcessingUnsafeTests.cs)
 
 # Errata
 
@@ -100,8 +109,7 @@ and the explanation will follow.
 
 # Future
 
-- Parallel Processing
-- AWS via LocalStack
-- Microsoft TestServer
-- More Extension Methods / Helper Classes for WireMock.Net Objects (TestCorrelator's done - see `TestCorrelatorExtensions` in [Logging](./README/README_Logging.md))
+- Snapshot Testing (Verify/Verify.NUnit) - deferred: the package requires either a paid sponsorship or an
+  explicit, time-bounded open-source exemption declaration to build (its "SponsorCheck" mechanism) - still
+  deciding how to handle that before adding the chapter.
 - Create Relative Code Snippet links in GitHub

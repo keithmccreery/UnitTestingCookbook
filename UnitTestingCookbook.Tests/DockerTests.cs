@@ -39,7 +39,7 @@ public class DockerTests
     //
     [Test]
     [Category("_passes")]
-    [Ignore("Requires Docker")]
+    [Ignore("Requires Docker - disabled by default to keep full test-suite runs fast during regular development")]
     public async Task A_Container()
     {
         // Arrange

@@ -7,6 +7,12 @@
 
 **NOTE:** Requires Docker
 
+**NOTE:** `DockerTests.A_Container` is permanently `[Ignore]`d - not because the technique doesn't work, but as a
+deliberate development-speed tradeoff. Pulling and starting a real container adds real wall-clock time (and a
+Docker dependency) to every single full test-suite run, which most day-to-day development doesn't want paying
+for on every save. This chapter exists to document the Testcontainers pattern - verified to pass locally (Docker running,
+`[Ignore]` attribute temporarily removed) - rather than to run routinely alongside the rest of the suite.
+
 All examples are located in `UnitTestingCookbook.Tests` -> [`DockerTests`](../UnitTestingCookbook.Tests/DockerTests.cs)   
 
 ---
