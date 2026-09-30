@@ -4,6 +4,11 @@
 
 ...with an introduction to **AwesomeAssertions**.  
 
+**Why AwesomeAssertions and not FluentAssertions?** FluentAssertions moved to a commercial license starting with
+v8. AwesomeAssertions is a community-maintained fork that kept the original Apache 2.0 license and has committed
+to keeping it - see the [AwesomeAssertions GitHub repo](https://github.com/AwesomeAssertions/AwesomeAssertions)
+for details.
+
 ## Why
 
 - I don't like being woken up at 2:00 AM with a production issue.
@@ -46,6 +51,11 @@ and the explanation will follow.
 
 - [AwesomeAssertions](./README/README_AwesomeAssertions.md)
     - [AwesomeAssertionsTests.cs](./UnitTestingCookbook.Tests/AwesomeAssertionsTests.cs)
+- [Data Hangover](./README/README_DataHangover.md)
+    - [DataHangoverFailureTests.cs](./UnitTestingCookbook.Tests/DataHangoverFailureTests.cs)
+    - [DataHangoverRighteousTests.cs](./UnitTestingCookbook.Tests/DataHangoverRighteousTests.cs)
+- [Mocking](./README/README_Mocking.md)
+    - [MockingTests.cs](./UnitTestingCookbook.Tests/MockingTests.cs)
 - [Data Driven](./README/README_DataDriven.md)
     - [DataDrivenTests.cs](./UnitTestingCookbook.Tests/DataDrivenTests.cs)
 - [AwesomeAssertions Add-Ons](./README/README_AwesomeAssertionsAddOns.md)
@@ -64,9 +74,6 @@ and the explanation will follow.
     - [WireMockNetTests.cs](./UnitTestingCookbook.Tests/WireMockNetTests.cs)
 - [Polly Policies](./README/README_WireMockNetPollyPolicies.md)
     - [WireMockNetPollyPoliciesTests.cs](./UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs)
-- [Data Hangover](./README/README_DataHangover.md)
-    - [DataHangoverFailureTests.cs](./UnitTestingCookbook.Tests/DataHangoverFailureTests.cs)
-    - [DataHangoverRighteousTests.cs](./UnitTestingCookbook.Tests/DataHangoverRighteousTests.cs)
 - [Analyzers](./README/README_Analyzers.md)
     - [AnalyzersTests.cs](./UnitTestingCookbook.Tests/AnalyzersTests.cs)
 - [General Tips](./README/README_GeneralTips.md)
@@ -94,7 +101,6 @@ and the explanation will follow.
 # Future
 
 - Parallel Processing
-- Moq Examples
 - AWS via LocalStack
 - Microsoft TestServer
 - More Extension Methods / Helper Classes for WireMock.Net Objects (TestCorrelator's done - see `TestCorrelatorExtensions` in [Logging](./README/README_Logging.md))
