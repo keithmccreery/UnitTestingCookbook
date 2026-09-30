@@ -67,16 +67,21 @@ above, against `Release` configuration.
 
 ## Architecture
 
-Four projects:
+Five projects:
 - **UnitTestingCookbook.Support** - the "production" code every chapter's tests exercise (`HttpBinOrgService`,
   `Miscellaneous`, sample logging/IO wrapper classes, `PollyContextExtensions`). Not a real product; exists purely
   to give the test chapters something realistic to test against.
 - **UnitTestingCookbook.TestHelpers** - a small reusable test-helper library (`ManageCaptureConsole`,
-  `ManageEnvironmentVariables`, `TestHelper.CreateInstanceInternal` for invoking non-public constructors). Some
-  chapters (e.g. `GeneralTipsTests.A_CaptureConsole` vs `A_CaptureConsole_TestHelpers`) deliberately show the same
-  technique implemented inline *and* via this shared library, back to back, as a comparison. Note: this project's
-  name ends in "Helpers", not "Test"/"Tests", so it does **not** match `.editorconfig`'s test-project exemption
-  glob (see below) - it's held to the same analyzer bar as Support, deliberately.
+  `ManageEnvironmentVariables`, `TestHelper.CreateInstanceInternal` for invoking non-public constructors,
+  `ReflectionExtensions`, `MockLoggerExtensions`, `TestCorrelatorExtensions`). Some chapters (e.g.
+  `GeneralTipsTests.A_CaptureConsole` vs `A_CaptureConsole_TestHelpers`) deliberately show the same technique
+  implemented inline *and* via this shared library, back to back, as a comparison. Note: this project's name ends
+  in "Helpers", not "Test"/"Tests", so it does **not** match `.editorconfig`'s test-project exemption glob (see
+  below) - it's held to the same analyzer bar as Support, deliberately.
+- **UnitTestingCookbook.TestHelpers.Tests** - unit tests for TestHelpers itself, using NUnit + AwesomeAssertions +
+  Moq. Kept separate from `UnitTestingCookbook.Tests` because it tests the helper library's own behavior rather
+  than demonstrating a cookbook technique - these aren't README chapters, just correctness coverage for shared
+  test infrastructure.
 - **UnitTestingCookbook.MinimalApi** - a small real ASP.NET Core app (`Microsoft.NET.Sdk.Web`), not folded into
   Support since it needs a real app host. Hosts both the MinimalApi Integration Testing chapter's "animal store"
   endpoints and the AppSettings/Connection String Validation chapters' `.ValidateOnStart()` options wiring - the
@@ -87,7 +92,7 @@ Four projects:
   AwesomeAssertions.
 
 Version/property management is centralized at the repo root: `Directory.Build.props` holds the
-`TargetFramework`/`ImplicitUsings`/`Nullable` settings shared by all four projects (plus a global set of
+`TargetFramework`/`ImplicitUsings`/`Nullable` settings shared by all five projects (plus a global set of
 code-quality analyzer `PackageReference`s - see below), and `Directory.Packages.props` centrally manages every
 package version (`ManagePackageVersionsCentrally=true`) - individual `.csproj` files reference packages by name
 only, no `Version=` attribute.

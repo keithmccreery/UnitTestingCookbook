@@ -37,6 +37,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestingCookbook.MinimalApi", "UnitTestingCookbook.MinimalApi\UnitTestingCookbook.MinimalApi.csproj", "{7AC8AE42-2EBF-4536-A4A1-75E21290202E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestingCookbook.TestHelpers.Tests", "UnitTestingCookbook.TestHelpers.Tests\UnitTestingCookbook.TestHelpers.Tests.csproj", "{D68894B5-ED19-4A27-90E2-03198733913F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,18 @@ Global
 		{7AC8AE42-2EBF-4536-A4A1-75E21290202E}.Release|x64.Build.0 = Release|Any CPU
 		{7AC8AE42-2EBF-4536-A4A1-75E21290202E}.Release|x86.ActiveCfg = Release|Any CPU
 		{7AC8AE42-2EBF-4536-A4A1-75E21290202E}.Release|x86.Build.0 = Release|Any CPU
+		{D68894B5-ED19-4A27-90E2-03198733913F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D68894B5-ED19-4A27-90E2-03198733913F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D68894B5-ED19-4A27-90E2-03198733913F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D68894B5-ED19-4A27-90E2-03198733913F}.Debug|x64.Build.0 = Debug|Any CPU
+		{D68894B5-ED19-4A27-90E2-03198733913F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D68894B5-ED19-4A27-90E2-03198733913F}.Debug|x86.Build.0 = Debug|Any CPU
+		{D68894B5-ED19-4A27-90E2-03198733913F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D68894B5-ED19-4A27-90E2-03198733913F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D68894B5-ED19-4A27-90E2-03198733913F}.Release|x64.ActiveCfg = Release|Any CPU
+		{D68894B5-ED19-4A27-90E2-03198733913F}.Release|x64.Build.0 = Release|Any CPU
+		{D68894B5-ED19-4A27-90E2-03198733913F}.Release|x86.ActiveCfg = Release|Any CPU
+		{D68894B5-ED19-4A27-90E2-03198733913F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
