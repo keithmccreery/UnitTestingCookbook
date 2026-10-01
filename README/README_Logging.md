@@ -2,6 +2,7 @@
 
 ## NuGet Packages Referenced
 
+- Microsoft.Extensions.Diagnostics.Testing https://github.com/dotnet/extensions (`FakeLogger<T>` / `FakeLogCollector`)
 - Moq https://github.com/moq/moq
 - Serilog.Extensions.Logging https://github.com/serilog/serilog-extensions-logging
 - Serilog.Sinks.TestCorrelator https://github.com/MitchBodmer/serilog-sinks-testcorrelator
@@ -19,6 +20,9 @@ inline so this chapter stands on its own.
 ## Credits
 
 - [Mocking ILogger with Moq](https://adamstorr.azurewebsites.net/blog/mocking-ilogger-with-moq) for the basis of `.VerifyLogging()`
+
+**Which approach should I use?** See [NullLogger vs. FakeLogger vs. Serilog + TestCorrelator](#nulllogger-vs-fakelogger-vs-serilog--testcorrelator)
+at the bottom of this chapter.  
 
 ---
 
@@ -616,3 +620,147 @@ wants to assert on all at once.
 ---
 
 Back to [README](../README.md)
+
+---
+
+## How do I assert Microsoft.Extensions.Logging ILogger logs with FakeLogger, without Serilog or a Mock?
+
+`FakeLogger<T>` (NuGet `Microsoft.Extensions.Diagnostics.Testing`, Microsoft's own package) is a real `ILogger<T>`
+that records every log into a `FakeLogCollector`. Nothing to configure: no Serilog pipeline, no `TestCorrelator`
+context, no Moq `It.IsAnyType` gymnastics.  
+
+- `.Message` is the **rendered** message, formatted by Microsoft.Extensions.Logging. A string property is **not**
+double-quoted, unlike Serilog's rendering in `O_TestCorrelator_HasMessage` above.
+- `.GetStructuredStateValue("{OriginalFormat}")` returns the raw message template.
+- `.GetStructuredStateValue("Message")` returns a single property, always as a `string?`.
+
+```csharp
+public void Q_FakeLogger()
+{
+    // Arrange
+    FakeLogger<SampleWithLogging> logger = new FakeLogger<SampleWithLogging>();
+
+    SampleWithLogging sampleWithLogging = new SampleWithLogging(logger);
+
+    const string message = "anything";
+
+    // Act
+    sampleWithLogging.LogInformationMessage(message);
+
+    // Assert
+    using (new AssertionScope())
+    {
+        logger.Collector.Count.Should().Be(1);
+        logger.LatestRecord.Level.Should().Be(LogLevel.Information);
+        logger.LatestRecord.Message.Should().Be($"This is the template with a {message}."); // rendered message
+        logger.LatestRecord.GetStructuredStateValue("{OriginalFormat}").Should().Be("This is the template with a {Message}."); // template
+        logger.LatestRecord.GetStructuredStateValue("Message").Should().Be(message); // property
+    }
+}
+```
+
+---
+
+## How do I assert Microsoft.Extensions.Logging ILogger logs with FakeLogger and Dependency Injection?
+
+`services.AddFakeLogging()` registers `ILoggerFactory` and `ILogger<>` (all generics), backed by a single shared
+`FakeLogCollector`, which `serviceProvider.GetFakeLogCollector()` hands back for asserting. `.GetSnapshot()` returns
+every `FakeLogRecord` in order. Projecting it into an anonymous type and comparing it with `.BeEquivalentTo()` is the
+FakeLogger equivalent of `P_TestCorrelator_CompareList`, with no custom extension method needed.
+
+```csharp
+public void R_FakeLogger_Via_DependencyInjection()
+{
+    // Arrange
+    ServiceCollection services = new ServiceCollection();
+    services.AddFakeLogging(); // registers ILoggerFactory, ILogger<>, and a shared FakeLogCollector
+    services.AddSingleton<SampleWithLogging>();
+    ServiceProvider serviceProvider = services.BuildServiceProvider(true);
+
+    // Act
+    SampleWithLogging sampleWithLogging = serviceProvider.GetRequiredService<SampleWithLogging>();
+    sampleWithLogging.LogInformationMessage("first");
+    sampleWithLogging.LogInformationMessage("second");
+
+    // Assert
+    FakeLogCollector collector = serviceProvider.GetFakeLogCollector();
+
+    collector.GetSnapshot()
+        .Select(x => new { x.Level, x.Message })
+        .Should().BeEquivalentTo(new[]
+        {
+            new { Level = LogLevel.Information, Message = "This is the template with a first." },
+            new { Level = LogLevel.Information, Message = "This is the template with a second." },
+        });
+}
+```
+
+---
+
+## How does FakeLogger handle a structured (destructured) Object?
+
+Not as well as Serilog does. FakeLogger is the main case where it falls short. Microsoft.Extensions.Logging has no concept of
+destructuring, so the `@` in `{@Object}` is just part of the property **name**, and the value is plain `.ToString()`
+output (here, an anonymous type's compiler-generated `ToString()`). Compare to `J_Serilog_TestCorrelator_Structured`,
+where Serilog captures a real `StructureValue` whose individual properties can be inspected.  
+
+```csharp
+public void S_FakeLogger_Structured()
+{
+    // Arrange
+    FakeLogger<SampleWithLogging> logger = new FakeLogger<SampleWithLogging>();
+
+    SampleWithLogging sampleWithLogging = new SampleWithLogging(logger);
+
+    var @object = new
+    {
+        Name = "John",
+        Age = 21,
+    };
+
+    // Act
+    sampleWithLogging.LogInformationStructuredMessage(@object);
+
+    // Assert
+    using (new AssertionScope())
+    {
+        logger.LatestRecord.GetStructuredStateValue("{OriginalFormat}").Should().Be("This is the template with a {@Object}.");
+
+        // Microsoft.Extensions.Logging has no destructuring - '@' is kept in the key name, and the value is just .ToString()
+        logger.LatestRecord.GetStructuredStateValue("@Object").Should().Be("{ Name = John, Age = 21 }");
+    }
+}
+```
+
+---
+
+## NullLogger vs. FakeLogger vs. Serilog + TestCorrelator
+
+All three plug into the same `ILogger<T>` / `ILoggerFactory` constructor parameter, so the class under test never
+knows the difference. The choice depends on what the test needs to check about logging.
+
+| | `NullLogger<T>` | `FakeLogger<T>` -> `FakeLogCollector` | Serilog -> `ILogger<T>` -> `TestCorrelator` |
+|---|---|---|---|
+| **Use when** | Logging is irrelevant to the test; you just need to satisfy the constructor | You want to assert *what* Microsoft.Extensions.Logging logged | Production logs through Serilog, and you want to assert what Serilog actually produces |
+| **NuGet** | `Microsoft.Extensions.Logging.Abstractions` (already referenced by anything using `ILogger`) | `Microsoft.Extensions.Diagnostics.Testing` | `Serilog`, `Serilog.Extensions.Logging`, `Serilog.Sinks.TestCorrelator` |
+| **Setup (no DI)** | `new NullLogger<T>()` | `new FakeLogger<T>()` | `LoggerConfiguration().WriteTo.TestCorrelator()...CreateLogger()` -> `new SerilogLoggerFactory(...)` -> `new Logger<T>(factory)` |
+| **Setup (DI)** | `AddSingleton(typeof(ILogger<>), typeof(NullLogger<>))` | `services.AddFakeLogging()` | Register `SerilogLoggerFactory` **and** `AddSingleton(typeof(ILogger<>), typeof(Logger<>))` |
+| **Capturing logs** | None. Everything is discarded | Always on, per logger / per collector | Only inside a `using (TestCorrelator.CreateContext())` block |
+| **Reading logs** | n/a | `logger.LatestRecord`, `logger.Collector.GetSnapshot()` | `TestCorrelator.GetLogEventsFromCurrentContext()` |
+| **Rendered message** | n/a | `.Message`, string properties unquoted | `.RenderMessage()`, string properties `"quoted"` |
+| **Properties** | n/a | `GetStructuredStateValue("Name")`, always `string?` | `.Properties["Name"]`, typed `ScalarValue` / `StructureValue` / ... |
+| **Destructured `{@Object}`** | n/a | `.ToString()` only, key keeps the `@` | Full `StructureValue`, each property inspectable |
+| **Scopes / enrichers** | n/a | Microsoft.Extensions.Logging scopes only | Serilog enrichers (`.Enrich.FromLogContext()`, etc.), as in production |
+| **Parallel-safe** | Yes | Yes. Each `FakeLogger` / `ServiceProvider` owns its own collector | Yes. Each context is isolated via `AsyncLocal` |
+
+**Summary:**
+- **`NullLogger<T>`** is the default for the many tests that don't care about logging. Examples `A_` through `E_`.
+- **`FakeLogger<T>`** is the simplest way to *assert* on logs. It takes one line of setup, has no extra
+configuration and no context block, and it's Microsoft's own package. If the class under test only depends on
+Microsoft.Extensions.Logging, start here. It also replaces the Moq approach (`K_` through `M_`), since it records real calls
+instead of verifying against `It.IsAnyType` matchers. Examples `Q_` through `S_`.
+- **Serilog + TestCorrelator** has more moving parts (three packages, a `LoggerConfiguration`, a `SerilogLoggerFactory`,
+an open-generic `Logger<>` registration and a `TestCorrelator` context). In return it tests the logging pipeline
+you actually ship, *if* that pipeline is Serilog: destructuring, enrichers, and Serilog's own rendering. If production
+doesn't use Serilog, adding Serilog just for tests means asserting on output production never produces. Examples `F_`
+through `J_` and `N_` through `P_`.

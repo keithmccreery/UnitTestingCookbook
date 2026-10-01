@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Logging.Testing;
 
 using Moq;
 
@@ -498,6 +499,99 @@ public class LoggingTests
                 new LogEventSummary(LogEventLevel.Information, "This is the template with a {Message}.", "This is the template with a \"first\"."),
                 new LogEventSummary(LogEventLevel.Information, "This is the template with a {Message}.", "This is the template with a \"second\"."),
             });
+        }
+    }
+
+    //
+    // Q: How do I assert Microsoft.Extensions.Logging ILogger logs with FakeLogger, without Serilog or a Mock?
+    // NOTE: NuGet Microsoft.Extensions.Diagnostics.Testing
+    //
+    [Test]
+    [Category("_passes")]
+    public void Q_FakeLogger()
+    {
+        // Arrange
+        FakeLogger<SampleWithLogging> logger = new FakeLogger<SampleWithLogging>();
+
+        SampleWithLogging sampleWithLogging = new SampleWithLogging(logger);
+
+        const string message = "anything";
+
+        // Act
+        sampleWithLogging.LogInformationMessage(message);
+
+        // Assert
+        using (new AssertionScope())
+        {
+            logger.Collector.Count.Should().Be(1);
+            logger.LatestRecord.Level.Should().Be(LogLevel.Information);
+            logger.LatestRecord.Message.Should().Be($"This is the template with a {message}."); // rendered message
+            logger.LatestRecord.GetStructuredStateValue("{OriginalFormat}").Should().Be("This is the template with a {Message}."); // template
+            logger.LatestRecord.GetStructuredStateValue("Message").Should().Be(message); // property
+        }
+    }
+
+    //
+    // Q: How do I assert Microsoft.Extensions.Logging ILogger logs with FakeLogger and Dependency Injection?
+    // NOTE: NuGet Microsoft.Extensions.Diagnostics.Testing
+    //
+    [Test]
+    [Category("_passes")]
+    public void R_FakeLogger_Via_DependencyInjection()
+    {
+        // Arrange
+        ServiceCollection services = new ServiceCollection();
+        services.AddFakeLogging(); // registers ILoggerFactory, ILogger<>, and a shared FakeLogCollector
+        services.AddSingleton<SampleWithLogging>();
+        ServiceProvider serviceProvider = services.BuildServiceProvider(true);
+
+        // Act
+        SampleWithLogging sampleWithLogging = serviceProvider.GetRequiredService<SampleWithLogging>();
+        sampleWithLogging.LogInformationMessage("first");
+        sampleWithLogging.LogInformationMessage("second");
+
+        // Assert
+        FakeLogCollector collector = serviceProvider.GetFakeLogCollector();
+
+        collector.GetSnapshot()
+            .Select(x => new { x.Level, x.Message })
+            .Should().BeEquivalentTo(new[]
+            {
+                new { Level = LogLevel.Information, Message = "This is the template with a first." },
+                new { Level = LogLevel.Information, Message = "This is the template with a second." },
+            });
+    }
+
+    //
+    // Q: How does FakeLogger handle a structured (destructured) Object?
+    // NOTE: NuGet Microsoft.Extensions.Diagnostics.Testing
+    // NOTE: Compare to J_Serilog_TestCorrelator_Structured - FakeLogger only keeps the string form
+    //
+    [Test]
+    [Category("_passes")]
+    public void S_FakeLogger_Structured()
+    {
+        // Arrange
+        FakeLogger<SampleWithLogging> logger = new FakeLogger<SampleWithLogging>();
+
+        SampleWithLogging sampleWithLogging = new SampleWithLogging(logger);
+
+        var @object = new
+        {
+            Name = "John",
+            Age = 21,
+        };
+
+        // Act
+        sampleWithLogging.LogInformationStructuredMessage(@object);
+
+        // Assert
+        using (new AssertionScope())
+        {
+            logger.LatestRecord.GetStructuredStateValue("{OriginalFormat}").Should().Be("This is the template with a {@Object}.");
+
+            // Microsoft.Extensions.Logging has no destructuring - '@' is kept in the key name, and the value is just .ToString()
+            logger.LatestRecord.GetStructuredStateValue("@Object").Should().Be("{ Name = John, Age = 21 }");
         }
     }
 }
