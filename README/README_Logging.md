@@ -619,10 +619,6 @@ wants to assert on all at once.
 
 ---
 
-Back to [README](../README.md)
-
----
-
 ## How do I assert Microsoft.Extensions.Logging ILogger logs with FakeLogger, without Serilog or a Mock?
 
 `FakeLogger<T>` (NuGet `Microsoft.Extensions.Diagnostics.Testing`, Microsoft's own package) is a real `ILogger<T>`
@@ -764,3 +760,7 @@ an open-generic `Logger<>` registration and a `TestCorrelator` context). In retu
 you actually ship, *if* that pipeline is Serilog: destructuring, enrichers, and Serilog's own rendering. If production
 doesn't use Serilog, adding Serilog just for tests means asserting on output production never produces. Examples `F_`
 through `J_` and `N_` through `P_`.
+
+---
+
+Back to [README](../README.md)
