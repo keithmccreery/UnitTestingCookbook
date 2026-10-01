@@ -30,9 +30,7 @@ public class DependencyInjectionTests
             .AddJsonStream(new MemoryStream(Encoding.UTF8.GetBytes("{ \"key\": \"value\" }")))
             .Build();
 
-        // Assert
-
-        // Act
+        // Act / Assert
         configuration["Logging:LogLevel:Default"].Should().Be("Debug");
         configuration["key"].Should().Be("value");
     }
@@ -49,26 +47,26 @@ public class DependencyInjectionTests
         ServiceCollection services = new ServiceCollection();
         services.AddScoped<IScopedService, SampleScopedService>();
 
-        ServiceProvider serviceProvider = services.BuildServiceProvider(true);
+        using ServiceProvider serviceProvider = services.BuildServiceProvider(true); // true = validateScopes
 
-        // Assert
-        IServiceScopeFactory? serviceScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
-
-        IScopedService scoped1;
-        IScopedService scoped2;
-
-        using (var scope = serviceScopeFactory.CreateScope())
-        {
-            scoped1 = scope.ServiceProvider.GetRequiredService<IScopedService>();
-        }
-
-        using (var scope = serviceScopeFactory.CreateScope())
-        {
-            scoped2 = scope.ServiceProvider.GetRequiredService<IScopedService>();
-        }
+        IServiceScopeFactory serviceScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
 
         // Act
-        scoped1.Should().NotBeSameAs(scoped2); // same as ReferenceEquals( scoped1, scoped2 ).Should().BeFalse()
+        // Both scopes stay open until the end of the test, so every instance is still live (not yet disposed by
+        // its scope) when it's asserted on - matters if the service were IDisposable.
+        using IServiceScope scope1 = serviceScopeFactory.CreateScope();
+        using IServiceScope scope2 = serviceScopeFactory.CreateScope();
+
+        IScopedService scope1First = scope1.ServiceProvider.GetRequiredService<IScopedService>();
+        IScopedService scope1Second = scope1.ServiceProvider.GetRequiredService<IScopedService>();
+        IScopedService scope2First = scope2.ServiceProvider.GetRequiredService<IScopedService>();
+
+        // Assert
+        using (new AssertionScope())
+        {
+            scope1First.Should().BeSameAs(scope1Second); // same scope -> same instance (would fail if registered Transient)
+            scope1First.Should().NotBeSameAs(scope2First); // different scope -> new instance (would fail if registered Singleton)
+        }
     }
 
     //
@@ -81,9 +79,7 @@ public class DependencyInjectionTests
         // Arrange
         IOptions<MemoryDistributedCacheOptions> options = Options.Create<MemoryDistributedCacheOptions>(new MemoryDistributedCacheOptions());
 
-        // Assert
-
-        // Act
+        // Act / Assert
         options.Should().NotBeNull();
         options.Value.Should().BeOfType<MemoryDistributedCacheOptions>()
             .Which.SizeLimit.Should().Be(200 * 1024 * 1024);

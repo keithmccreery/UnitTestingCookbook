@@ -25,9 +25,7 @@ public void A_IConfiguration()
         .AddJsonStream(new MemoryStream(Encoding.UTF8.GetBytes("{ \"key\": \"value\" }")))
         .Build();
 
-    // Assert
-
-    // Act
+    // Act / Assert
     configuration["Logging:LogLevel:Default"].Should().Be("Debug");
     configuration["key"].Should().Be("value");
 }
@@ -37,9 +35,22 @@ public void A_IConfiguration()
 
 ## How do I create a new 'scope'?
 
-`.NotBeSameAs()` calls `ReferenceEquals()` under the hood.  
+A scoped registration has two properties, and the test checks both:
+- **Same scope -> same instance.** `.BeSameAs()` fails if the service were registered `Transient` (a new instance per resolve).
+- **Different scope -> different instance.** `.NotBeSameAs()` fails if the service were registered `Singleton` (one
+instance for everything).
 
-**NOTE:** `serviceProvider.CreateScope()` can also be used to create a new scope.  
+Asserting only the second one (different scopes) isn't enough: a `Transient` registration would pass that too.  
+
+`.BeSameAs()`/`.NotBeSameAs()` call `ReferenceEquals()` under the hood.  
+
+**NOTES:**
+- `serviceProvider.CreateScope()` is a shortcut extension method that does the same as resolving `IServiceScopeFactory` and calling
+`.CreateScope()` on it.
+- `BuildServiceProvider(true)` turns on scope validation: resolving a scoped service from the *root* provider throws,
+instead of quietly giving you an instance that lives as long as the provider (effectively a singleton).
+- Both scopes stay open until the end of the test, so every resolved instance is still live when it's asserted on.
+Disposing a scope also disposes the `IDisposable` services it created, so don't keep a service around after its scope is disposed.
 
 ```csharp
 public void B_Scope()
@@ -48,26 +59,26 @@ public void B_Scope()
     ServiceCollection services = new ServiceCollection();
     services.AddScoped<IScopedService, SampleScopedService>();
 
-    ServiceProvider serviceProvider = services.BuildServiceProvider(true);
+    using ServiceProvider serviceProvider = services.BuildServiceProvider(true); // true = validateScopes
 
-    // Assert
-    IServiceScopeFactory? serviceScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
-
-    IScopedService scoped1;
-    IScopedService scoped2;
-
-    using (var scope = serviceScopeFactory.CreateScope())
-    {
-        scoped1 = scope.ServiceProvider.GetRequiredService<IScopedService>();
-    }
-
-    using (var scope = serviceScopeFactory.CreateScope())
-    {
-        scoped2 = scope.ServiceProvider.GetRequiredService<IScopedService>();
-    }
+    IServiceScopeFactory serviceScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
 
     // Act
-    scoped1.Should().NotBeSameAs(scoped2); // same as ReferenceEquals( scoped1, scoped2 ).Should().BeFalse()
+    // Both scopes stay open until the end of the test, so every instance is still live (not yet disposed by
+    // its scope) when it's asserted on - matters if the service were IDisposable.
+    using IServiceScope scope1 = serviceScopeFactory.CreateScope();
+    using IServiceScope scope2 = serviceScopeFactory.CreateScope();
+
+    IScopedService scope1First = scope1.ServiceProvider.GetRequiredService<IScopedService>();
+    IScopedService scope1Second = scope1.ServiceProvider.GetRequiredService<IScopedService>();
+    IScopedService scope2First = scope2.ServiceProvider.GetRequiredService<IScopedService>();
+
+    // Assert
+    using (new AssertionScope())
+    {
+        scope1First.Should().BeSameAs(scope1Second); // same scope -> same instance (would fail if registered Transient)
+        scope1First.Should().NotBeSameAs(scope2First); // different scope -> new instance (would fail if registered Singleton)
+    }
 }
 ```
 
@@ -81,9 +92,7 @@ public void C_IOptions()
     // Arrange
     IOptions<MemoryDistributedCacheOptions> options = Options.Create<MemoryDistributedCacheOptions>(new MemoryDistributedCacheOptions());
 
-    // Assert
-
-    // Act
+    // Act / Assert
     options.Should().NotBeNull();
     options.Value.Should().BeOfType<MemoryDistributedCacheOptions>()
         .Which.SizeLimit.Should().Be(200 * 1024 * 1024);
