@@ -62,6 +62,12 @@
     <PackageVersion Include="System.IO.Abstractions" Version="22.3.0" />
     <PackageVersion Include="System.IO.Abstractions.TestingHelpers" Version="22.3.0" />
     <PackageVersion Include="Testcontainers" Version="4.15.0" />
+    <!--
+      PINNED - do not bump. Verify 32.0.0 (2026-08-26) is the last release before Verify's Open Source
+      Maintenance Fee took effect (versions released after 2026-09-01), and predates the v33+ build-time
+      "SponsorCheck". Still MIT licensed. See README/README_SnapshotTesting.md.
+    -->
+    <PackageVersion Include="Verify.NUnit" Version="32.0.0" />
     <PackageVersion Include="WireMock.Net" Version="2.18.0" />
     <PackageVersion Include="WireMock.Net.AwesomeAssertions" Version="2.18.0" />
   </ItemGroup>

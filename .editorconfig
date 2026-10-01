@@ -33,6 +33,21 @@ indent_size = 4
 indent_size = 4
 
 #
+# VERIFY SNAPSHOT SETTINGS
+# Verify writes *.verified.* files byte-exact (UTF-8 with BOM, no forced final newline) and compares them byte-exact,
+# so an editor applying the [*] rules above on save would turn a passing snapshot into a failing one. Per Verify's
+# recommended .editorconfig settings - https://github.com/VerifyTests/Verify
+#
+[*.{received,verified}.{csv,json,txt,xml}]
+charset = utf-8-bom
+end_of_line = lf
+indent_size = unset
+indent_style = unset
+insert_final_newline = false
+tab_width = unset
+trim_trailing_whitespace = false
+
+#
 # C# and VB SETTINGS
 #
 [*.{cs,vb}]

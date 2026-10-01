@@ -1,0 +1,10 @@
+﻿{
+  customer: John,
+  lines: [
+    {
+      sku: WIDGET,
+      quantity: 2
+    }
+  ],
+  id: Guid_1
+}

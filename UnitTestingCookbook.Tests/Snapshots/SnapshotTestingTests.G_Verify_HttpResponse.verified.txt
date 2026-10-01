@@ -1,0 +1,5 @@
+﻿{
+  StatusCode: OK,
+  ContentType: application/json; charset=utf-8,
+  Body: {"id":1,"species":"Blue Whale"}
+}

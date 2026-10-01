@@ -1,0 +1,18 @@
+﻿{
+  Id: Guid_1,
+  CreatedUtc: DateTime_1,
+  Customer: John,
+  Lines: [
+    {
+      Sku: WIDGET,
+      Quantity: 2,
+      UnitPrice: 9.99
+    },
+    {
+      Sku: GADGET,
+      Quantity: 1,
+      UnitPrice: 24.50
+    }
+  ],
+  Total: 44.48
+}

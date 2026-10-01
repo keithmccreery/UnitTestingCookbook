@@ -1,0 +1,5 @@
+﻿{
+  Id: 42,
+  Name: Widget,
+  Price: 9.99
+}

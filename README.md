@@ -102,6 +102,9 @@ and the explanation will follow.
 - [Parallel Processing](./README/README_ParallelProcessing.md)
     - [ParallelProcessingSafeTests.cs](./UnitTestingCookbook.Tests/ParallelProcessingSafeTests.cs)
     - [ParallelProcessingUnsafeTests.cs](./UnitTestingCookbook.Tests/ParallelProcessingUnsafeTests.cs)
+- [Snapshot Testing (Verify)](./README/README_SnapshotTesting.md)
+    - [SnapshotTestingTests.cs](./UnitTestingCookbook.Tests/SnapshotTestingTests.cs)
+    - [Snapshots](./UnitTestingCookbook.Tests/Snapshots)
 
 # Errata
 
@@ -109,7 +112,4 @@ and the explanation will follow.
 
 # Future
 
-- Snapshot Testing (Verify/Verify.NUnit) - deferred: the package requires either a paid sponsorship or an
-  explicit, time-bounded open-source exemption declaration to build (its "SponsorCheck" mechanism) - still
-  deciding how to handle that before adding the chapter.
 - Create Relative Code Snippet links in GitHub

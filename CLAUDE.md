@@ -63,6 +63,11 @@ Notes on running tests:
   on any fixture except `ParallelProcessingSafeTests`, the only one marked `[Parallelizable]`. Every other
   fixture keeps running sequentially exactly as before; see `README_ParallelProcessing.md` for why most of this
   repo's `TestHelpers` (env vars, console capture) are unsafe to parallelize as-is.
+- `SnapshotTestingTests.cs` uses **Verify.NUnit pinned at 32.0.0** - do not bump it (or add any Verify add-on
+  newer than 2026-09-01): later releases fall under Verify's Open Source Maintenance Fee, and v33+ adds a
+  build-time SponsorCheck. See `README_SnapshotTesting.md`. A new or changed snapshot test **fails on its first
+  run by design** and writes a `.received.*` file under `UnitTestingCookbook.Tests/Snapshots/`; review it, rename
+  it to `.verified.*`, and commit it. Never accept a `.received` file without reading it.
 - After changing package versions, `dotnet build`/`dotnet restore` may print `NU1608` warnings for
   `Humanizer.Core.<locale>` satellite packages - these come from WireMock.Net's own transitive dependency on an
   older Humanizer and are resolved correctly (the repo's direct reference wins); they're noise, not a real conflict.

@@ -21,6 +21,13 @@
 *.bat            text eol=crlf
 Dockerfile       text eol=lf
 
+# Verify snapshot files - always LF and UTF-8 in the working tree on every OS, so a snapshot accepted on
+# Windows still matches byte-for-byte on Linux CI. See README/README_SnapshotTesting.md.
+*.verified.txt   text eol=lf working-tree-encoding=UTF-8
+*.verified.csv   text eol=lf working-tree-encoding=UTF-8
+*.verified.json  text eol=lf working-tree-encoding=UTF-8
+*.verified.xml   text eol=lf working-tree-encoding=UTF-8
+
 # Binary files that Git must never touch.
 *.png            binary
 *.jpg            binary
