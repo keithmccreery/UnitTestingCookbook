@@ -109,6 +109,25 @@ with the same filtered command above, against `Release` configuration, plus the 
 coverage. On pushes to `main` only, a separate `deploy-coverage` job publishes the HTML coverage report to GitHub Pages
 (https://keithmccreery.github.io/UnitTestingCookbook/).
 
+## Git workflow
+
+- **All changes go through pull requests** into `main` - work on a branch (e.g. `feat/property-based-testing`,
+  `ci/pr-title-check`), push it, open a PR. Don't push to `main` directly.
+- **PRs are squash-merged** (the only merge method enabled), and the branch is deleted on merge. The squash commit's
+  subject is the **PR title**, and its body is the list of the branch's commit messages.
+- **PR titles use [Conventional Commits](https://www.conventionalcommits.org)** - `type: description` or
+  `type(scope): description`, lower-case type. Enforced by `.github/workflows/pr-title.yml`. Allowed types: `feat`,
+  `fix`, `docs`, `test`, `ci`, `build`, `refactor`, `perf`, `style`, `chore`, `revert`. In this repo, a new chapter is
+  `feat:`; README-only changes are `docs:`; package/tooling changes are `build:` or `chore:`; workflow changes are `ci:`.
+- **Individual commits use [Arlo's Commit Notation](https://github.com/RefactoringCombos/ArlosCommitNotation)** -
+  `<risk> <intention> <description>`, e.g. `^ t Add property tests for ShippingCalculator`.
+  - Risk: `.` proven safe, `^` validated (e.g. by the test suite), `!` risky (known risks unverified), `@` probably
+    broken / no attestation. Be honest - a feature or bugfix over 8 changed lines can't be better than `!` per the spec.
+  - Intention: `F` feature, `B` bugfix, `r` refactoring, `d` documentation - plus this repo's extensions `t` test-only
+    and `e` environment (CI, tooling, packages, editorconfig).
+  - Casing means *intended behavior change*: UPPERCASE = the commit intends to change exactly one behavior, lowercase =
+    it intends to change none (so `F`/`B` are normally uppercase; `r`/`d`/`t`/`e` normally lowercase).
+
 ## Architecture
 
 Five projects:
