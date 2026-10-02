@@ -74,6 +74,9 @@ nunit-*.xml
 # Approval Tests result files
 *.received.*
 
+# Stryker.NET mutation testing reports (dotnet stryker - see README/README_MutationTesting.md)
+StrykerOutput/
+
 # Build Results of an ATL Project
 [Dd]ebugPS/
 [Rr]eleasePS/

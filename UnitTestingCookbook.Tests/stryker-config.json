@@ -1,0 +1,19 @@
+{
+  "stryker-config": {
+    "project": "UnitTestingCookbook.Support.csproj",
+    "mutate": [
+      "**/Services/ShippingCalculator.cs"
+    ],
+    "test-case-filter": "TestCategory=mutationtesting",
+    "reporters": [
+      "progress",
+      "cleartext",
+      "html"
+    ],
+    "thresholds": {
+      "high": 80,
+      "low": 60,
+      "break": 0
+    }
+  }
+}

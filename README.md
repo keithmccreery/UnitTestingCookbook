@@ -105,6 +105,11 @@ and the explanation will follow.
 - [Snapshot Testing (Verify)](./README/README_SnapshotTesting.md)
     - [SnapshotTestingTests.cs](./UnitTestingCookbook.Tests/SnapshotTestingTests.cs)
     - [Snapshots](./UnitTestingCookbook.Tests/Snapshots)
+- [Metrics (MetricCollector)](./README/README_Metrics.md)
+    - [MetricsTests.cs](./UnitTestingCookbook.Tests/MetricsTests.cs)
+- [Mutation Testing (Stryker.NET)](./README/README_MutationTesting.md)
+    - [MutationTestingTests.cs](./UnitTestingCookbook.Tests/MutationTestingTests.cs)
+    - [stryker-config.json](./UnitTestingCookbook.Tests/stryker-config.json)
 
 # Errata
 

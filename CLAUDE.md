@@ -42,6 +42,14 @@ dotnet test UnitTestingCookbook.Tests/UnitTestingCookbook.Tests.csproj --filter 
 dotnet test UnitTestingCookbook.Tests/UnitTestingCookbook.Tests.csproj --filter "TestCategory!=wiremocknet_pollypolicies"
 ```
 
+Run mutation testing (Stryker.NET, a local .NET tool pinned in the root `dotnet-tools.json` - **not** run in CI;
+must be run from the test project folder, and only mutates/tests what `UnitTestingCookbook.Tests/stryker-config.json`
+scopes it to - see `README_MutationTesting.md`):
+```
+dotnet tool restore
+cd UnitTestingCookbook.Tests && dotnet stryker
+```
+
 Check/apply formatting per `.editorconfig`:
 ```
 dotnet format UnitTestingCookbook.sln --verify-no-changes
