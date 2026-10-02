@@ -18,6 +18,7 @@
     <PackageReference Include="AwesomeAssertions.Web" />
     <PackageReference Include="Ben.Demystifier" />
     <PackageReference Include="Bogus" />
+    <PackageReference Include="CsCheck" />
     <PackageReference Include="DeepCloner" />
     <PackageReference Include="Flurl" />
     <PackageReference Include="Humanizer.Core" />
