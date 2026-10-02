@@ -103,6 +103,8 @@ and the explanation will follow.
     - [TimeProviderTests.cs](./UnitTestingCookbook.Tests/TimeProviderTests.cs)
 - [Testing IHostedService / BackgroundService](./README/README_HostedService.md)
     - [HostedServiceTests.cs](./UnitTestingCookbook.Tests/HostedServiceTests.cs)
+- [Async Streams and Channels](./README/README_AsyncStreams.md)
+    - [AsyncStreamsTests.cs](./UnitTestingCookbook.Tests/AsyncStreamsTests.cs)
 - [Entity Framework Core](./README/README_EntityFrameworkCore.md)
     - [EntityFrameworkCoreTests.cs](./UnitTestingCookbook.Tests/EntityFrameworkCoreTests.cs)
 - [Parallel Processing](./README/README_ParallelProcessing.md)
