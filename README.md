@@ -117,3 +117,10 @@ and the explanation will follow.
 # Errata
 
 - NUnit vs. XUnit vs. MSTest: Comparing Unit Testing Frameworks In C# https://www.lambdatest.com/blog/nunit-vs-xunit-vs-mstest/
+
+# Future
+
+- Update the WireMock.Net / Polly Policies examples from Polly's v7-style `Policy` API
+  (`Microsoft.Extensions.Http.Polly`) to Polly v8 resilience pipelines (`Microsoft.Extensions.Http.Resilience`). This
+  also removes the repo's last deprecated package (`Polly.Extensions.Http`, pulled in transitively by
+  `Microsoft.Extensions.Http.Polly`).

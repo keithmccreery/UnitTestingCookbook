@@ -14,6 +14,12 @@
 
 All examples are located in `UnitTestingCookbook.Tests` -> [`WireMockNetPollyPoliciesTests`](../UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs)  
 
+**NOTE:** The repo references **Polly 8.x**, but these examples still use the **v7-style `Policy` API**
+(`Policy.Handle<...>()`, `.WaitAndRetryAsync(...)`, `.CircuitBreakerAsync(...)`) via `Microsoft.Extensions.Http.Polly`'s
+`AddPolicyHandler(...)`. Polly v8 keeps that API for backward compatibility, so the code is unchanged. Polly v8's own
+model is *resilience pipelines* (`Microsoft.Extensions.Http.Resilience`), and moving these examples to it is on the
+[Future](../README.md#future) list.  
+
 **NOTE:** The `IServiceCollection`/DI wiring below follows the same basic pattern as
 [Dependency Injection](./README_DependencyInjection.md) (the source of truth for that pattern), and the
 Serilog-to-`ILoggerFactory` bridging (`SerilogLoggerFactory`, `services.AddSingleton(typeof(ILogger<>), ...)`) is
