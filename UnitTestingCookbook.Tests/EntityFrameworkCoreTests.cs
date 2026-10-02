@@ -12,6 +12,7 @@ public class EntityFrameworkCoreTests
 {
     [Test]
     [Category("_passes")]
+    // begin-snippet: EntityFrameworkCoreTests_A_InMemory_AddAndQuery_RoundTrips
     public void A_InMemory_AddAndQuery_RoundTrips()
     {
         // Arrange
@@ -30,9 +31,11 @@ public class EntityFrameworkCoreTests
         result.Should().NotBeNull();
         result!.Price.Should().Be(9.99m);
     }
+    // end-snippet
 
     [Test]
     [Category("_passes")]
+    // begin-snippet: EntityFrameworkCoreTests_B_InMemory_DoesNotEnforceUniqueIndex
     public void B_InMemory_DoesNotEnforceUniqueIndex()
     {
         // Arrange
@@ -51,9 +54,11 @@ public class EntityFrameworkCoreTests
         action.Should().NotThrow();
         dbContext.Products.Count().Should().Be(2);
     }
+    // end-snippet
 
     [Test]
     [Category("_passes")]
+    // begin-snippet: EntityFrameworkCoreTests_C_Sqlite_EnforcesUniqueIndex_Throws
     public void C_Sqlite_EnforcesUniqueIndex_Throws()
     {
         // Arrange
@@ -75,4 +80,5 @@ public class EntityFrameworkCoreTests
         // Assert - Sqlite is a real relational engine, so the unique index is actually enforced
         action.Should().Throw<DbUpdateException>();
     }
+    // end-snippet
 }

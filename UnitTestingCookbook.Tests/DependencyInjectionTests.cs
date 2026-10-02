@@ -20,6 +20,7 @@ public class DependencyInjectionTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: DependencyInjectionTests_A_IConfiguration
     public void A_IConfiguration()
     {
         // Arrange
@@ -34,6 +35,7 @@ public class DependencyInjectionTests
         configuration["Logging:LogLevel:Default"].Should().Be("Debug");
         configuration["key"].Should().Be("value");
     }
+    // end-snippet
 
     //
     // Q: How do I create a new ‘scope’?
@@ -41,6 +43,7 @@ public class DependencyInjectionTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: DependencyInjectionTests_B_Scope
     public void B_Scope()
     {
         // Arrange
@@ -68,12 +71,14 @@ public class DependencyInjectionTests
             scope1First.Should().NotBeSameAs(scope2First); // different scope -> new instance (would fail if registered Singleton)
         }
     }
+    // end-snippet
 
     //
     // Q: How do I setup IOptions<T> for testing?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: DependencyInjectionTests_C_IOptions
     public void C_IOptions()
     {
         // Arrange
@@ -84,4 +89,5 @@ public class DependencyInjectionTests
         options.Value.Should().BeOfType<MemoryDistributedCacheOptions>()
             .Which.SizeLimit.Should().Be(200 * 1024 * 1024);
     }
+    // end-snippet
 }

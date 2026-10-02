@@ -11,6 +11,7 @@ namespace UnitTestingCookbook.Tests;
 [TestFixture, Order(2)]
 public class DataHangoverFailureTests
 {
+    // begin-snippet: DataHangoverFailureTests_Tests
     [Test, Order(1)]
     [Category("_passes")]
     public void First_Test_Lease_Passes()
@@ -47,5 +48,6 @@ public class DataHangoverFailureTests
         // Assert
         offer.Finance.PaymentType.Should().Be("P");
     }
+    // end-snippet
 }
 #pragma warning restore CS0618

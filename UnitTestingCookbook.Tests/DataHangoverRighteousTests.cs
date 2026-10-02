@@ -13,6 +13,7 @@ namespace UnitTestingCookbook.Tests;
 [TestFixture, Order(1)]
 public class DataHangoverRighteousTests
 {
+    // begin-snippet: DataHangoverRighteousTests_Tests
     private readonly Offer _originalOffer = new Offer()
     {
         Dealer = TestValues.DealerValues,
@@ -46,5 +47,6 @@ public class DataHangoverRighteousTests
         // Assert
         offer.Finance.PaymentType.Should().Be("P");
     }
+    // end-snippet
 }
 #pragma warning restore CS0618

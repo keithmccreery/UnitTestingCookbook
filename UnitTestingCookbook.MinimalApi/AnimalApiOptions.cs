@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace UnitTestingCookbook.MinimalApi;
 
+// begin-snippet: AnimalApiOptions
 public class AnimalApiOptions
 {
     public const string SectionName = "AnimalApi";
@@ -12,3 +13,4 @@ public class AnimalApiOptions
     [Required]
     public string DefaultSpecies { get; set; } = default!;
 }
+// end-snippet

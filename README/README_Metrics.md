@@ -23,7 +23,9 @@ inline so this chapter stands on its own.
 histogram, and an observable gauge. It creates its `Meter` from an injected `IMeterFactory` instead of `new Meter(...)`.
 That's the recommended pattern for DI apps, and it's what makes the tests below isolated from each other (see `E_`).
 
-```csharp
+<!-- snippet: OrderMetrics.cs -->
+<a id='snippet-OrderMetrics.cs'></a>
+```cs
 using System.Diagnostics.Metrics;
 
 using UnitTestingCookbook.Support.Models;
@@ -63,6 +65,8 @@ public sealed class OrderMetrics
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Support/Services/OrderMetrics.cs#L1-L38' title='Snippet source file'>snippet source</a> | <a href='#snippet-OrderMetrics.cs' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 `MetricCollector<T>` listens to **one instrument**, identified by `(meterScope, meterName, instrumentName)`, and
 records every measurement it emits from the moment it's created. Create it **before** the code under test runs, and
@@ -76,7 +80,9 @@ dispose it (`using`) when done. `T` must match the instrument's type (`Counter<l
 - `.EvaluateAsCounter()` sums them, which is usually what a counter assertion actually cares about.
 - `LastMeasurement` returns the most recent measurement.
 
-```csharp
+<!-- snippet: MetricsTests_A_Counter -->
+<a id='snippet-MetricsTests_A_Counter'></a>
+```cs
 public void A_Counter()
 {
     // Arrange
@@ -104,12 +110,16 @@ public void A_Counter()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/MetricsTests.cs#L25-L52' title='Snippet source file'>snippet source</a> | <a href='#snippet-MetricsTests_A_Counter' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
 ## How do I assert the values recorded by a Histogram?
 
-```csharp
+<!-- snippet: MetricsTests_B_Histogram -->
+<a id='snippet-MetricsTests_B_Histogram'></a>
+```cs
 public void B_Histogram()
 {
     // Arrange
@@ -133,6 +143,8 @@ public void B_Histogram()
         .Should().Equal(19.98, 24.50);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/MetricsTests.cs#L59-L82' title='Snippet source file'>snippet source</a> | <a href='#snippet-MetricsTests_B_Histogram' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -141,7 +153,9 @@ public void B_Histogram()
 `ContainsTags("name")` filters to measurements that *have* a tag (any value). `MatchesTags(new KeyValuePair<...>(name, value))`
 filters to an exact name **and** value. Both return the filtered measurements, so `.EvaluateAsCounter()` can be chained.
 
-```csharp
+<!-- snippet: MetricsTests_C_Tags -->
+<a id='snippet-MetricsTests_C_Tags'></a>
+```cs
 public void C_Tags()
 {
     // Arrange
@@ -172,6 +186,8 @@ public void C_Tags()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/MetricsTests.cs#L89-L119' title='Snippet source file'>snippet source</a> | <a href='#snippet-MetricsTests_C_Tags' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -181,7 +197,9 @@ Observable instruments don't record anything when the value changes. Their callb
 **polls** them. In production that's the metrics exporter, on its own schedule. In a test,
 `collector.RecordObservableInstruments()` polls them on demand, so the test controls exactly when each value is captured.
 
-```csharp
+<!-- snippet: MetricsTests_D_ObservableGauge -->
+<a id='snippet-MetricsTests_D_ObservableGauge'></a>
+```cs
 public void D_ObservableGauge()
 {
     // Arrange
@@ -208,6 +226,8 @@ public void D_ObservableGauge()
         .Should().Equal(7, 3);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/MetricsTests.cs#L126-L152' title='Snippet source file'>snippet source</a> | <a href='#snippet-MetricsTests_D_ObservableGauge' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -218,7 +238,9 @@ A factory-created `Meter`'s `Scope` is the factory itself, and a collector only 
 is **equal** to the `meterScope` it was given. So each DI container's measurements stay separate, even with
 identical meter and instrument names:
 
-```csharp
+<!-- snippet: MetricsTests_E_Isolation_Per_MeterFactory -->
+<a id='snippet-MetricsTests_E_Isolation_Per_MeterFactory'></a>
+```cs
 public void E_Isolation_Per_MeterFactory()
 {
     // Arrange - two independent containers, as two tests (possibly running in parallel) would have
@@ -249,6 +271,8 @@ public void E_Isolation_Per_MeterFactory()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/MetricsTests.cs#L160-L190' title='Snippet source file'>snippet source</a> | <a href='#snippet-MetricsTests_E_Isolation_Per_MeterFactory' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 **Why this matters:** with a `static readonly Meter meter = new Meter("UnitTestingCookbook.Orders")` (very common, and
 fine in production), the meter has **no** scope, so there's only one per process. A collector listening to it
@@ -267,7 +291,9 @@ not 3).
 `MetricCollector<T>` takes an optional `TimeProvider` and uses it to timestamp each measurement. With a
 `FakeTimeProvider`, the timestamps are exact and assertable:
 
-```csharp
+<!-- snippet: MetricsTests_F_Timestamps_With_FakeTimeProvider -->
+<a id='snippet-MetricsTests_F_Timestamps_With_FakeTimeProvider'></a>
+```cs
 public void F_Timestamps_With_FakeTimeProvider()
 {
     // Arrange
@@ -295,6 +321,8 @@ public void F_Timestamps_With_FakeTimeProvider()
         .Should().Equal(now, now.AddMinutes(5));
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/MetricsTests.cs#L198-L225' title='Snippet source file'>snippet source</a> | <a href='#snippet-MetricsTests_F_Timestamps_With_FakeTimeProvider' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 See [TimeProvider](./README_TimeProvider.md) (the source of truth for `FakeTimeProvider`).  
 

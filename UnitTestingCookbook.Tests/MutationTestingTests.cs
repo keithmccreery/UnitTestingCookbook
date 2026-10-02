@@ -18,6 +18,7 @@ public class MutationTestingTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: MutationTestingTests_A_HappyPath_Only
     public void A_HappyPath_Only()
     {
         // Act
@@ -31,13 +32,15 @@ public class MutationTestingTests
             underThreshold.Should().Be(5.99m);
         }
     }
+    // end-snippet
 
     //
     // Q: How do I kill a boundary mutant (>= mutated to >)?
     //
+    [Category("_passes")]
+    // begin-snippet: MutationTestingTests_B_FreeShipping_Boundary
     [TestCase(50.00, 0.00)] // exactly at the threshold - only >= gives free shipping
     [TestCase(49.99, 5.99)] // just under
-    [Category("_passes")]
     public void B_FreeShipping_Boundary(decimal orderTotal, decimal expected)
     {
         // Act
@@ -46,13 +49,15 @@ public class MutationTestingTests
         // Assert
         shipping.Should().Be(expected);
     }
+    // end-snippet
 
     //
     // Q: How do I kill a mutant in a branch no test asserts on?
     //
+    [Category("_passes")]
+    // begin-snippet: MutationTestingTests_C_Express_AddsSurcharge
     [TestCase(10.00, 15.99)] // standard rate + express surcharge
     [TestCase(100.00, 10.00)] // free shipping + express surcharge
-    [Category("_passes")]
     public void C_Express_AddsSurcharge(decimal orderTotal, decimal expected)
     {
         // Act
@@ -61,12 +66,14 @@ public class MutationTestingTests
         // Assert
         shipping.Should().Be(expected);
     }
+    // end-snippet
 
     //
     // Q: How do I kill mutants in a guard clause?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: MutationTestingTests_D_NegativeTotal_Throws
     public void D_NegativeTotal_Throws()
     {
         // Act
@@ -76,12 +83,14 @@ public class MutationTestingTests
         act.Should().Throw<ArgumentOutOfRangeException>()
             .WithParameterName("orderTotal");
     }
+    // end-snippet
 
     //
     // Q: Does a zero total still pass the guard clause?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: MutationTestingTests_E_ZeroTotal_DoesNotThrow
     public void E_ZeroTotal_DoesNotThrow()
     {
         // Act
@@ -90,4 +99,5 @@ public class MutationTestingTests
         // Assert
         shipping.Should().Be(5.99m);
     }
+    // end-snippet
 }

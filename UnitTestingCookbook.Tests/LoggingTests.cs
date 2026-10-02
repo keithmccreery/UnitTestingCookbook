@@ -25,6 +25,7 @@ public class LoggingTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: LoggingTests_A_ILogger_Via_NullLoggerFactory
     public void A_ILogger_Via_NullLoggerFactory()
     {
         // Arrange
@@ -39,12 +40,14 @@ public class LoggingTests
         // Assert
         logger.Should().NotBeNull();
     }
+    // end-snippet
 
     //
     // Q: How do I Instantiate a Class with Microsoft.Extensions.Logging ILogger via NullLogger?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: LoggingTests_B_ILogger_Via_NullLogger
     public void B_ILogger_Via_NullLogger()
     {
         // Arrange
@@ -58,12 +61,14 @@ public class LoggingTests
         // Assert
         logger.Should().NotBeNull();
     }
+    // end-snippet
 
     //
     // Q: How do I Instantiate a Class with Microsoft.Extensions.Logging ILogger via NullLoggerFactory and Dependency Injection?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: LoggingTests_C_ILogger_Via_DependencyInjection_NullLoggerFactory
     public void C_ILogger_Via_DependencyInjection_NullLoggerFactory()
     {
         // Arrange
@@ -80,12 +85,14 @@ public class LoggingTests
         // Assert
         sampleWithLogging.Should().NotBeNull();
     }
+    // end-snippet
 
     //
     // Q: How do I Instantiate a Class with Microsoft.Extensions.Logging ILogger via NullLogger and Dependency Injection?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: LoggingTests_D_ILogger_Via_DependencyInjection_NullLogger
     public void D_ILogger_Via_DependencyInjection_NullLogger()
     {
         // Arrange
@@ -101,6 +108,7 @@ public class LoggingTests
         // Assert
         sampleWithLogging.Should().NotBeNull();
     }
+    // end-snippet
 
     //
     // Q: How do I Instantiate a Class with Microsoft.Extensions.Logging ILoggerFactory via NullLoggerFactory and Dependency Injection?
@@ -108,6 +116,7 @@ public class LoggingTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: LoggingTests_E_ILoggerFactory_Via_DependencyInjection_NullLoggerFactory
     public void E_ILoggerFactory_Via_DependencyInjection_NullLoggerFactory()
     {
         // Arrange
@@ -123,6 +132,7 @@ public class LoggingTests
         // Assert
         sampleWithLoggingFactory.Should().NotBeNull();
     }
+    // end-snippet
 
     //
     // Q: How can I use Serilog with Microsoft.Extensions.Logging ILoggerFactory?
@@ -130,6 +140,7 @@ public class LoggingTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: LoggingTests_F_Serilog_To_ILoggerFactory
     public void F_Serilog_To_ILoggerFactory()
     {
         // Arrange
@@ -145,6 +156,7 @@ public class LoggingTests
         // Assert
         sampleWithLoggingFactory.Should().NotBeNull();
     }
+    // end-snippet
 
     //
     // Q: How can I use Serilog with Microsoft.Extensions.Logging ILogger?
@@ -152,6 +164,7 @@ public class LoggingTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: LoggingTests_G_Serilog_To_ILogger
     public void G_Serilog_To_ILogger()
     {
         // Arrange
@@ -168,6 +181,7 @@ public class LoggingTests
         // Assert
         sampleWithLogging.Should().NotBeNull();
     }
+    // end-snippet
 
     //
     // Q: How can I use Serilog with Microsoft.Extensions.Logging ILogger to display Log Context to Console?
@@ -176,6 +190,7 @@ public class LoggingTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: LoggingTests_H_Serilog_To_ILogger_Context_To_Console
     public void H_Serilog_To_ILogger_Context_To_Console()
     {
         // Arrange
@@ -198,6 +213,7 @@ public class LoggingTests
         // Assert
         sampleWithLogging.Should().NotBeNull();
     }
+    // end-snippet
 
     //
     // Q: How can I assert Logs with Serilog.Sinks.TestCorrelator?
@@ -206,6 +222,7 @@ public class LoggingTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: LoggingTests_I_Serilog_TestCorrelator
     public void I_Serilog_TestCorrelator()
     {
         // Arrange
@@ -244,6 +261,7 @@ public class LoggingTests
                 .Value.Should().Be(message);
         }
     }
+    // end-snippet
 
     //
     // Q: How can I assert Logs with Serilog.Sinks.TestCorrelator with an Object?
@@ -252,6 +270,7 @@ public class LoggingTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: LoggingTests_J_Serilog_TestCorrelator_Structured
     public void J_Serilog_TestCorrelator_Structured()
     {
         // Arrange
@@ -296,12 +315,14 @@ public class LoggingTests
             // LogEventProperty is a key/value object as 'Name' and 'Value'
         }
     }
+    // end-snippet
 
     //
     // Q: How do I Mock and Verify Microsoft.Extensions.Logging ILogger? GOOD
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: LoggingTests_K_Mock_ILogger_Good
     public void K_Mock_ILogger_Good()
     {
         // Arrange
@@ -324,12 +345,14 @@ public class LoggingTests
             It.IsAny<Exception>(),
             It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)));
     }
+    // end-snippet
 
     //
     // Q: How do I Mock and Verify Microsoft.Extensions.Logging ILogger? BETTER
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: LoggingTests_L_Mock_ILogger_Better
     public void L_Mock_ILogger_Better()
     {
         // Arrange
@@ -352,12 +375,14 @@ public class LoggingTests
             It.IsAny<Exception>(),
             It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)));
     }
+    // end-snippet
 
     //
     // Q: How do I Mock and Verify Microsoft.Extensions.Logging ILogger? BEST
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: LoggingTests_M_Mock_ILogger_Best
     public void M_Mock_ILogger_Best()
     {
         // Arrange
@@ -374,6 +399,7 @@ public class LoggingTests
         // Assert
         loggerMock.VerifyLogging($"This is the template with a {message}.", LogLevel.Information, Times.Once());
     }
+    // end-snippet
 
     //
     // Q: How do I count TestCorrelator log events - overall, by severity, or by message template?
@@ -381,6 +407,7 @@ public class LoggingTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: LoggingTests_N_TestCorrelator_Count
     public void N_TestCorrelator_Count()
     {
         // Arrange
@@ -417,6 +444,7 @@ public class LoggingTests
             }
         }
     }
+    // end-snippet
 
     //
     // Q: How do I check whether a particular message was logged, without pulling it out and asserting on it manually?
@@ -424,6 +452,7 @@ public class LoggingTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: LoggingTests_O_TestCorrelator_HasMessage
     public void O_TestCorrelator_HasMessage()
     {
         // Arrange
@@ -462,6 +491,7 @@ public class LoggingTests
             }
         }
     }
+    // end-snippet
 
     //
     // Q: How do I compare a whole list of expected log events at once?
@@ -469,6 +499,7 @@ public class LoggingTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: LoggingTests_P_TestCorrelator_CompareList
     public void P_TestCorrelator_CompareList()
     {
         // Arrange
@@ -501,6 +532,7 @@ public class LoggingTests
             });
         }
     }
+    // end-snippet
 
     //
     // Q: How do I assert Microsoft.Extensions.Logging ILogger logs with FakeLogger, without Serilog or a Mock?
@@ -508,6 +540,7 @@ public class LoggingTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: LoggingTests_Q_FakeLogger
     public void Q_FakeLogger()
     {
         // Arrange
@@ -530,6 +563,7 @@ public class LoggingTests
             logger.LatestRecord.GetStructuredStateValue("Message").Should().Be(message); // property
         }
     }
+    // end-snippet
 
     //
     // Q: How do I assert Microsoft.Extensions.Logging ILogger logs with FakeLogger and Dependency Injection?
@@ -537,6 +571,7 @@ public class LoggingTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: LoggingTests_R_FakeLogger_Via_DependencyInjection
     public void R_FakeLogger_Via_DependencyInjection()
     {
         // Arrange
@@ -561,6 +596,7 @@ public class LoggingTests
                 new { Level = LogLevel.Information, Message = "This is the template with a second." },
             });
     }
+    // end-snippet
 
     //
     // Q: How does FakeLogger handle a structured (destructured) Object?
@@ -569,6 +605,7 @@ public class LoggingTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: LoggingTests_S_FakeLogger_Structured
     public void S_FakeLogger_Structured()
     {
         // Arrange
@@ -594,4 +631,5 @@ public class LoggingTests
             logger.LatestRecord.GetStructuredStateValue("@Object").Should().Be("{ Name = John, Age = 21 }");
         }
     }
+    // end-snippet
 }

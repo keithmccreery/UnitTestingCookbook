@@ -20,7 +20,9 @@ not the data within the Objects, creating Data Hangover (from the previous test)
 
 ### Data Hangover
 
-```csharp
+<!-- snippet: DataHangoverFailureTests_Tests -->
+<a id='snippet-DataHangoverFailureTests_Tests'></a>
+```cs
 [Test, Order(1)]
 [Category("_passes")]
 public void First_Test_Lease_Passes()
@@ -58,6 +60,8 @@ public void Second_Test_Payment_Fails()
     offer.Finance.PaymentType.Should().Be("P");
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/DataHangoverFailureTests.cs#L14-L51' title='Snippet source file'>snippet source</a> | <a href='#snippet-DataHangoverFailureTests_Tests' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ### Righteous
 
@@ -70,7 +74,9 @@ and make the desired changes on the cloned data to test against.
 same execution order that exhibited the problem above (change a property first, then check the original value),
 and now pass.  
 
-```csharp
+<!-- snippet: DataHangoverRighteousTests_Tests -->
+<a id='snippet-DataHangoverRighteousTests_Tests'></a>
+```cs
 private readonly Offer _originalOffer = new Offer()
 {
     Dealer = TestValues.DealerValues,
@@ -105,6 +111,8 @@ public void Second_Test_Payment_Passes()
     offer.Finance.PaymentType.Should().Be("P");
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/DataHangoverRighteousTests.cs#L16-L50' title='Snippet source file'>snippet source</a> | <a href='#snippet-DataHangoverRighteousTests_Tests' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ### What these patterns are called
 

@@ -2,6 +2,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace UnitTestingCookbook.Support.Services;
 
+// begin-snippet: HeartbeatWorker
 public class HeartbeatWorker : BackgroundService
 {
     private readonly TimeProvider timeProvider;
@@ -24,3 +25,4 @@ public class HeartbeatWorker : BackgroundService
         }
     }
 }
+// end-snippet

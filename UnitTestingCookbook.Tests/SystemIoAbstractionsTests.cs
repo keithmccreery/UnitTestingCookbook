@@ -15,6 +15,7 @@ public class SystemIoAbstractionsTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: SystemIoAbstractionsTests_A_IFileSystem_Exist
     public void A_IFileSystem_Exist()
     {
         // Arrange
@@ -23,7 +24,7 @@ public class SystemIoAbstractionsTests
 
         IFileSystem fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>()
         {
-            { existsFilePath, new MockFileData( String.Empty ) },
+            { existsFilePath, new MockFileData(String.Empty) },
         });
 
         SampleSystemIoAbstractions systemIoAbstractions = new SampleSystemIoAbstractions(fileSystem);
@@ -36,4 +37,5 @@ public class SystemIoAbstractionsTests
         exists.Should().BeTrue();
         doesNotExist.Should().BeFalse();
     }
+    // end-snippet
 }

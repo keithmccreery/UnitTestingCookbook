@@ -141,7 +141,9 @@ Here we define the Polly Policies.
 
 :exclamation: Polly Policy context example https://github.com/App-vNext/Polly/wiki/Polly-and-HttpClientFactory#configuring-httpclientfactory-policies-to-use-an-iloggert-from-the-call-site  
 
-```csharp
+<!-- snippet: WireMockNetPollyPoliciesTests_SetUp -->
+<a id='snippet-WireMockNetPollyPoliciesTests_SetUp'></a>
+```cs
 public void SetUp()
 {
     //
@@ -235,10 +237,14 @@ public void SetUp()
     _serviceProvider = services.BuildServiceProvider(true);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs#L138-L231' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetPollyPoliciesTests_SetUp' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ### TearDown
 
-```csharp
+<!-- snippet: WireMockNetPollyPoliciesTests_TearDown -->
+<a id='snippet-WireMockNetPollyPoliciesTests_TearDown'></a>
+```cs
 public async Task TearDown()
 {
     await Task.Delay(3000); // BUG in WireMock.Net LogEntries. Need to wait for this call to be logged, to allow .ResetLogEntries() to work
@@ -246,10 +252,14 @@ public async Task TearDown()
     (_serviceProvider as IDisposable)?.Dispose();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs#L234-L241' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetPollyPoliciesTests_TearDown' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ### One Time TearDown
 
-```csharp
+<!-- snippet: WireMockNetPollyPoliciesTests_OneTimeTearDown -->
+<a id='snippet-WireMockNetPollyPoliciesTests_OneTimeTearDown'></a>
+```cs
 [OneTimeTearDown]
 public void OneTimeTearDown()
 {
@@ -257,6 +267,8 @@ public void OneTimeTearDown()
     _wireMockServer.Dispose();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs#L128-L135' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetPollyPoliciesTests_OneTimeTearDown' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ### Polly Context Extension Method
 
@@ -266,7 +278,9 @@ These Extension Methods help define the Polly Context, which includes...
  
 To use, it does require the `.AddPollyContext()` to be added to every `HttpRequestMessage` or every endpoint call.  
 
-```csharp
+<!-- snippet: PollyContextExtensions -->
+<a id='snippet-PollyContextExtensions'></a>
+```cs
 public static class PollyContextExtensions
 {
     private static readonly string LoggerKey = "ILogger";
@@ -299,9 +313,13 @@ public static class PollyContextExtensions
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Support/PollyContextExtensions.cs#L17-L49' title='Snippet source file'>snippet source</a> | <a href='#snippet-PollyContextExtensions' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 Service Endpoint...
-```csharp
+<!-- snippet: HttpBinOrgService_GetStatusAsync -->
+<a id='snippet-HttpBinOrgService_GetStatusAsync'></a>
+```cs
 public async Task<HttpStatusCode> GetStatusAsync(HttpStatusCode status, CancellationToken cancellationToken = default)
 {
     HttpClient httpClient = httpClientFactory.CreateClient("HttpBinOrg"); // short-lived
@@ -320,6 +338,8 @@ public async Task<HttpStatusCode> GetStatusAsync(HttpStatusCode status, Cancella
     return response.StatusCode;
 }
 ```
+<sup><a href='/UnitTestingCookbook.Support/Services/HttpBinOrgService.cs#L20-L38' title='Snippet source file'>snippet source</a> | <a href='#snippet-HttpBinOrgService_GetStatusAsync' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -327,7 +347,9 @@ public async Task<HttpStatusCode> GetStatusAsync(HttpStatusCode status, Cancella
 
 This is the Happy Path.
 
-```csharp
+<!-- snippet: WireMockNetPollyPoliciesTests_A_WireMockNet_Polly_OK -->
+<a id='snippet-WireMockNetPollyPoliciesTests_A_WireMockNet_Polly_OK'></a>
+```cs
 public async Task A_WireMockNet_Polly_OK()
 {
     // Arrange
@@ -344,6 +366,8 @@ public async Task A_WireMockNet_Polly_OK()
         .AtUrl($"{_baseUrl}{ENDPOINT_STATUS_OK}");
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs#L252-L268' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetPollyPoliciesTests_A_WireMockNet_Polly_OK' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -355,7 +379,9 @@ public async Task A_WireMockNet_Polly_OK()
 - endpoint delay is 3 seconds.
 
 
-```csharp
+<!-- snippet: WireMockNetPollyPoliciesTests_B_WireMockNet_Polly_CancellationToken -->
+<a id='snippet-WireMockNetPollyPoliciesTests_B_WireMockNet_Polly_CancellationToken'></a>
+```cs
 public async Task B_WireMockNet_Polly_CancellationToken()
 {
     // Arrange
@@ -372,12 +398,16 @@ public async Task B_WireMockNet_Polly_CancellationToken()
     await action.Should().ThrowAsync<TaskCanceledException>();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs#L284-L300' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetPollyPoliciesTests_B_WireMockNet_Polly_CancellationToken' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ### WaitAndRetry
 
 ---
 
-```csharp
+<!-- snippet: WireMockNetPollyPoliciesTests_C_WireMockNet_Polly_InternalServerError -->
+<a id='snippet-WireMockNetPollyPoliciesTests_C_WireMockNet_Polly_InternalServerError'></a>
+```cs
 public async Task C_WireMockNet_Polly_InternalServerError()
 {
     // Arrange
@@ -401,6 +431,8 @@ public async Task C_WireMockNet_Polly_InternalServerError()
     stopwatch.ElapsedMilliseconds.Should().BeGreaterThan(6000); // 6 seconds
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs#L312-L335' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetPollyPoliciesTests_C_WireMockNet_Polly_InternalServerError' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 OUTPUT...
 
@@ -413,7 +445,9 @@ OUTPUT...
 
 ### WaitAndRetry & Timeout
 
-```csharp
+<!-- snippet: WireMockNetPollyPoliciesTests_D_WireMockNet_Polly_WaitAndRetry_Timeout -->
+<a id='snippet-WireMockNetPollyPoliciesTests_D_WireMockNet_Polly_WaitAndRetry_Timeout'></a>
+```cs
 public async Task D_WireMockNet_Polly_WaitAndRetry_Timeout()
 {
     // Arrange
@@ -437,6 +471,8 @@ public async Task D_WireMockNet_Polly_WaitAndRetry_Timeout()
     stopwatch.ElapsedMilliseconds.Should().BeGreaterThan(12000); // 12 seconds
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs#L347-L370' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetPollyPoliciesTests_D_WireMockNet_Polly_WaitAndRetry_Timeout' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 OUTPUT...
 
@@ -452,7 +488,9 @@ OUTPUT...
 
 ### WaitAndRetry & CircuitBreaker
 
-```csharp
+<!-- snippet: WireMockNetPollyPoliciesTests_E_WireMockNet_Polly_WaitAndRetry_CircuitBreaker -->
+<a id='snippet-WireMockNetPollyPoliciesTests_E_WireMockNet_Polly_WaitAndRetry_CircuitBreaker'></a>
+```cs
 public async Task E_WireMockNet_Polly_WaitAndRetry_CircuitBreaker()
 {
     // Arrange
@@ -507,6 +545,8 @@ public async Task E_WireMockNet_Polly_WaitAndRetry_CircuitBreaker()
     _wireMockServer.LogEntries.Should().HaveCount(17);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs#L382-L436' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetPollyPoliciesTests_E_WireMockNet_Polly_WaitAndRetry_CircuitBreaker' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 OUTPUT...
 
@@ -538,7 +578,9 @@ OUTPUT...
 
 ### Intermittent Failure, then Success
 
-```csharp
+<!-- snippet: WireMockNetPollyPoliciesTests_F_WireMockNet_Polly_HandleIntermittentFailureThenSuccess -->
+<a id='snippet-WireMockNetPollyPoliciesTests_F_WireMockNet_Polly_HandleIntermittentFailureThenSuccess'></a>
+```cs
 public async Task F_WireMockNet_Polly_HandleIntermittentFailureThenSuccess()
 {
     // Arrange
@@ -561,6 +603,8 @@ public async Task F_WireMockNet_Polly_HandleIntermittentFailureThenSuccess()
     _wireMockServer.LogEntries.Should().HaveCount(2);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs#L446-L468' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetPollyPoliciesTests_F_WireMockNet_Polly_HandleIntermittentFailureThenSuccess' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 OUTPUT...
 

@@ -57,7 +57,9 @@ public class SampleSystemIoAbstractions
 Sample Unit test...  
 We can create a Mock File System, with Mock Files and Mock Data to test against.  
 
-```csharp
+<!-- snippet: SystemIoAbstractionsTests_A_IFileSystem_Exist -->
+<a id='snippet-SystemIoAbstractionsTests_A_IFileSystem_Exist'></a>
+```cs
 public void A_IFileSystem_Exist()
 {
     // Arrange
@@ -80,6 +82,8 @@ public void A_IFileSystem_Exist()
     doesNotExist.Should().BeFalse();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/SystemIoAbstractionsTests.cs#L18-L40' title='Snippet source file'>snippet source</a> | <a href='#snippet-SystemIoAbstractionsTests_A_IFileSystem_Exist' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 In Production, use the default `FileSystem`, which calls `System.IO`.  
 

@@ -44,7 +44,9 @@ the test, writes a new `.received` file and (locally) opens a diff tool showing 
 **Snapshot location.** By default, snapshots go next to the test's `.cs` file. A module initializer sends them to a
 `Snapshots` folder instead:
 
-```csharp
+<!-- snippet: VerifyModuleInitializer.cs -->
+<a id='snippet-VerifyModuleInitializer.cs'></a>
+```cs
 using System.Runtime.CompilerServices;
 
 namespace UnitTestingCookbook.Tests;
@@ -63,6 +65,8 @@ public static class VerifyModuleInitializer
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/VerifyModuleInitializer.cs#L1-L17' title='Snippet source file'>snippet source</a> | <a href='#snippet-VerifyModuleInitializer.cs' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 **Line endings and encoding.** Verify writes snapshot files as UTF-8 with a BOM and compares them byte for byte, so two repo
 settings keep editors and git from changing them:
@@ -76,7 +80,9 @@ an editor doesn't break it.
 
 ## How do I assert an entire object at once, without writing a .Should() per property?
 
-```csharp
+<!-- snippet: SnapshotTestingTests_A_Verify_Object -->
+<a id='snippet-SnapshotTestingTests_A_Verify_Object'></a>
+```cs
 public Task A_Verify_Object()
 {
     // Arrange
@@ -91,6 +97,8 @@ public Task A_Verify_Object()
     return Verify(product);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/SnapshotTestingTests.cs#L21-L35' title='Snippet source file'>snippet source</a> | <a href='#snippet-SnapshotTestingTests_A_Verify_Object' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 `Snapshots/SnapshotTestingTests.A_Verify_Object.verified.txt`:
 
@@ -112,7 +120,9 @@ This works with no configuration. Verify **scrubs** `Guid`s and `DateTime`s by d
 with a stable placeholder (`Guid_1`, `Guid_2`, `DateTime_1`, ...). The snapshot stays the same across runs, but
 still shows whether two fields held the *same* value (both `Guid_1`) or *different* values (`Guid_1` vs. `Guid_2`).
 
-```csharp
+<!-- snippet: SnapshotTestingTests_B_Verify_AutoScrubbing -->
+<a id='snippet-SnapshotTestingTests_B_Verify_AutoScrubbing'></a>
+```cs
 public Task B_Verify_AutoScrubbing()
 {
     // Arrange
@@ -132,6 +142,8 @@ public Task B_Verify_AutoScrubbing()
     return Verify(order);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/SnapshotTestingTests.cs#L42-L61' title='Snippet source file'>snippet source</a> | <a href='#snippet-SnapshotTestingTests_B_Verify_AutoScrubbing' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 `Snapshots/SnapshotTestingTests.B_Verify_AutoScrubbing.verified.txt`:
 
@@ -167,7 +179,9 @@ fails the test until someone reviews it and accepts the new snapshot.
 `.IgnoreMember<T>(x => x.Member)` removes it completely. (`.ScrubMember<T>(...)` keeps the property name but replaces
 its value with `{Scrubbed}`, if the property's *presence* matters but its value doesn't.)
 
-```csharp
+<!-- snippet: SnapshotTestingTests_C_Verify_IgnoreMember -->
+<a id='snippet-SnapshotTestingTests_C_Verify_IgnoreMember'></a>
+```cs
 public Task C_Verify_IgnoreMember()
 {
     // Arrange
@@ -185,6 +199,8 @@ public Task C_Verify_IgnoreMember()
         .IgnoreMember<Order>(x => x.InternalNotes);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/SnapshotTestingTests.cs#L68-L85' title='Snippet source file'>snippet source</a> | <a href='#snippet-SnapshotTestingTests_C_Verify_IgnoreMember' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 `Snapshots/SnapshotTestingTests.C_Verify_IgnoreMember.verified.txt`:
 
@@ -211,7 +227,9 @@ public Task C_Verify_IgnoreMember()
 Pass a `string` plus an `extension`. The snapshot is saved as-is, with no serialization, as a `.verified.csv`, so it
 opens (and diffs) as a normal CSV file.
 
-```csharp
+<!-- snippet: SnapshotTestingTests_D_Verify_Text_Csv -->
+<a id='snippet-SnapshotTestingTests_D_Verify_Text_Csv'></a>
+```cs
 public Task D_Verify_Text_Csv()
 {
     // Arrange
@@ -232,6 +250,8 @@ public Task D_Verify_Text_Csv()
     return Verify(csv, extension: "csv");
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/SnapshotTestingTests.cs#L92-L112' title='Snippet source file'>snippet source</a> | <a href='#snippet-SnapshotTestingTests_D_Verify_Text_Csv' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 `Snapshots/SnapshotTestingTests.D_Verify_Text_Csv.verified.csv`:
 
@@ -250,7 +270,9 @@ TOTAL,,,44.48
 same Guid/DateTime scrubbing applies to values *inside* the JSON. Whitespace or formatting changes in the source
 JSON don't fail the test; only content changes do.
 
-```csharp
+<!-- snippet: SnapshotTestingTests_E_VerifyJson -->
+<a id='snippet-SnapshotTestingTests_E_VerifyJson'></a>
+```cs
 public Task E_VerifyJson()
 {
     // Arrange
@@ -260,6 +282,8 @@ public Task E_VerifyJson()
     return VerifyJson(json);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/SnapshotTestingTests.cs#L119-L128' title='Snippet source file'>snippet source</a> | <a href='#snippet-SnapshotTestingTests_E_VerifyJson' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 `Snapshots/SnapshotTestingTests.E_VerifyJson.verified.txt`:
 
@@ -283,7 +307,9 @@ public Task E_VerifyJson()
 No extra code needed. Verify.NUnit reads the current test's arguments from NUnit and adds them to the file name,
 so each `[TestCase]` gets its own snapshot:
 
-```csharp
+<!-- snippet: SnapshotTestingTests_F_Verify_Parameterized -->
+<a id='snippet-SnapshotTestingTests_F_Verify_Parameterized'></a>
+```cs
 public Task F_Verify_Parameterized(string sku, int quantity)
 {
     // Arrange
@@ -300,6 +326,8 @@ public Task F_Verify_Parameterized(string sku, int quantity)
     return Verify(csv, extension: "csv");
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/SnapshotTestingTests.cs#L136-L152' title='Snippet source file'>snippet source</a> | <a href='#snippet-SnapshotTestingTests_F_Verify_Parameterized' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 `Snapshots/SnapshotTestingTests.F_Verify_Parameterized_sku=WIDGET_quantity=1.verified.csv`:
 
@@ -327,7 +355,9 @@ changed. The add-on package [Verify.Http](https://github.com/VerifyTests/Verify.
 Verify add-on would also need pinning to a release from on or before 2026-09-01). Without an add-on, pick out what matters
 explicitly:
 
-```csharp
+<!-- snippet: SnapshotTestingTests_G_Verify_HttpResponse -->
+<a id='snippet-SnapshotTestingTests_G_Verify_HttpResponse'></a>
+```cs
 public async Task G_Verify_HttpResponse()
 {
     // Arrange
@@ -346,6 +376,8 @@ public async Task G_Verify_HttpResponse()
     });
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/SnapshotTestingTests.cs#L162-L180' title='Snippet source file'>snippet source</a> | <a href='#snippet-SnapshotTestingTests_G_Verify_HttpResponse' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 `Snapshots/SnapshotTestingTests.G_Verify_HttpResponse.verified.txt`:
 

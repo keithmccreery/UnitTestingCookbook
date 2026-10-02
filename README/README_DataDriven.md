@@ -13,7 +13,9 @@ Using `TestCaseAttribute`.
 NOTE: For value type data driven tests, it is best NOT to use a TestName.
 Using TestName, especially with VS TestExplorer doesn't lend well to the visual appearance of the test names.  
 
-```csharp
+<!-- snippet: DataDrivenTests_A_DataDrivenTest_TestCase -->
+<a id='snippet-DataDrivenTests_A_DataDrivenTest_TestCase'></a>
+```cs
 [TestCase(1, 1, 2)]
 [TestCase(0, 0, 0)]
 [TestCase(-1, 1, 0)]
@@ -29,12 +31,16 @@ public void A_DataDrivenTest_TestCase(int a, int b, int expected)
     result.Should().Be(expected);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/DataDrivenTests.cs#L30-L45' title='Snippet source file'>snippet source</a> | <a href='#snippet-DataDrivenTests_A_DataDrivenTest_TestCase' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ## How do I create a Data Driven test for any object?
 
 Using `TestCaseSourceAttribute`.  
 
-```csharp
+<!-- snippet: DataDrivenTests_B_DataDrivenTest_TestCaseSource -->
+<a id='snippet-DataDrivenTests_B_DataDrivenTest_TestCaseSource'></a>
+```cs
 [TestCaseSource(typeof(DataDrivenTestData), nameof(DataDrivenTestData.TestCaseSourceData))]
 [Category("_passes")]
 public void B_DataDrivenTest_TestCaseSource(Whale whale, bool expected)
@@ -48,6 +54,8 @@ public void B_DataDrivenTest_TestCaseSource(Whale whale, bool expected)
     result.Should().Be(expected);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/DataDrivenTests.cs#L50-L63' title='Snippet source file'>snippet source</a> | <a href='#snippet-DataDrivenTests_B_DataDrivenTest_TestCaseSource' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ```csharp
 // This class can be named anything

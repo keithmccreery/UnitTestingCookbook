@@ -30,16 +30,22 @@ at the bottom of this chapter.
 
 Given a Class Constructor...  
 
-```csharp
+<!-- snippet: SampleWithLogging_Constructor -->
+<a id='snippet-SampleWithLogging_Constructor'></a>
+```cs
 public SampleWithLogging(ILogger<SampleWithLogging> logger)
 {
     this.logger = logger;
 }
 ```
+<sup><a href='/UnitTestingCookbook.Support/SampleWithLogging.cs#L9-L14' title='Snippet source file'>snippet source</a> | <a href='#snippet-SampleWithLogging_Constructor' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 The Unit Test...  
 
-```csharp
+<!-- snippet: LoggingTests_A_ILogger_Via_NullLoggerFactory -->
+<a id='snippet-LoggingTests_A_ILogger_Via_NullLoggerFactory'></a>
+```cs
 public void A_ILogger_Via_NullLoggerFactory()
 {
     // Arrange
@@ -55,12 +61,16 @@ public void A_ILogger_Via_NullLoggerFactory()
     logger.Should().NotBeNull();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/LoggingTests.cs#L28-L43' title='Snippet source file'>snippet source</a> | <a href='#snippet-LoggingTests_A_ILogger_Via_NullLoggerFactory' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
 ## How do I Instantiate a Class with Microsoft.Extensions.Logging ILogger via NullLogger?
 
-```csharp
+<!-- snippet: LoggingTests_B_ILogger_Via_NullLogger -->
+<a id='snippet-LoggingTests_B_ILogger_Via_NullLogger'></a>
+```cs
 public void B_ILogger_Via_NullLogger()
 {
     // Arrange
@@ -75,12 +85,16 @@ public void B_ILogger_Via_NullLogger()
     logger.Should().NotBeNull();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/LoggingTests.cs#L50-L64' title='Snippet source file'>snippet source</a> | <a href='#snippet-LoggingTests_B_ILogger_Via_NullLogger' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
 ## How do I Instantiate a Class with Microsoft.Extensions.Logging ILogger via NullLoggerFactory and Dependency Injection?
 
-```csharp
+<!-- snippet: LoggingTests_C_ILogger_Via_DependencyInjection_NullLoggerFactory -->
+<a id='snippet-LoggingTests_C_ILogger_Via_DependencyInjection_NullLoggerFactory'></a>
+```cs
 public void C_ILogger_Via_DependencyInjection_NullLoggerFactory()
 {
     // Arrange
@@ -98,6 +112,8 @@ public void C_ILogger_Via_DependencyInjection_NullLoggerFactory()
     sampleWithLogging.Should().NotBeNull();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/LoggingTests.cs#L71-L88' title='Snippet source file'>snippet source</a> | <a href='#snippet-LoggingTests_C_ILogger_Via_DependencyInjection_NullLoggerFactory' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -106,7 +122,9 @@ public void C_ILogger_Via_DependencyInjection_NullLoggerFactory()
 Because most implementations of `Microsoft.Extensions.Logging.ILogger` are the generic `ILogger<T>`,
 a generic Injection `ILogger<>` of `services.AddSingleton( typeof( ILogger<> ), typeof( NullLogger<> ) )` must be defined.
 
-```csharp
+<!-- snippet: LoggingTests_D_ILogger_Via_DependencyInjection_NullLogger -->
+<a id='snippet-LoggingTests_D_ILogger_Via_DependencyInjection_NullLogger'></a>
+```cs
 public void D_ILogger_Via_DependencyInjection_NullLogger()
 {
     // Arrange
@@ -123,6 +141,8 @@ public void D_ILogger_Via_DependencyInjection_NullLogger()
     sampleWithLogging.Should().NotBeNull();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/LoggingTests.cs#L95-L111' title='Snippet source file'>snippet source</a> | <a href='#snippet-LoggingTests_D_ILogger_Via_DependencyInjection_NullLogger' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -161,7 +181,9 @@ public class SampleWithLoggingFactory
 
 If all classes only required an `ILoggerFactory`, then there is no need to define an `ILogger<T>` for injection.  
 
-```csharp
+<!-- snippet: LoggingTests_E_ILoggerFactory_Via_DependencyInjection_NullLoggerFactory -->
+<a id='snippet-LoggingTests_E_ILoggerFactory_Via_DependencyInjection_NullLoggerFactory'></a>
+```cs
 public void E_ILoggerFactory_Via_DependencyInjection_NullLoggerFactory()
 {
     // Arrange
@@ -178,6 +200,8 @@ public void E_ILoggerFactory_Via_DependencyInjection_NullLoggerFactory()
     sampleWithLoggingFactory.Should().NotBeNull();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/LoggingTests.cs#L119-L135' title='Snippet source file'>snippet source</a> | <a href='#snippet-LoggingTests_E_ILoggerFactory_Via_DependencyInjection_NullLoggerFactory' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -186,7 +210,9 @@ public void E_ILoggerFactory_Via_DependencyInjection_NullLoggerFactory()
 **Why?** So I can have all the functionality of Serilog, with the Microsoft.Extensions.Logging ILogger or ILoggerFactory pattern,
 including TestCorrelator for easier Testing (see below).  
 
-```csharp
+<!-- snippet: LoggingTests_F_Serilog_To_ILoggerFactory -->
+<a id='snippet-LoggingTests_F_Serilog_To_ILoggerFactory'></a>
+```cs
 public void F_Serilog_To_ILoggerFactory()
 {
     // Arrange
@@ -203,12 +229,16 @@ public void F_Serilog_To_ILoggerFactory()
     sampleWithLoggingFactory.Should().NotBeNull();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/LoggingTests.cs#L143-L159' title='Snippet source file'>snippet source</a> | <a href='#snippet-LoggingTests_F_Serilog_To_ILoggerFactory' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
 ## How can I use Serilog with Microsoft.Extensions.Logging ILogger?
 
-```csharp
+<!-- snippet: LoggingTests_G_Serilog_To_ILogger -->
+<a id='snippet-LoggingTests_G_Serilog_To_ILogger'></a>
+```cs
 public void G_Serilog_To_ILogger()
 {
     // Arrange
@@ -226,6 +256,8 @@ public void G_Serilog_To_ILogger()
     sampleWithLogging.Should().NotBeNull();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/LoggingTests.cs#L167-L184' title='Snippet source file'>snippet source</a> | <a href='#snippet-LoggingTests_G_Serilog_To_ILogger' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -236,7 +268,9 @@ This sample shows `ILogger<>`, but will also support `ILoggerFactory`.
 
 The `outputTemplate` or `"[{Timestamp:HH:mm:ss} {Level:u3}] [{Properties:j}] {Message:lj}{NewLine}{Exception}"`, specifically `[{Properties:j}]`, illustrates how to display the log context(s) to the console.  
 
-```csharp
+<!-- snippet: LoggingTests_H_Serilog_To_ILogger_Context_To_Console -->
+<a id='snippet-LoggingTests_H_Serilog_To_ILogger_Context_To_Console'></a>
+```cs
 public void H_Serilog_To_ILogger_Context_To_Console()
 {
     // Arrange
@@ -260,6 +294,8 @@ public void H_Serilog_To_ILogger_Context_To_Console()
     sampleWithLogging.Should().NotBeNull();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/LoggingTests.cs#L193-L216' title='Snippet source file'>snippet source</a> | <a href='#snippet-LoggingTests_H_Serilog_To_ILogger_Context_To_Console' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -267,7 +303,9 @@ public void H_Serilog_To_ILogger_Context_To_Console()
 
 **NOTE:** By casting to a `ScalarValue`, we can easily get the message.  
 
-```csharp
+<!-- snippet: LoggingTests_I_Serilog_TestCorrelator -->
+<a id='snippet-LoggingTests_I_Serilog_TestCorrelator'></a>
+```cs
 public void I_Serilog_TestCorrelator()
 {
     // Arrange
@@ -307,12 +345,16 @@ public void I_Serilog_TestCorrelator()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/LoggingTests.cs#L225-L264' title='Snippet source file'>snippet source</a> | <a href='#snippet-LoggingTests_I_Serilog_TestCorrelator' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
 ## How can I assert Logs with Serilog.Sinks.TestCorrelator with an Object?
 
-```csharp
+<!-- snippet: LoggingTests_J_Serilog_TestCorrelator_Structured -->
+<a id='snippet-LoggingTests_J_Serilog_TestCorrelator_Structured'></a>
+```cs
 public void J_Serilog_TestCorrelator_Structured()
 {
     // Arrange
@@ -358,6 +400,8 @@ public void J_Serilog_TestCorrelator_Structured()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/LoggingTests.cs#L273-L318' title='Snippet source file'>snippet source</a> | <a href='#snippet-LoggingTests_J_Serilog_TestCorrelator_Structured' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -367,7 +411,9 @@ public void J_Serilog_TestCorrelator_Structured()
 
 This Mock `.Verify()` will catch **ALL** logs.  
 
-```csharp
+<!-- snippet: LoggingTests_K_Mock_ILogger_Good -->
+<a id='snippet-LoggingTests_K_Mock_ILogger_Good'></a>
+```cs
 public void K_Mock_ILogger_Good()
 {
     // Arrange
@@ -391,12 +437,16 @@ public void K_Mock_ILogger_Good()
         It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)));
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/LoggingTests.cs#L325-L348' title='Snippet source file'>snippet source</a> | <a href='#snippet-LoggingTests_K_Mock_ILogger_Good' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ### Answer 2 - Better
 
 This Mock `.Verify()` will catch the specific log we want.   
 
-```csharp
+<!-- snippet: LoggingTests_L_Mock_ILogger_Better -->
+<a id='snippet-LoggingTests_L_Mock_ILogger_Better'></a>
+```cs
 public void L_Mock_ILogger_Better()
 {
     // Arrange
@@ -420,6 +470,8 @@ public void L_Mock_ILogger_Better()
         It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)));
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/LoggingTests.cs#L355-L378' title='Snippet source file'>snippet source</a> | <a href='#snippet-LoggingTests_L_Mock_ILogger_Better' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ### Answer 3 - Best
 
@@ -453,7 +505,9 @@ extension<T>(Mock<ILogger<T>> logger)
 
 Now the verification can be specific and also verify multiple logs, by chaining.  
 
-```csharp
+<!-- snippet: LoggingTests_M_Mock_ILogger_Best -->
+<a id='snippet-LoggingTests_M_Mock_ILogger_Best'></a>
+```cs
 public void M_Mock_ILogger_Best()
 {
     // Arrange
@@ -471,6 +525,8 @@ public void M_Mock_ILogger_Best()
     loggerMock.VerifyLogging($"This is the template with a {message}.", LogLevel.Information, Times.Once());
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/LoggingTests.cs#L385-L402' title='Snippet source file'>snippet source</a> | <a href='#snippet-LoggingTests_M_Mock_ILogger_Best' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -479,7 +535,9 @@ public void M_Mock_ILogger_Best()
 `TestCorrelatorExtensions.CountAtLevel()` / `.CountWithMessageTemplate()` - a plain count of everything is just
 `logs.Count()` (LINQ, nothing TestCorrelator-specific needed).
 
-```csharp
+<!-- snippet: LoggingTests_N_TestCorrelator_Count -->
+<a id='snippet-LoggingTests_N_TestCorrelator_Count'></a>
+```cs
 public void N_TestCorrelator_Count()
 {
     // Arrange
@@ -517,6 +575,8 @@ public void N_TestCorrelator_Count()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/LoggingTests.cs#L410-L447' title='Snippet source file'>snippet source</a> | <a href='#snippet-LoggingTests_N_TestCorrelator_Count' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -528,7 +588,9 @@ double-quoted, since that's how Serilog renders a scalar string by default). `.G
 scalar property without the caller needing to know about `LogEventPropertyValue`/`ScalarValue` (compare to
 `I_Serilog_TestCorrelator` above, which does that unwrapping by hand).
 
-```csharp
+<!-- snippet: LoggingTests_O_TestCorrelator_HasMessage -->
+<a id='snippet-LoggingTests_O_TestCorrelator_HasMessage'></a>
+```cs
 public void O_TestCorrelator_HasMessage()
 {
     // Arrange
@@ -568,6 +630,8 @@ public void O_TestCorrelator_HasMessage()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/LoggingTests.cs#L455-L494' title='Snippet source file'>snippet source</a> | <a href='#snippet-LoggingTests_O_TestCorrelator_HasMessage' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -578,7 +642,9 @@ public void O_TestCorrelator_HasMessage()
 `LogEvent` itself isn't practical to compare directly (its `Timestamp` and `Properties` dictionary make an
 equality/equivalency comparison noisy or impossible).
 
-```csharp
+<!-- snippet: LoggingTests_P_TestCorrelator_CompareList -->
+<a id='snippet-LoggingTests_P_TestCorrelator_CompareList'></a>
+```cs
 public void P_TestCorrelator_CompareList()
 {
     // Arrange
@@ -612,6 +678,8 @@ public void P_TestCorrelator_CompareList()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/LoggingTests.cs#L502-L535' title='Snippet source file'>snippet source</a> | <a href='#snippet-LoggingTests_P_TestCorrelator_CompareList' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 **NOTE:** `TestCorrelatorExtensions` also has `.WithLevel()` and `.WithMessageTemplate()` (filter to a matching
 subset, for chaining into further assertions) - not shown above, but useful once a test logs more events than it
@@ -630,7 +698,9 @@ double-quoted, unlike Serilog's rendering in `O_TestCorrelator_HasMessage` above
 - `.GetStructuredStateValue("{OriginalFormat}")` returns the raw message template.
 - `.GetStructuredStateValue("Message")` returns a single property, always as a `string?`.
 
-```csharp
+<!-- snippet: LoggingTests_Q_FakeLogger -->
+<a id='snippet-LoggingTests_Q_FakeLogger'></a>
+```cs
 public void Q_FakeLogger()
 {
     // Arrange
@@ -654,6 +724,8 @@ public void Q_FakeLogger()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/LoggingTests.cs#L543-L566' title='Snippet source file'>snippet source</a> | <a href='#snippet-LoggingTests_Q_FakeLogger' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -664,7 +736,9 @@ public void Q_FakeLogger()
 every `FakeLogRecord` in order. Projecting it into an anonymous type and comparing it with `.BeEquivalentTo()` is the
 FakeLogger equivalent of `P_TestCorrelator_CompareList`, with no custom extension method needed.
 
-```csharp
+<!-- snippet: LoggingTests_R_FakeLogger_Via_DependencyInjection -->
+<a id='snippet-LoggingTests_R_FakeLogger_Via_DependencyInjection'></a>
+```cs
 public void R_FakeLogger_Via_DependencyInjection()
 {
     // Arrange
@@ -690,6 +764,8 @@ public void R_FakeLogger_Via_DependencyInjection()
         });
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/LoggingTests.cs#L574-L599' title='Snippet source file'>snippet source</a> | <a href='#snippet-LoggingTests_R_FakeLogger_Via_DependencyInjection' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -700,7 +776,9 @@ destructuring, so the `@` in `{@Object}` is just part of the property **name**, 
 output (here, an anonymous type's compiler-generated `ToString()`). Compare to `J_Serilog_TestCorrelator_Structured`,
 where Serilog captures a real `StructureValue` whose individual properties can be inspected.  
 
-```csharp
+<!-- snippet: LoggingTests_S_FakeLogger_Structured -->
+<a id='snippet-LoggingTests_S_FakeLogger_Structured'></a>
+```cs
 public void S_FakeLogger_Structured()
 {
     // Arrange
@@ -727,6 +805,8 @@ public void S_FakeLogger_Structured()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/LoggingTests.cs#L608-L634' title='Snippet source file'>snippet source</a> | <a href='#snippet-LoggingTests_S_FakeLogger_Structured' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 

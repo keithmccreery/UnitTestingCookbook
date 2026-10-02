@@ -14,6 +14,7 @@ public class MockingTests
 {
     [Test]
     [Category("_passes")]
+    // begin-snippet: MockingTests_A_SetupReturnValue_Moq
     public void A_SetupReturnValue_Moq()
     {
         // Arrange
@@ -26,9 +27,11 @@ public class MockingTests
         // Assert
         result.Should().Be("Hello, Alice!");
     }
+    // end-snippet
 
     [Test]
     [Category("_passes")]
+    // begin-snippet: MockingTests_B_SetupReturnValue_NSubstitute
     public void B_SetupReturnValue_NSubstitute()
     {
         // Arrange
@@ -41,9 +44,11 @@ public class MockingTests
         // Assert
         result.Should().Be("Hello, Alice!");
     }
+    // end-snippet
 
     [Test]
     [Category("_passes")]
+    // begin-snippet: MockingTests_C_VerifyCallWasMade_Moq
     public void C_VerifyCallWasMade_Moq()
     {
         // Arrange
@@ -55,9 +60,11 @@ public class MockingTests
         // Assert
         greetingServiceMock.Verify(x => x.Greet("Bob"), Times.Once());
     }
+    // end-snippet
 
     [Test]
     [Category("_passes")]
+    // begin-snippet: MockingTests_D_VerifyCallWasMade_NSubstitute
     public void D_VerifyCallWasMade_NSubstitute()
     {
         // Arrange
@@ -69,9 +76,11 @@ public class MockingTests
         // Assert
         greetingService.Received(1).Greet("Bob");
     }
+    // end-snippet
 
     [Test]
     [Category("_passes")]
+    // begin-snippet: MockingTests_E_ArgumentMatching_Moq
     public void E_ArgumentMatching_Moq()
     {
         // Arrange
@@ -84,9 +93,11 @@ public class MockingTests
         // Assert
         result.Should().Be("Hello, whoever you are!");
     }
+    // end-snippet
 
     [Test]
     [Category("_passes")]
+    // begin-snippet: MockingTests_F_ArgumentMatching_NSubstitute
     public void F_ArgumentMatching_NSubstitute()
     {
         // Arrange
@@ -99,9 +110,11 @@ public class MockingTests
         // Assert
         result.Should().Be("Hello, whoever you are!");
     }
+    // end-snippet
 
     [Test]
     [Category("_passes")]
+    // begin-snippet: MockingTests_G_ThrowException_Moq
     public void G_ThrowException_Moq()
     {
         // Arrange
@@ -114,9 +127,11 @@ public class MockingTests
         // Assert
         action.Should().Throw<InvalidOperationException>();
     }
+    // end-snippet
 
     [Test]
     [Category("_passes")]
+    // begin-snippet: MockingTests_H_ThrowException_NSubstitute
     public void H_ThrowException_NSubstitute()
     {
         // Arrange
@@ -129,4 +144,5 @@ public class MockingTests
         // Assert
         action.Should().Throw<InvalidOperationException>();
     }
+    // end-snippet
 }

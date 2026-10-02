@@ -28,7 +28,9 @@ Mock `HttpMessageHandler` and instantiate `HttpClient` with the `HttpMessageHand
 
 **NOTE:** This example only illustrates the 'wiring'.  
 
-```csharp
+<!-- snippet: HttpClientFactoryTests_A_Mock_HttpClient -->
+<a id='snippet-HttpClientFactoryTests_A_Mock_HttpClient'></a>
+```cs
 public async Task A_Mock_HttpClient()
 {
     // Arrange
@@ -56,6 +58,8 @@ public async Task A_Mock_HttpClient()
         .Verify("SendAsync", Times.Exactly(0), ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Get), ItExpr.IsAny<CancellationToken>());
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/HttpClientFactoryTests.cs#L23-L50' title='Snippet source file'>snippet source</a> | <a href='#snippet-HttpClientFactoryTests_A_Mock_HttpClient' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ### Answer 2 - Better
 
@@ -63,7 +67,9 @@ Assuming you are using `IHttpClientFactory`, the same process is used -
 Mock `HttpMessageHandler` and instantiate `HttpClient` with the `HttpMessageHandler`
 and final Mock `IHttpClientFactory`, with a `.CreateClient()` Setup.  
 
-```csharp
+<!-- snippet: HttpClientFactoryTests_B_Mock_HttpClientFactory -->
+<a id='snippet-HttpClientFactoryTests_B_Mock_HttpClientFactory'></a>
+```cs
 public async Task B_Mock_HttpClientFactory()
 {
     // Arrange
@@ -102,6 +108,8 @@ public async Task B_Mock_HttpClientFactory()
         .Verify("SendAsync", Times.Exactly(1), ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Get), ItExpr.IsAny<CancellationToken>());
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/HttpClientFactoryTests.cs#L57-L95' title='Snippet source file'>snippet source</a> | <a href='#snippet-HttpClientFactoryTests_B_Mock_HttpClientFactory' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ### Answer 3 - (More) Better (but not Best)
 
@@ -109,7 +117,9 @@ Using Moq.Contrib.HttpClient.
 
 **NOTICE:** Moq.Contrib.HttpClient adds `.CreateClient()`, `.SetupRequest()` and `.Return()` to `HttpMessageHandler` Mock.  
 
-```csharp
+<!-- snippet: HttpClientFactoryTests_C_Mock_HttpClientFactory_Best -->
+<a id='snippet-HttpClientFactoryTests_C_Mock_HttpClientFactory_Best'></a>
+```cs
 public async Task C_Mock_HttpClientFactory_Best()
 {
     // Arrange
@@ -149,6 +159,8 @@ public async Task C_Mock_HttpClientFactory_Best()
         .Verify("SendAsync", Times.Exactly(1), ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Get), ItExpr.IsAny<CancellationToken>());
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/HttpClientFactoryTests.cs#L103-L142' title='Snippet source file'>snippet source</a> | <a href='#snippet-HttpClientFactoryTests_C_Mock_HttpClientFactory_Best' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ### Answer 4 - Best
 

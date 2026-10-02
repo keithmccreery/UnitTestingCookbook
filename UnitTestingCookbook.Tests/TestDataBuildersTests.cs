@@ -15,6 +15,7 @@ public class TestDataBuildersTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: TestDataBuildersTests_A_Prototype_ExplicitChanges
     public void A_Prototype_ExplicitChanges()
     {
         // Arrange
@@ -29,12 +30,14 @@ public class TestDataBuildersTests
         errors.Should().ContainSingle()
             .Which.Should().Be("Lease terms cannot exceed 36 months.");
     }
+    // end-snippet
 
     //
     // Q: How do I make it impossible to forget DeepClone()?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: TestDataBuildersTests_B_Prototype_EachRead_IsAFreshObject
     public void B_Prototype_EachRead_IsAFreshObject()
     {
         // Arrange
@@ -51,12 +54,14 @@ public class TestDataBuildersTests
             second.Finance.Should().NotBeSameAs(first.Finance);
         }
     }
+    // end-snippet
 
     //
     // Q: How does an Object Mother avoid Data Hangover without DeepClone()?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: TestDataBuildersTests_C_ObjectMother_EachCall_IsAFreshObject
     public void C_ObjectMother_EachCall_IsAFreshObject()
     {
         // Arrange
@@ -73,12 +78,14 @@ public class TestDataBuildersTests
             second.Finance.Should().NotBeSameAs(first.Finance);
         }
     }
+    // end-snippet
 
     //
     // Q: How do I reuse a named, ready-made scenario?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: TestDataBuildersTests_D_ObjectMother_NamedScenario
     public void D_ObjectMother_NamedScenario()
     {
         // Arrange
@@ -90,12 +97,14 @@ public class TestDataBuildersTests
         // Assert
         errors.Should().BeEmpty();
     }
+    // end-snippet
 
     //
     // Q: How do I build test data that shows only what matters to this test?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: TestDataBuildersTests_E_Builder_OnlyWhatMatters
     public void E_Builder_OnlyWhatMatters()
     {
         // Arrange
@@ -111,13 +120,15 @@ public class TestDataBuildersTests
         errors.Should().ContainSingle()
             .Which.Should().Be("Lease terms cannot exceed 36 months.");
     }
+    // end-snippet
 
     //
     // Q: How do I vary one value without restating the rest of the object?
     //
+    [Category("_passes")]
+    // begin-snippet: TestDataBuildersTests_F_Builder_VaryOneValue
     [TestCase(0, true)]
     [TestCase(-1, false)]
-    [Category("_passes")]
     public void F_Builder_VaryOneValue(int downPayment, bool expectedValid)
     {
         // Arrange
@@ -131,12 +142,14 @@ public class TestDataBuildersTests
         // Assert
         errors.Should().HaveCount(expectedValid ? 0 : 1);
     }
+    // end-snippet
 
     //
     // Q: Can one builder safely produce several objects?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: TestDataBuildersTests_G_Builder_EachBuild_IsAFreshObject
     public void G_Builder_EachBuild_IsAFreshObject()
     {
         // Arrange
@@ -155,6 +168,7 @@ public class TestDataBuildersTests
             second.Finance.MaxTerms.Should().Be(36); // unaffected
         }
     }
+    // end-snippet
 
     //
     // Q: Is there a built-in builder for immutable types?
@@ -162,6 +176,7 @@ public class TestDataBuildersTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: TestDataBuildersTests_H_Record_With_Expression
     public void H_Record_With_Expression()
     {
         // Arrange
@@ -177,4 +192,5 @@ public class TestDataBuildersTests
             purchase.Should().Be(new FinanceTerms("P", 48, 1000)); // original unchanged
         }
     }
+    // end-snippet
 }

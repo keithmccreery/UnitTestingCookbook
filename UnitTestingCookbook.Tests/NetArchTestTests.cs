@@ -26,6 +26,7 @@ public class NetArchTestTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: NetArchTestTests_A_ShouldNotDependOnMoq
     public void A_ShouldNotDependOnMoq()
     {
         // Arrange
@@ -39,6 +40,7 @@ public class NetArchTestTests
         // Assert
         result.IsSuccessful.Should().BeTrue();
     }
+    // end-snippet
 
     //
     // Q: How do I enforce a naming convention across a whole assembly?
@@ -49,6 +51,7 @@ public class NetArchTestTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: NetArchTestTests_B_InterfacesShouldStartWithI
     public void B_InterfacesShouldStartWithI()
     {
         // Arrange
@@ -64,6 +67,7 @@ public class NetArchTestTests
         // Assert
         result.IsSuccessful.Should().BeTrue();
     }
+    // end-snippet
 
     //
     // Q: How do I stop library code from writing directly to the Console?
@@ -76,6 +80,7 @@ public class NetArchTestTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: NetArchTestTests_C_ServicesShouldNotDependOnConsole
     public void C_ServicesShouldNotDependOnConsole()
     {
         // Arrange
@@ -95,4 +100,5 @@ public class NetArchTestTests
             result.FailingTypeNames.Should().BeNullOrEmpty();
         }
     }
+    // end-snippet
 }

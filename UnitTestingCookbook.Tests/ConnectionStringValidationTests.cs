@@ -23,7 +23,9 @@ public class ConnectionStringValidationTests
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
+        // begin-snippet: ConnectionStringValidationTests_RegisterFactory
         DbProviderFactories.RegisterFactory(ConnectionStringValidator.ProviderName, SqliteFactory.Instance);
+        // end-snippet
     }
 
     //
@@ -31,6 +33,7 @@ public class ConnectionStringValidationTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: ConnectionStringValidationTests_A_OpenableConnectionString_Succeeds
     public void A_OpenableConnectionString_Succeeds()
     {
         // Arrange
@@ -43,6 +46,7 @@ public class ConnectionStringValidationTests
         // Assert
         result.Succeeded.Should().BeTrue();
     }
+    // end-snippet
 
     //
     // Q: How do I catch a connection string that points at an inaccessible resource?
@@ -53,6 +57,7 @@ public class ConnectionStringValidationTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: ConnectionStringValidationTests_B_UnreachableConnectionString_Fails
     public void B_UnreachableConnectionString_Fails()
     {
         // Arrange
@@ -72,12 +77,14 @@ public class ConnectionStringValidationTests
             result.FailureMessage.Should().Contain("Unable to open a connection");
         }
     }
+    // end-snippet
 
     //
     // Q: How do I catch a connection string that was never configured at all?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: ConnectionStringValidationTests_C_MissingConnectionString_Fails
     public void C_MissingConnectionString_Fails()
     {
         // Arrange
@@ -94,4 +101,5 @@ public class ConnectionStringValidationTests
             result.FailureMessage.Should().Contain("is required");
         }
     }
+    // end-snippet
 }

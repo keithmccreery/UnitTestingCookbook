@@ -13,6 +13,7 @@ public class HostedServiceTests
     // Advancing repeatedly in small steps (rather than once, by the full period) tolerates that race: an
     // Advance() call before the timer is registered is simply a no-op, and once the timer registers, the
     // remaining small steps accumulate up to its due time and fire it exactly once.
+    // begin-snippet: HostedServiceTests_AdvanceUntilNextHeartbeat
     private static async Task AdvanceUntilNextHeartbeat(FakeTimeProvider timeProvider, HeartbeatWorker worker, TimeSpan step, TimeSpan timeout)
     {
         int initialCount = worker.HeartbeatCount;
@@ -23,9 +24,11 @@ public class HostedServiceTests
             await Task.Delay(1);
         }
     }
+    // end-snippet
 
     [Test]
     [Category("_passes")]
+    // begin-snippet: HostedServiceTests_A_HeartbeatWorker_AdvancingTimeProvider_IncrementsHeartbeatCount
     public async Task A_HeartbeatWorker_AdvancingTimeProvider_IncrementsHeartbeatCount()
     {
         // Arrange
@@ -42,6 +45,7 @@ public class HostedServiceTests
         // Cleanup
         await worker.StopAsync(CancellationToken.None);
     }
+    // end-snippet
 
     [Test]
     [Category("_passes")]
@@ -65,6 +69,7 @@ public class HostedServiceTests
 
     [Test]
     [Category("_passes")]
+    // begin-snippet: HostedServiceTests_C_HeartbeatWorker_StopAsync_StopsGracefully
     public async Task C_HeartbeatWorker_StopAsync_StopsGracefully()
     {
         // Arrange
@@ -78,4 +83,5 @@ public class HostedServiceTests
         // Assert
         await action.Should().NotThrowAsync();
     }
+    // end-snippet
 }

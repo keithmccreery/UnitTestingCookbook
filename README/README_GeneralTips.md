@@ -14,7 +14,9 @@ Capturing `System.Console.*` requires redirecting Standard Output.
 
 ### Answer 1 - Long Way
 
-```csharp
+<!-- snippet: GeneralTipsTests_A_CaptureConsole -->
+<a id='snippet-GeneralTipsTests_A_CaptureConsole'></a>
+```cs
 public void A_CaptureConsole()
 {
     using (StringWriter capturedConsole = new StringWriter())
@@ -43,12 +45,16 @@ public void A_CaptureConsole()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/GeneralTipsTests.cs#L18-L46' title='Snippet source file'>snippet source</a> | <a href='#snippet-GeneralTipsTests_A_CaptureConsole' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ### Answer 2 - Helper Class
 
 This solution uses `ManageCaptureConsole` class, located in `UnitTestingCookbook.TestHelpers` project.  
 
-```csharp
+<!-- snippet: GeneralTipsTests_A_CaptureConsole_TestHelpers -->
+<a id='snippet-GeneralTipsTests_A_CaptureConsole_TestHelpers'></a>
+```cs
 public void A_CaptureConsole_TestHelpers()
 {
     // Arrange
@@ -65,6 +71,8 @@ public void A_CaptureConsole_TestHelpers()
     result.Should().Be(expected);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/GeneralTipsTests.cs#L53-L69' title='Snippet source file'>snippet source</a> | <a href='#snippet-GeneralTipsTests_A_CaptureConsole_TestHelpers' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -72,7 +80,9 @@ public void A_CaptureConsole_TestHelpers()
 
 ### Answer 1 - Long Way
 
-```csharp
+<!-- snippet: GeneralTipsTests_B_EnvironmentVariables -->
+<a id='snippet-GeneralTipsTests_B_EnvironmentVariables'></a>
+```cs
 public void B_EnvironmentVariables()
 {
     const string ASPNETCORE_ENVIRONMENT = "ASPNETCORE_ENVIRONMENT";
@@ -104,12 +114,16 @@ public void B_EnvironmentVariables()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/GeneralTipsTests.cs#L76-L107' title='Snippet source file'>snippet source</a> | <a href='#snippet-GeneralTipsTests_B_EnvironmentVariables' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ### Answer 2 - Helper Class
 
 This solution uses `ManageEnvironmentVariables` class, located in `UnitTestingCookbook.TestHelpers` project.  
 
-```csharp
+<!-- snippet: GeneralTipsTests_B_EnvironmentVariables_TestHelpers -->
+<a id='snippet-GeneralTipsTests_B_EnvironmentVariables_TestHelpers'></a>
+```cs
 public void B_EnvironmentVariables_TestHelpers()
 {
     // Arrange
@@ -128,6 +142,8 @@ public void B_EnvironmentVariables_TestHelpers()
     result.Should().BeTrue(); // Check the work
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/GeneralTipsTests.cs#L114-L132' title='Snippet source file'>snippet source</a> | <a href='#snippet-GeneralTipsTests_B_EnvironmentVariables_TestHelpers' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -142,7 +158,9 @@ reaches past the public API.
 
 Sometimes it is necessary to access a Private Property.  
 
-```csharp
+<!-- snippet: GeneralTipsTests_C_Private_Property -->
+<a id='snippet-GeneralTipsTests_C_Private_Property'></a>
+```cs
 public void C_Private_Property()
 {
     // Arrange
@@ -155,6 +173,8 @@ public void C_Private_Property()
     result.Should().Be("private_property");
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/GeneralTipsTests.cs#L145-L157' title='Snippet source file'>snippet source</a> | <a href='#snippet-GeneralTipsTests_C_Private_Property' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 This solution uses an Extension Method `.GetPropertyValue<T>()`, located in `ReflectionExtensions.cs` in `UnitTestingCookbook.TestHelpers` project. Written using C# 14's `extension` block syntax (see
 [Logging](./README_Logging.md) for the first use of this syntax in the repo).  
@@ -185,7 +205,9 @@ declared on a base class (e.g. `HttpClient`'s private `_handler` field, declared
 
 Sometimes it is necessary to access a Private Field. See below for an example.  
 
-```csharp
+<!-- snippet: GeneralTipsTests_D_Private_Field -->
+<a id='snippet-GeneralTipsTests_D_Private_Field'></a>
+```cs
 public void D_Private_Field()
 {
     // Arrange
@@ -198,6 +220,8 @@ public void D_Private_Field()
     result.Should().Be("private_field");
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/GeneralTipsTests.cs#L164-L176' title='Snippet source file'>snippet source</a> | <a href='#snippet-GeneralTipsTests_D_Private_Field' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 This solution uses an Extension Method `.GetFieldValue<T>()`, located in `ReflectionExtensions.cs` in `UnitTestingCookbook.TestHelpers` project.  
 
@@ -225,7 +249,9 @@ For a real, fully worked example of `GetFieldValue<T>()` reaching a private fiel
 
 Sometimes it is necessary to invoke a Private Method. 
 
-```csharp
+<!-- snippet: GeneralTipsTests_E_Private_Method -->
+<a id='snippet-GeneralTipsTests_E_Private_Method'></a>
+```cs
 public void E_Private_Method()
 {
     // Arrange
@@ -238,6 +264,8 @@ public void E_Private_Method()
     result.Should().BeTrue();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/GeneralTipsTests.cs#L183-L195' title='Snippet source file'>snippet source</a> | <a href='#snippet-GeneralTipsTests_E_Private_Method' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 This solution uses an Extension Method `.ExecuteMethod<T>()`, located in `ReflectionExtensions.cs` in `UnitTestingCookbook.TestHelpers` project.  
 
@@ -265,7 +293,9 @@ extension(object @this)
 
 Sometimes it is necessary to instantiate a class for unit testing using an Internal Constructor. 
 
-```csharp
+<!-- snippet: GeneralTipsTests_F_Internal_Constructor -->
+<a id='snippet-GeneralTipsTests_F_Internal_Constructor'></a>
+```cs
 public void F_Internal_Constructor()
 {
     // Arrange
@@ -277,6 +307,8 @@ public void F_Internal_Constructor()
     miscellaneous.Should().NotBeNull();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/GeneralTipsTests.cs#L202-L213' title='Snippet source file'>snippet source</a> | <a href='#snippet-GeneralTipsTests_F_Internal_Constructor' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 This solution uses a Helper Method `.InstantiateInternalConstructor<T>()`, located in `TestHelper.cs` in `UnitTestingCookbook.TestHelpers` project.  
 
@@ -284,7 +316,9 @@ This solution uses a Helper Method `.InstantiateInternalConstructor<T>()`, locat
 Please see this StackOverflow Question [GetMethod for generic method](https://stackoverflow.com/questions/4035719/getmethod-for-generic-method) on how to implement `.GetMethodExt()` to handle additional parameter types.  
 
 
-```csharp
+<!-- snippet: TestHelper_InstantiateInternalConstructor -->
+<a id='snippet-TestHelper_InstantiateInternalConstructor'></a>
+```cs
 public static T InstantiateInternalConstructor<T>(params object[] args)
 {
     return (T) (typeof(T)
@@ -293,6 +327,8 @@ public static T InstantiateInternalConstructor<T>(params object[] args)
         .Invoke(args);
 }
 ```
+<sup><a href='/UnitTestingCookbook.TestHelpers/TestHelper.cs#L26-L34' title='Snippet source file'>snippet source</a> | <a href='#snippet-TestHelper_InstantiateInternalConstructor' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -310,7 +346,9 @@ using System.Runtime.CompilerServices;
 
 ## How do I Pretty Print a Stack Trace
 
-```csharp
+<!-- snippet: GeneralTipsTests_G_Demystifier -->
+<a id='snippet-GeneralTipsTests_G_Demystifier'></a>
+```cs
 public void G_Demystifier()
 {
     // Arrange
@@ -335,6 +373,8 @@ public void G_Demystifier()
     // Assert
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/GeneralTipsTests.cs#L220-L244' title='Snippet source file'>snippet source</a> | <a href='#snippet-GeneralTipsTests_G_Demystifier' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 Output...
 

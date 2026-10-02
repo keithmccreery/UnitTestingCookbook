@@ -24,7 +24,9 @@ awkward to hand-roll with plain reflection.
 
 ## How do I stop "production" code from depending on a mocking/test library?
 
-```csharp
+<!-- snippet: NetArchTestTests_A_ShouldNotDependOnMoq -->
+<a id='snippet-NetArchTestTests_A_ShouldNotDependOnMoq'></a>
+```cs
 public void A_ShouldNotDependOnMoq()
 {
     // Arrange
@@ -39,12 +41,16 @@ public void A_ShouldNotDependOnMoq()
     result.IsSuccessful.Should().BeTrue();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/NetArchTestTests.cs#L29-L43' title='Snippet source file'>snippet source</a> | <a href='#snippet-NetArchTestTests_A_ShouldNotDependOnMoq' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
 ## How do I enforce a naming convention across a whole assembly?
 
-```csharp
+<!-- snippet: NetArchTestTests_B_InterfacesShouldStartWithI -->
+<a id='snippet-NetArchTestTests_B_InterfacesShouldStartWithI'></a>
+```cs
 public void B_InterfacesShouldStartWithI()
 {
     // Arrange
@@ -61,6 +67,8 @@ public void B_InterfacesShouldStartWithI()
     result.IsSuccessful.Should().BeTrue();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/NetArchTestTests.cs#L54-L70' title='Snippet source file'>snippet source</a> | <a href='#snippet-NetArchTestTests_B_InterfacesShouldStartWithI' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 **NOTE:** `.editorconfig`'s `dotnet_naming_rule.interface_should_be_begins_with_i` is the same rule, but only a
 suggestion visible in the IDE / `dotnet format`. This is the same check as an actual test - it fails the build if
@@ -74,7 +82,9 @@ Direct `Console` usage is a common source of "this class is hard to test" - see
 [General Tips](./README_GeneralTips.md)'s `A_CaptureConsole` for why: without redirecting `Console`, its output
 can't be observed from a test at all.
 
-```csharp
+<!-- snippet: NetArchTestTests_C_ServicesShouldNotDependOnConsole -->
+<a id='snippet-NetArchTestTests_C_ServicesShouldNotDependOnConsole'></a>
+```cs
 public void C_ServicesShouldNotDependOnConsole()
 {
     // Arrange
@@ -95,6 +105,8 @@ public void C_ServicesShouldNotDependOnConsole()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/NetArchTestTests.cs#L83-L103' title='Snippet source file'>snippet source</a> | <a href='#snippet-NetArchTestTests_C_ServicesShouldNotDependOnConsole' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 **NOTE:** This is scoped to the `Services` namespace specifically, not the whole assembly - the
 `Console.WriteLine` calls elsewhere in `UnitTestingCookbook.Support` (`SampleWithLogging`, `Miscellaneous`, ...)

@@ -28,6 +28,7 @@ public class AwesomeAssertionsAddOnsTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: AwesomeAssertionsAddOnsTests_A_Json
     public void A_Json()
     {
         // Arrange
@@ -51,12 +52,14 @@ public class AwesomeAssertionsAddOnsTests
             jToken.Should().NotHaveElement("bozo");
         }
     }
+    // end-snippet
 
     //
     // AwesomeAssertions.Web
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: AwesomeAssertionsAddOnsTests_B_Web
     public void B_Web()
     {
         // Arrange
@@ -87,6 +90,7 @@ public class AwesomeAssertionsAddOnsTests
             response.Should().HaveHeader("X-Correlation-ID").And.NotBeEmpty();
         }
     }
+    // end-snippet
 
     //
     // DI ServiceCollection assertions
@@ -97,6 +101,7 @@ public class AwesomeAssertionsAddOnsTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: AwesomeAssertionsAddOnsTests_X_DependencyInjection
     public void X_DependencyInjection()
     {
         // Arrange
@@ -148,9 +153,9 @@ public class AwesomeAssertionsAddOnsTests
                 .And.OnlyContain(d => d.Lifetime == ServiceLifetime.Singleton);
             loggerProviderDescriptors.Select(d => d.ImplementationType).Should().BeEquivalentTo(new[]
             {
-                typeof( ConsoleLoggerProvider ),
-                typeof( DebugLoggerProvider ),
-                typeof( EventSourceLoggerProvider ),
+                typeof(ConsoleLoggerProvider),
+                typeof(DebugLoggerProvider),
+                typeof(EventSourceLoggerProvider),
             });
 
             // Generic - No Implementation
@@ -159,4 +164,5 @@ public class AwesomeAssertionsAddOnsTests
                 .Which.Lifetime.Should().Be(ServiceLifetime.Singleton);
         }
     }
+    // end-snippet
 }

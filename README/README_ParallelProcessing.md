@@ -19,9 +19,13 @@ the assembly (sizes the worker pool everything marked `[Parallelizable]` shares 
 parallelizes, no matter what's marked). Both were verified empirically before writing this - `Parallelizable`
 alone, or `LevelOfParallelism` alone, produced ordinary sequential execution.
 
-```csharp
+<!-- snippet: GlobalAttributes_LevelOfParallelism -->
+<a id='snippet-GlobalAttributes_LevelOfParallelism'></a>
+```cs
 [assembly: LevelOfParallelism(4)]
 ```
+<sup><a href='/UnitTestingCookbook.Tests/GlobalAttributes.cs#L7-L9' title='Snippet source file'>snippet source</a> | <a href='#snippet-GlobalAttributes_LevelOfParallelism' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ```csharp
 [TestFixture]
@@ -59,14 +63,18 @@ The example below doesn't rely on actual thread-scheduling luck to prove the poi
 interleaving two real parallel tests *could* produce, deterministically, on one thread: two overlapping scopes,
 disposed out of nested (LIFO) order.
 
-```csharp
+<!-- snippet: ParallelProcessingUnsafeTests_A_OverlappingEnvironmentVariableScopes_OutOfOrderDisposal_CorruptsSharedState -->
+<a id='snippet-ParallelProcessingUnsafeTests_A_OverlappingEnvironmentVariableScopes_OutOfOrderDisposal_CorruptsSharedState'></a>
+```cs
 public void A_OverlappingEnvironmentVariableScopes_OutOfOrderDisposal_CorruptsSharedState()
 {
     // Arrange
     const string key = "UTC_PARALLEL_DEMO_VARIABLE";
     Environment.SetEnvironmentVariable(key, "original");
 
-    // Act
+    // Act - simulates the interleaving two real parallel tests touching the same environment variable
+    // could produce, deterministically and on one thread (not dependent on actual thread-scheduling
+    // luck): two overlapping scopes, disposed out of nested (LIFO) order.
     ManageEnvironmentVariables testA = new ManageEnvironmentVariables(new Dictionary<string, string?> { [key] = "test-a-value" });
     ManageEnvironmentVariables testB = new ManageEnvironmentVariables(new Dictionary<string, string?> { [key] = "test-b-value" });
 
@@ -86,8 +94,13 @@ public void A_OverlappingEnvironmentVariableScopes_OutOfOrderDisposal_CorruptsSh
         // WRONG - should be back to "original" once both are done, but ended up as "test-a-value" instead
         finalValue.Should().Be("test-a-value");
     }
+
+    // Cleanup
+    Environment.SetEnvironmentVariable(key, null);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/ParallelProcessingUnsafeTests.cs#L12-L45' title='Snippet source file'>snippet source</a> | <a href='#snippet-ParallelProcessingUnsafeTests_A_OverlappingEnvironmentVariableScopes_OutOfOrderDisposal_CorruptsSharedState' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 Walking through why: `testA` captures `"original"` before setting `"test-a-value"`. `testB` then captures
 whatever is *currently* there - `"test-a-value"`, not the true original - before setting `"test-b-value"`.
@@ -105,10 +118,15 @@ against the broken example above: same "two overlapping tests, disposed out of o
 per-instance `IConfiguration` ([Dependency Injection](./README_DependencyInjection.md) is the source of truth
 for that setup pattern) instead of `Environment.SetEnvironmentVariable`.
 
-```csharp
+<!-- snippet: ParallelProcessingSafeTests_C_PerInstanceConfiguration_OutOfOrderDisposal_DoesNotInterfere -->
+<a id='snippet-ParallelProcessingSafeTests_C_PerInstanceConfiguration_OutOfOrderDisposal_DoesNotInterfere'></a>
+```cs
 public void C_PerInstanceConfiguration_OutOfOrderDisposal_DoesNotInterfere()
 {
-    // Arrange
+    // Arrange - compare against ParallelProcessingUnsafeTests.A: each "test" gets its own IConfiguration
+    // instance instead of mutating the shared, process-wide environment (see Dependency Injection for the
+    // IConfiguration setup pattern itself). There's no `using`/Dispose lifecycle at all here, because
+    // there's no shared state to restore.
     IConfiguration configurationA = new ConfigurationBuilder()
         .AddInMemoryCollection(new Dictionary<string, string?> { ["MyKey"] = "test-a-value" })
         .Build();
@@ -128,6 +146,8 @@ public void C_PerInstanceConfiguration_OutOfOrderDisposal_DoesNotInterfere()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/ParallelProcessingSafeTests.cs#L41-L66' title='Snippet source file'>snippet source</a> | <a href='#snippet-ParallelProcessingSafeTests_C_PerInstanceConfiguration_OutOfOrderDisposal_DoesNotInterfere' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 There's no `using`/`Dispose()` lifecycle here at all, and disposal order is irrelevant, because there's nothing
 shared left to corrupt.

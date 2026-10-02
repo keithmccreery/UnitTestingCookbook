@@ -18,6 +18,7 @@ public class SnapshotTestingTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: SnapshotTestingTests_A_Verify_Object
     public Task A_Verify_Object()
     {
         // Arrange
@@ -31,12 +32,14 @@ public class SnapshotTestingTests
         // Act / Assert
         return Verify(product);
     }
+    // end-snippet
 
     //
     // Q: How do I snapshot an object containing values that change every run (Guid, DateTime)?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: SnapshotTestingTests_B_Verify_AutoScrubbing
     public Task B_Verify_AutoScrubbing()
     {
         // Arrange
@@ -55,12 +58,14 @@ public class SnapshotTestingTests
         // Act / Assert
         return Verify(order);
     }
+    // end-snippet
 
     //
     // Q: How do I leave a property out of the snapshot?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: SnapshotTestingTests_C_Verify_IgnoreMember
     public Task C_Verify_IgnoreMember()
     {
         // Arrange
@@ -77,12 +82,14 @@ public class SnapshotTestingTests
         return Verify(order)
             .IgnoreMember<Order>(x => x.InternalNotes);
     }
+    // end-snippet
 
     //
     // Q: How do I snapshot text output (CSV, HTML, etc.) as its own file type?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: SnapshotTestingTests_D_Verify_Text_Csv
     public Task D_Verify_Text_Csv()
     {
         // Arrange
@@ -102,12 +109,14 @@ public class SnapshotTestingTests
         // Assert
         return Verify(csv, extension: "csv");
     }
+    // end-snippet
 
     //
     // Q: How do I snapshot a JSON string?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: SnapshotTestingTests_E_VerifyJson
     public Task E_VerifyJson()
     {
         // Arrange
@@ -116,6 +125,7 @@ public class SnapshotTestingTests
         // Act / Assert
         return VerifyJson(json);
     }
+    // end-snippet
 
     //
     // Q: How do I snapshot a parameterized ([TestCase]) test - one snapshot file per case?
@@ -123,6 +133,7 @@ public class SnapshotTestingTests
     [TestCase("WIDGET", 1)]
     [TestCase("GADGET", 3)]
     [Category("_passes")]
+    // begin-snippet: SnapshotTestingTests_F_Verify_Parameterized
     public Task F_Verify_Parameterized(string sku, int quantity)
     {
         // Arrange
@@ -138,6 +149,7 @@ public class SnapshotTestingTests
         // Assert
         return Verify(csv, extension: "csv");
     }
+    // end-snippet
 
     //
     // Q: How do I snapshot an HTTP response (status, content type, body) from a Minimal API?
@@ -147,6 +159,7 @@ public class SnapshotTestingTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: SnapshotTestingTests_G_Verify_HttpResponse
     public async Task G_Verify_HttpResponse()
     {
         // Arrange
@@ -164,4 +177,5 @@ public class SnapshotTestingTests
             Body = await response.Content.ReadAsStringAsync(),
         });
     }
+    // end-snippet
 }

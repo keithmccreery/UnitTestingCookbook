@@ -125,14 +125,17 @@ public class WireMockNetPollyPoliciesTests
             );
     }
 
+    // begin-snippet: WireMockNetPollyPoliciesTests_OneTimeTearDown
     [OneTimeTearDown]
     public void OneTimeTearDown()
     {
         _wireMockServer.Stop();
         _wireMockServer.Dispose();
     }
+    // end-snippet
 
     [SetUp]
+    // begin-snippet: WireMockNetPollyPoliciesTests_SetUp
     public void SetUp()
     {
         //
@@ -225,14 +228,17 @@ public class WireMockNetPollyPoliciesTests
 
         _serviceProvider = services.BuildServiceProvider(true);
     }
+    // end-snippet
 
     [TearDown]
+    // begin-snippet: WireMockNetPollyPoliciesTests_TearDown
     public async Task TearDown()
     {
         await Task.Delay(3000); // BUG in WireMock.Net LogEntries. Need to wait for this call to be logged, to allow .ResetLogEntries() to work
 
         (_serviceProvider as IDisposable)?.Dispose();
     }
+    // end-snippet
 
     //
     // Q: How do I verify Polly Policies - OK
@@ -243,6 +249,7 @@ public class WireMockNetPollyPoliciesTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: WireMockNetPollyPoliciesTests_A_WireMockNet_Polly_OK
     public async Task A_WireMockNet_Polly_OK()
     {
         // Arrange
@@ -258,6 +265,7 @@ public class WireMockNetPollyPoliciesTests
             .HaveReceivedACall()
             .AtUrl($"{_baseUrl}{ENDPOINT_STATUS_OK}");
     }
+    // end-snippet
 
     //
     // Q: How do I verify Polly Policies - CancellationToken
@@ -273,6 +281,7 @@ public class WireMockNetPollyPoliciesTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: WireMockNetPollyPoliciesTests_B_WireMockNet_Polly_CancellationToken
     public async Task B_WireMockNet_Polly_CancellationToken()
     {
         // Arrange
@@ -288,6 +297,7 @@ public class WireMockNetPollyPoliciesTests
         // Assert
         await action.Should().ThrowAsync<TaskCanceledException>();
     }
+    // end-snippet
 
     //
     // Q: How do I verify Polly Policies - WaitAndRetry
@@ -299,6 +309,7 @@ public class WireMockNetPollyPoliciesTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: WireMockNetPollyPoliciesTests_C_WireMockNet_Polly_InternalServerError
     public async Task C_WireMockNet_Polly_InternalServerError()
     {
         // Arrange
@@ -321,6 +332,7 @@ public class WireMockNetPollyPoliciesTests
 
         stopwatch.ElapsedMilliseconds.Should().BeGreaterThan(6000); // 6 seconds
     }
+    // end-snippet
 
     //
     // Q: How do I verify Polly Policies WaitAndRetry & Timeout
@@ -332,6 +344,7 @@ public class WireMockNetPollyPoliciesTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: WireMockNetPollyPoliciesTests_D_WireMockNet_Polly_WaitAndRetry_Timeout
     public async Task D_WireMockNet_Polly_WaitAndRetry_Timeout()
     {
         // Arrange
@@ -354,6 +367,7 @@ public class WireMockNetPollyPoliciesTests
 
         stopwatch.ElapsedMilliseconds.Should().BeGreaterThan(12000); // 12 seconds
     }
+    // end-snippet
 
     //
     // Q: How do I verify Polly Policies WaitAndRetry & CircuitBreaker
@@ -365,6 +379,7 @@ public class WireMockNetPollyPoliciesTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: WireMockNetPollyPoliciesTests_E_WireMockNet_Polly_WaitAndRetry_CircuitBreaker
     public async Task E_WireMockNet_Polly_WaitAndRetry_CircuitBreaker()
     {
         // Arrange
@@ -418,6 +433,7 @@ public class WireMockNetPollyPoliciesTests
         // 16 failed attempts + 1 successful
         _wireMockServer.LogEntries.Should().HaveCount(17);
     }
+    // end-snippet
 
     //
     // Q: How do I verify Polly Policies with an Intermittent Failure, then Succcess?
@@ -427,6 +443,7 @@ public class WireMockNetPollyPoliciesTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: WireMockNetPollyPoliciesTests_F_WireMockNet_Polly_HandleIntermittentFailureThenSuccess
     public async Task F_WireMockNet_Polly_HandleIntermittentFailureThenSuccess()
     {
         // Arrange
@@ -448,4 +465,5 @@ public class WireMockNetPollyPoliciesTests
         //
         _wireMockServer.LogEntries.Should().HaveCount(2);
     }
+    // end-snippet
 }

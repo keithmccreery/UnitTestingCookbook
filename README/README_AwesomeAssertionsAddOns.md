@@ -24,7 +24,9 @@ dropped from this cookbook rather than pinned to the legacy, commercially-licens
 
 Asserts on `JToken`, `JObject`, and `JValue`.
 
-```csharp
+<!-- snippet: AwesomeAssertionsAddOnsTests_A_Json -->
+<a id='snippet-AwesomeAssertionsAddOnsTests_A_Json'></a>
+```cs
 public void A_Json()
 {
     // Arrange
@@ -49,6 +51,8 @@ public void A_Json()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/AwesomeAssertionsAddOnsTests.cs#L31-L55' title='Snippet source file'>snippet source</a> | <a href='#snippet-AwesomeAssertionsAddOnsTests_A_Json' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -56,7 +60,9 @@ public void A_Json()
 
 Asserts on `HttpResponseMessage`.
 
-```csharp
+<!-- snippet: AwesomeAssertionsAddOnsTests_B_Web -->
+<a id='snippet-AwesomeAssertionsAddOnsTests_B_Web'></a>
+```cs
 public void B_Web()
 {
     // Arrange
@@ -88,6 +94,8 @@ public void B_Web()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/AwesomeAssertionsAddOnsTests.cs#L62-L93' title='Snippet source file'>snippet source</a> | <a href='#snippet-AwesomeAssertionsAddOnsTests_B_Web' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -108,7 +116,9 @@ default - a bare `ServiceCollection` wouldn't have any of that to assert on.
 registers for the package version in use, and `EventLogLoggerProvider` is only registered on Windows - both will
 need adjusting if/when the `Microsoft.Extensions.*` packages are bumped again.  
 
-```csharp
+<!-- snippet: AwesomeAssertionsAddOnsTests_X_DependencyInjection -->
+<a id='snippet-AwesomeAssertionsAddOnsTests_X_DependencyInjection'></a>
+```cs
 public void X_DependencyInjection()
 {
     // Arrange
@@ -129,6 +139,8 @@ public void X_DependencyInjection()
     // Assert
     using (new AssertionScope())
     {
+        // NOTE: this count is tied to exactly what Microsoft.Extensions.Hosting registers by default
+        // for this package version - it will drift on future framework/package upgrades.
         serviceCollection.Should().HaveCount(52);
 
         // With Implementation
@@ -148,7 +160,9 @@ public void X_DependencyInjection()
             .ContainSingle(d => d.ServiceType == typeof(IHost))
             .Which.Lifetime.Should().Be(ServiceLifetime.Singleton);
 
-        // Multiple Implementations (Console/Debug/EventSource only - EventLog is Windows-only)
+        // Multiple Implementations
+        // NOTE: EventLogLoggerProvider is only registered by the Generic Host on Windows,
+        // so it's intentionally excluded here to keep this test cross-platform.
         IEnumerable<ServiceDescriptor> loggerProviderDescriptors =
             serviceCollection.Where(d => d.ServiceType == typeof(ILoggerProvider));
 
@@ -168,6 +182,8 @@ public void X_DependencyInjection()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/AwesomeAssertionsAddOnsTests.cs#L104-L167' title='Snippet source file'>snippet source</a> | <a href='#snippet-AwesomeAssertionsAddOnsTests_X_DependencyInjection' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 

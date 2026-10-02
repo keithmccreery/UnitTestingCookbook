@@ -21,6 +21,7 @@ public class BogusTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: BogusTests_A_FakerBasics
     public void A_FakerBasics()
     {
         // Arrange
@@ -39,6 +40,7 @@ public class BogusTests
             whale.Length.Should().BeInRange(10, 100);
         }
     }
+    // end-snippet
 
     //
     // Q: How do I get reproducible fake data (so a "random" test isn't flaky)?
@@ -50,6 +52,7 @@ public class BogusTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: BogusTests_B_DeterministicSeed
     public void B_DeterministicSeed()
     {
         // Arrange
@@ -68,6 +71,7 @@ public class BogusTests
             whale.Length.Should().Be(100);
         }
     }
+    // end-snippet
 
     //
     // Q: How do I feed Bogus-generated data into a Data Driven test?
@@ -76,8 +80,9 @@ public class BogusTests
     // the TestCaseData's values with Bogus instead of hand-typing them, using .UseSeed() (see above)
     // so the generated set - and the resulting test names - are stable across runs.
     //
-    [TestCaseSource(typeof(BogusTestData), nameof(BogusTestData.TestCaseSourceData))]
     [Category("_passes")]
+    // begin-snippet: BogusTests_C_TestCaseSourceWithBogus
+    [TestCaseSource(typeof(BogusTestData), nameof(BogusTestData.TestCaseSourceData))]
     public void C_TestCaseSourceWithBogus(Whale whale)
     {
         // Arrange
@@ -87,8 +92,10 @@ public class BogusTests
         // Assert
         whale.Length.Should().BeInRange(10, 100);
     }
+    // end-snippet
 }
 
+// begin-snippet: BogusTests_BogusTestData
 // This class can be named anything
 public static class BogusTestData
 {
@@ -109,3 +116,4 @@ public static class BogusTestData
         }
     }
 }
+// end-snippet

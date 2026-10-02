@@ -37,7 +37,9 @@ that change by hand. Stryker automates making those changes across your producti
 [`ShippingCalculator`](../UnitTestingCookbook.Support/Services/ShippingCalculator.cs) - small, but it has a guard
 clause, a boundary (`>=`), and a branch, which is where mutants tend to survive:
 
-```csharp
+<!-- snippet: ShippingCalculator.cs -->
+<a id='snippet-ShippingCalculator.cs'></a>
+```cs
 namespace UnitTestingCookbook.Support.Services;
 
 public static class ShippingCalculator
@@ -59,6 +61,8 @@ public static class ShippingCalculator
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Support/Services/ShippingCalculator.cs#L1-L20' title='Snippet source file'>snippet source</a> | <a href='#snippet-ShippingCalculator.cs' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -108,7 +112,9 @@ minute (Polly delays), which Stryker would repeat for every mutant. In Stryker 5
 
 ## Run 1 - only a happy-path test: is "covered" the same as "tested"?
 
-```csharp
+<!-- snippet: MutationTestingTests_A_HappyPath_Only -->
+<a id='snippet-MutationTestingTests_A_HappyPath_Only'></a>
+```cs
 public void A_HappyPath_Only()
 {
     // Act
@@ -123,6 +129,8 @@ public void A_HappyPath_Only()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/MutationTestingTests.cs#L21-L35' title='Snippet source file'>snippet source</a> | <a href='#snippet-MutationTestingTests_A_HappyPath_Only' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 Both branches of the free-shipping ternary run, and the test passes. Running Stryker with **only this test**
 gives (real output, Stryker 5.0.0):
@@ -156,7 +164,9 @@ Each survivor points at a specific missing test:
 
 One test per gap:
 
-```csharp
+<!-- snippet: MutationTestingTests_B_FreeShipping_Boundary -->
+<a id='snippet-MutationTestingTests_B_FreeShipping_Boundary'></a>
+```cs
 [TestCase(50.00, 0.00)] // exactly at the threshold - only >= gives free shipping
 [TestCase(49.99, 5.99)] // just under
 public void B_FreeShipping_Boundary(decimal orderTotal, decimal expected)
@@ -168,8 +178,12 @@ public void B_FreeShipping_Boundary(decimal orderTotal, decimal expected)
     shipping.Should().Be(expected);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/MutationTestingTests.cs#L41-L52' title='Snippet source file'>snippet source</a> | <a href='#snippet-MutationTestingTests_B_FreeShipping_Boundary' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
-```csharp
+<!-- snippet: MutationTestingTests_C_Express_AddsSurcharge -->
+<a id='snippet-MutationTestingTests_C_Express_AddsSurcharge'></a>
+```cs
 [TestCase(10.00, 15.99)] // standard rate + express surcharge
 [TestCase(100.00, 10.00)] // free shipping + express surcharge
 public void C_Express_AddsSurcharge(decimal orderTotal, decimal expected)
@@ -181,8 +195,12 @@ public void C_Express_AddsSurcharge(decimal orderTotal, decimal expected)
     shipping.Should().Be(expected);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/MutationTestingTests.cs#L58-L69' title='Snippet source file'>snippet source</a> | <a href='#snippet-MutationTestingTests_C_Express_AddsSurcharge' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
-```csharp
+<!-- snippet: MutationTestingTests_D_NegativeTotal_Throws -->
+<a id='snippet-MutationTestingTests_D_NegativeTotal_Throws'></a>
+```cs
 public void D_NegativeTotal_Throws()
 {
     // Act
@@ -193,8 +211,12 @@ public void D_NegativeTotal_Throws()
         .WithParameterName("orderTotal");
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/MutationTestingTests.cs#L76-L86' title='Snippet source file'>snippet source</a> | <a href='#snippet-MutationTestingTests_D_NegativeTotal_Throws' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
-```csharp
+<!-- snippet: MutationTestingTests_E_ZeroTotal_DoesNotThrow -->
+<a id='snippet-MutationTestingTests_E_ZeroTotal_DoesNotThrow'></a>
+```cs
 public void E_ZeroTotal_DoesNotThrow()
 {
     // Act
@@ -204,6 +226,8 @@ public void E_ZeroTotal_DoesNotThrow()
     shipping.Should().Be(5.99m);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/MutationTestingTests.cs#L93-L102' title='Snippet source file'>snippet source</a> | <a href='#snippet-MutationTestingTests_E_ZeroTotal_DoesNotThrow' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 Running `dotnet stryker` with the committed config (all 5 tests, 7 test cases):
 

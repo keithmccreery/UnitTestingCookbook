@@ -37,7 +37,9 @@ accepts a request.
 
 The framework has this built in - decorate the options class, then chain `.ValidateDataAnnotations()`.
 
-```csharp
+<!-- snippet: AnimalApiOptions -->
+<a id='snippet-AnimalApiOptions'></a>
+```cs
 public class AnimalApiOptions
 {
     public const string SectionName = "AnimalApi";
@@ -49,13 +51,19 @@ public class AnimalApiOptions
     public string DefaultSpecies { get; set; } = default!;
 }
 ```
+<sup><a href='/UnitTestingCookbook.MinimalApi/AnimalApiOptions.cs#L5-L16' title='Snippet source file'>snippet source</a> | <a href='#snippet-AnimalApiOptions' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
-```csharp
+<!-- snippet: Program_AddAnimalApiOptions -->
+<a id='snippet-Program_AddAnimalApiOptions'></a>
+```cs
 builder.Services.AddOptions<AnimalApiOptions>()
     .Bind(builder.Configuration.GetSection(AnimalApiOptions.SectionName))
     .ValidateDataAnnotations()
     .ValidateOnStart();
 ```
+<sup><a href='/UnitTestingCookbook.MinimalApi/Program.cs#L18-L23' title='Snippet source file'>snippet source</a> | <a href='#snippet-Program_AddAnimalApiOptions' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 Running the app with `AnimalApi:MaxAnimals` set to `0` and `AnimalApi:DefaultSpecies` unset...
 
@@ -146,13 +154,17 @@ public static class OptionsBuilderFluentValidationExtensions
 }
 ```
 
-```csharp
+<!-- snippet: Program_AddNotificationOptions -->
+<a id='snippet-Program_AddNotificationOptions'></a>
+```cs
 builder.Services.AddScoped<IValidator<NotificationOptions>, NotificationOptionsValidator>();
 builder.Services.AddOptions<NotificationOptions>()
     .Bind(builder.Configuration.GetSection(NotificationOptions.SectionName))
     .ValidateFluentValidation()
     .ValidateOnStart();
 ```
+<sup><a href='/UnitTestingCookbook.MinimalApi/Program.cs#L27-L33' title='Snippet source file'>snippet source</a> | <a href='#snippet-Program_AddNotificationOptions' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 Running the app with `Notifications:FromEmail` set to `not-an-email` and `Notifications:MaxRetries` set to `99`...
 

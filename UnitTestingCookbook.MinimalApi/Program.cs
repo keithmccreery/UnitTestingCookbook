@@ -15,18 +15,22 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<AnimalStore>();
 
 // Data Annotations: validated via the framework's own .ValidateDataAnnotations().
+// begin-snippet: Program_AddAnimalApiOptions
 builder.Services.AddOptions<AnimalApiOptions>()
     .Bind(builder.Configuration.GetSection(AnimalApiOptions.SectionName))
     .ValidateDataAnnotations()
     .ValidateOnStart();
+// end-snippet
 
 // FluentValidation: no built-in Options-pattern integration, so it goes through the
 // FluentValidateOptions<T> adapter (see FluentValidateOptions.cs) instead.
+// begin-snippet: Program_AddNotificationOptions
 builder.Services.AddScoped<IValidator<NotificationOptions>, NotificationOptionsValidator>();
 builder.Services.AddOptions<NotificationOptions>()
     .Bind(builder.Configuration.GetSection(NotificationOptions.SectionName))
     .ValidateFluentValidation()
     .ValidateOnStart();
+// end-snippet
 
 // Connection String Validation: the only options here validated by actually opening a real
 // connection (see ConnectionStringValidator.cs) rather than checking the string's shape.
@@ -61,6 +65,8 @@ app.MapPost("/animals", (AnimalRecord animal, AnimalStore store) =>
 
 app.Run();
 
+// begin-snippet: Program_PartialClass
 // Makes the auto-generated top-level-statements Program class visible to
 // WebApplicationFactory<Program> in the test project (it's `internal` by default).
 public partial class Program;
+// end-snippet

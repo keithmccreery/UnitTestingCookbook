@@ -23,6 +23,7 @@ public static class TestHelper
     /// </param>
     /// <returns>The newly constructed instance.</returns>
     /// <exception cref="NotImplementedException">No non-public constructor matching <paramref name="args"/>'s types was found on <typeparamref name="T"/>.</exception>
+    // begin-snippet: TestHelper_InstantiateInternalConstructor
     public static T InstantiateInternalConstructor<T>(params object[] args)
     {
         return (T) (typeof(T)
@@ -30,4 +31,5 @@ public static class TestHelper
             ?? throw new NotImplementedException("No internal constructor matches the parameters."))
             .Invoke(args);
     }
+    // end-snippet
 }

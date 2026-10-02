@@ -14,6 +14,7 @@ namespace UnitTestingCookbook.Support;
 /// <remarks>
 /// https://github.com/App-vNext/Polly/wiki/Polly-and-HttpClientFactory#configuring-httpclientfactory-policies-to-use-an-iloggert-from-the-call-site
 /// </remarks>
+// begin-snippet: PollyContextExtensions
 public static class PollyContextExtensions
 {
     private static readonly string LoggerKey = "ILogger";
@@ -45,3 +46,4 @@ public static class PollyContextExtensions
         return @this;
     }
 }
+// end-snippet

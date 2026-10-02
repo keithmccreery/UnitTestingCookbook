@@ -27,7 +27,9 @@ Why bother, when a hand-typed literal works fine? Two reasons:
 
 Using `new Faker<T>()`, describe each property with `.RuleFor()`, then `.Generate()` an instance.
 
-```csharp
+<!-- snippet: BogusTests_A_FakerBasics -->
+<a id='snippet-BogusTests_A_FakerBasics'></a>
+```cs
 public void A_FakerBasics()
 {
     // Arrange
@@ -47,6 +49,8 @@ public void A_FakerBasics()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/BogusTests.cs#L24-L43' title='Snippet source file'>snippet source</a> | <a href='#snippet-BogusTests_A_FakerBasics' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 **NOTE:** Because the values are random, the Assert has to check *shape* (is it one of the expected species? is it
 in range?) rather than an exact value - that's the trade-off for the extra coverage above.
@@ -59,7 +63,9 @@ Bogus data is non-deterministic by default - a `Faker<T>` without a seed generat
 That's fine when you're only asserting shape/range (as above), but a test that asserts an *exact* generated value
 needs `.UseSeed()` to pin the sequence - the same seed always produces the same values.
 
-```csharp
+<!-- snippet: BogusTests_B_DeterministicSeed -->
+<a id='snippet-BogusTests_B_DeterministicSeed'></a>
+```cs
 public void B_DeterministicSeed()
 {
     // Arrange
@@ -79,6 +85,8 @@ public void B_DeterministicSeed()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/BogusTests.cs#L55-L74' title='Snippet source file'>snippet source</a> | <a href='#snippet-BogusTests_B_DeterministicSeed' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 **NOTE:** `.UseSeed()` on a `Faker<T>` instance is preferred over Bogus's global `Randomizer.Seed` static - it
 scopes the seed to this one faker instead of mutating shared state that could affect other tests.
@@ -91,7 +99,9 @@ See [Data Driven](./README_DataDriven.md) for the `TestCaseSource` pattern itsel
 pattern) - this generates the `TestCaseData`'s values with Bogus instead of hand-typing them, using `.UseSeed()`
 (see above) so the generated set - and the resulting test names - are stable across runs.
 
-```csharp
+<!-- snippet: BogusTests_C_TestCaseSourceWithBogus -->
+<a id='snippet-BogusTests_C_TestCaseSourceWithBogus'></a>
+```cs
 [TestCaseSource(typeof(BogusTestData), nameof(BogusTestData.TestCaseSourceData))]
 public void C_TestCaseSourceWithBogus(Whale whale)
 {
@@ -103,8 +113,12 @@ public void C_TestCaseSourceWithBogus(Whale whale)
     whale.Length.Should().BeInRange(10, 100);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/BogusTests.cs#L84-L95' title='Snippet source file'>snippet source</a> | <a href='#snippet-BogusTests_C_TestCaseSourceWithBogus' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
-```csharp
+<!-- snippet: BogusTests_BogusTestData -->
+<a id='snippet-BogusTests_BogusTestData'></a>
+```cs
 // This class can be named anything
 public static class BogusTestData
 {
@@ -126,6 +140,8 @@ public static class BogusTestData
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/BogusTests.cs#L98-L119' title='Snippet source file'>snippet source</a> | <a href='#snippet-BogusTests_BogusTestData' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 

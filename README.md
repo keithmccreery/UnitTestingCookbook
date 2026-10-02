@@ -117,7 +117,3 @@ and the explanation will follow.
 # Errata
 
 - NUnit vs. XUnit vs. MSTest: Comparing Unit Testing Frameworks In C# https://www.lambdatest.com/blog/nunit-vs-xunit-vs-mstest/
-
-# Future
-
-- Create Relative Code Snippet links in GitHub

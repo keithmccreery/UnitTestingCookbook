@@ -18,7 +18,9 @@ Code that calls `DateTime.Now`/`DateTimeOffset.UtcNow` directly is untestable - 
 from a test. `TimeProvider` is the modern (.NET 8+) fix: inject `TimeProvider` instead of calling the static
 clock directly, and substitute `FakeTimeProvider` in tests to set "now" to whatever the test needs.
 
-```csharp
+<!-- snippet: GreetingClock -->
+<a id='snippet-GreetingClock'></a>
+```cs
 public class GreetingClock
 {
     private readonly TimeProvider timeProvider;
@@ -41,8 +43,12 @@ public class GreetingClock
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Support/Services/GreetingClock.cs#L3-L25' title='Snippet source file'>snippet source</a> | <a href='#snippet-GreetingClock' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
-```csharp
+<!-- snippet: TimeProviderTests_A_GetGreeting_BeforeNoon_ReturnsGoodMorning -->
+<a id='snippet-TimeProviderTests_A_GetGreeting_BeforeNoon_ReturnsGoodMorning'></a>
+```cs
 public void A_GetGreeting_BeforeNoon_ReturnsGoodMorning()
 {
     // Arrange
@@ -57,6 +63,8 @@ public void A_GetGreeting_BeforeNoon_ReturnsGoodMorning()
     result.Should().Be("Good morning");
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/TimeProviderTests.cs#L13-L27' title='Snippet source file'>snippet source</a> | <a href='#snippet-TimeProviderTests_A_GetGreeting_BeforeNoon_ReturnsGoodMorning' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 **NOTE:** `FakeTimeProvider.LocalTimeZone` defaults to UTC, so `GetLocalNow()` and `GetUtcNow()` agree in these
 examples - no timezone conversion to reason about. Production code should still call `GetLocalNow()` where local
@@ -69,7 +77,9 @@ time is genuinely what's wanted; the test just doesn't need to care about the di
 `FakeTimeProvider.Advance(TimeSpan)` moves the fake clock forward instantly - no `Task.Delay`, no real elapsed
 wall-clock time, and no flakiness from a test that's timing-sensitive against the real clock.
 
-```csharp
+<!-- snippet: ExpiringCache -->
+<a id='snippet-ExpiringCache'></a>
+```cs
 public class ExpiringCache<TValue>
 {
     private readonly TimeProvider timeProvider;
@@ -103,8 +113,12 @@ public class ExpiringCache<TValue>
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Support/Services/ExpiringCache.cs#L3-L36' title='Snippet source file'>snippet source</a> | <a href='#snippet-ExpiringCache' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
-```csharp
+<!-- snippet: TimeProviderTests_D_ExpiringCache_AfterTimeToLiveElapses_ReturnsNothing -->
+<a id='snippet-TimeProviderTests_D_ExpiringCache_AfterTimeToLiveElapses_ReturnsNothing'></a>
+```cs
 public void D_ExpiringCache_AfterTimeToLiveElapses_ReturnsNothing()
 {
     // Arrange
@@ -121,6 +135,8 @@ public void D_ExpiringCache_AfterTimeToLiveElapses_ReturnsNothing()
     result.Should().BeNull();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/TimeProviderTests.cs#L65-L81' title='Snippet source file'>snippet source</a> | <a href='#snippet-TimeProviderTests_D_ExpiringCache_AfterTimeToLiveElapses_ReturnsNothing' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 See [Testing IHostedService / BackgroundService](./README_HostedService.md) for `TimeProvider` used to test a
 periodic background worker the same way, without waiting on its actual period.

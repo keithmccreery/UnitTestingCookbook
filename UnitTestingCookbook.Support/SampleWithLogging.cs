@@ -6,10 +6,12 @@ public class SampleWithLogging
 {
     private readonly ILogger<SampleWithLogging> logger;
 
+    // begin-snippet: SampleWithLogging_Constructor
     public SampleWithLogging(ILogger<SampleWithLogging> logger)
     {
         this.logger = logger;
     }
+    // end-snippet
 
     public void LogInformationMessage(string? message)
     {

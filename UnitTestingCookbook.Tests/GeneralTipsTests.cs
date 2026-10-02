@@ -15,6 +15,7 @@ public class GeneralTipsTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: GeneralTipsTests_A_CaptureConsole
     public void A_CaptureConsole()
     {
         using (StringWriter capturedConsole = new StringWriter())
@@ -42,12 +43,14 @@ public class GeneralTipsTests
             }
         }
     }
+    // end-snippet
 
     //
     // Q: How do I Capture Console to test?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: GeneralTipsTests_A_CaptureConsole_TestHelpers
     public void A_CaptureConsole_TestHelpers()
     {
         // Arrange
@@ -63,12 +66,14 @@ public class GeneralTipsTests
         // Assert
         result.Should().Be(expected);
     }
+    // end-snippet
 
     //
     // Q: How do I change ENVIRONMENT variables for testing?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: GeneralTipsTests_B_EnvironmentVariables
     public void B_EnvironmentVariables()
     {
         const string ASPNETCORE_ENVIRONMENT = "ASPNETCORE_ENVIRONMENT";
@@ -99,12 +104,14 @@ public class GeneralTipsTests
                 .ForEach(kvp => Environment.SetEnvironmentVariable(kvp.Key, kvp.Value));
         }
     }
+    // end-snippet
 
     //
     // Q: How do I change ENVIRONMENT variables for testing?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: GeneralTipsTests_B_EnvironmentVariables_TestHelpers
     public void B_EnvironmentVariables_TestHelpers()
     {
         // Arrange
@@ -122,6 +129,7 @@ public class GeneralTipsTests
         // Assert
         result.Should().BeTrue(); // Check the work
     }
+    // end-snippet
 
     //
     // CAUTION: C_Private_Property, D_Private_Field, and E_Private_Method below use reflection to reach into a
@@ -134,6 +142,7 @@ public class GeneralTipsTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: GeneralTipsTests_C_Private_Property
     public void C_Private_Property()
     {
         // Arrange
@@ -145,12 +154,14 @@ public class GeneralTipsTests
         // Assert
         result.Should().Be("private_property");
     }
+    // end-snippet
 
     //
     // Q: How do I access a private Field?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: GeneralTipsTests_D_Private_Field
     public void D_Private_Field()
     {
         // Arrange
@@ -162,12 +173,14 @@ public class GeneralTipsTests
         // Assert
         result.Should().Be("private_field");
     }
+    // end-snippet
 
     //
     // Q: How do I invoke a private Method?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: GeneralTipsTests_E_Private_Method
     public void E_Private_Method()
     {
         // Arrange
@@ -179,12 +192,14 @@ public class GeneralTipsTests
         // Assert
         result.Should().BeTrue();
     }
+    // end-snippet
 
     //
     // Q: How do I access an Internal Constructor (for unit testing)?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: GeneralTipsTests_F_Internal_Constructor
     public void F_Internal_Constructor()
     {
         // Arrange
@@ -195,12 +210,14 @@ public class GeneralTipsTests
         // Assert
         miscellaneous.Should().NotBeNull();
     }
+    // end-snippet
 
     //
     // Q: How do I Pretty Print a Stack Trace
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: GeneralTipsTests_G_Demystifier
     public void G_Demystifier()
     {
         // Arrange
@@ -224,4 +241,5 @@ public class GeneralTipsTests
 
         // Assert
     }
+    // end-snippet
 }

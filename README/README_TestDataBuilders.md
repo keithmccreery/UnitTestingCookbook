@@ -22,7 +22,9 @@ all creating a **new** object graph for every test.
 
 The code under test is [`OfferValidator`](../UnitTestingCookbook.Support/Services/OfferValidator.cs):
 
-```csharp
+<!-- snippet: OfferValidator.cs -->
+<a id='snippet-OfferValidator.cs'></a>
+```cs
 using UnitTestingCookbook.Support.Models;
 
 namespace UnitTestingCookbook.Support.Services;
@@ -54,6 +56,8 @@ public static class OfferValidator
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Support/Services/OfferValidator.cs#L1-L30' title='Snippet source file'>snippet source</a> | <a href='#snippet-OfferValidator.cs' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -85,7 +89,9 @@ any property can be varied without first adding a `With...()` method for it.
 mutates the shared original, and Data Hangover is back. That's easy to design away, though, while keeping the same style:
 make the original **private**, and expose it only through a property that clones on every read:
 
-```csharp
+<!-- snippet: OfferPrototype.cs -->
+<a id='snippet-OfferPrototype.cs'></a>
+```cs
 using Force.DeepCloner;
 
 using UnitTestingCookbook.Support.Models;
@@ -114,11 +120,15 @@ public static class OfferPrototype
     public static Offer Offer => Prototype.DeepClone();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/TestData/OfferPrototype.cs#L1-L27' title='Snippet source file'>snippet source</a> | <a href='#snippet-OfferPrototype.cs' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 Tests read the same as before, with the baseline plus explicit changes, but there's no longer any way to get the
 shared instance:
 
-```csharp
+<!-- snippet: TestDataBuildersTests_A_Prototype_ExplicitChanges -->
+<a id='snippet-TestDataBuildersTests_A_Prototype_ExplicitChanges'></a>
+```cs
 public void A_Prototype_ExplicitChanges()
 {
     // Arrange
@@ -134,8 +144,12 @@ public void A_Prototype_ExplicitChanges()
         .Which.Should().Be("Lease terms cannot exceed 36 months.");
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/TestDataBuildersTests.cs#L18-L33' title='Snippet source file'>snippet source</a> | <a href='#snippet-TestDataBuildersTests_A_Prototype_ExplicitChanges' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
-```csharp
+<!-- snippet: TestDataBuildersTests_B_Prototype_EachRead_IsAFreshObject -->
+<a id='snippet-TestDataBuildersTests_B_Prototype_EachRead_IsAFreshObject'></a>
+```cs
 public void B_Prototype_EachRead_IsAFreshObject()
 {
     // Arrange
@@ -153,6 +167,8 @@ public void B_Prototype_EachRead_IsAFreshObject()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/TestDataBuildersTests.cs#L40-L57' title='Snippet source file'>snippet source</a> | <a href='#snippet-TestDataBuildersTests_B_Prototype_EachRead_IsAFreshObject' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 **The prototype must own its data.** An earlier draft of `OfferPrototype` built its prototype from
 `TestValues.DealerValues` / `CustomerValues` / `FinanceValues`. It passed when run alone, but **failed** when run
@@ -175,7 +191,9 @@ runtime ever breaks it, only that line needs to change (to a hand-written copy, 
 The simplest fix of all: make the Object Mother's members **methods that build a new graph on every call**,
 instead of shared `static readonly` fields. There's nothing to clone, so there's nothing to forget.
 
-```csharp
+<!-- snippet: OfferMother.cs -->
+<a id='snippet-OfferMother.cs'></a>
+```cs
 using UnitTestingCookbook.Support.Models;
 
 namespace UnitTestingCookbook.Tests.TestData;
@@ -202,10 +220,14 @@ public static class OfferMother
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/TestData/OfferMother.cs#L1-L25' title='Snippet source file'>snippet source</a> | <a href='#snippet-OfferMother.cs' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 Mutating what one call returns can't affect the next call:
 
-```csharp
+<!-- snippet: TestDataBuildersTests_C_ObjectMother_EachCall_IsAFreshObject -->
+<a id='snippet-TestDataBuildersTests_C_ObjectMother_EachCall_IsAFreshObject'></a>
+```cs
 public void C_ObjectMother_EachCall_IsAFreshObject()
 {
     // Arrange
@@ -223,10 +245,14 @@ public void C_ObjectMother_EachCall_IsAFreshObject()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/TestDataBuildersTests.cs#L64-L81' title='Snippet source file'>snippet source</a> | <a href='#snippet-TestDataBuildersTests_C_ObjectMother_EachCall_IsAFreshObject' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 And a named scenario reads well when the test needs a *typical* object, with no special values:
 
-```csharp
+<!-- snippet: TestDataBuildersTests_D_ObjectMother_NamedScenario -->
+<a id='snippet-TestDataBuildersTests_D_ObjectMother_NamedScenario'></a>
+```cs
 public void D_ObjectMother_NamedScenario()
 {
     // Arrange
@@ -239,6 +265,8 @@ public void D_ObjectMother_NamedScenario()
     errors.Should().BeEmpty();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/TestDataBuildersTests.cs#L88-L100' title='Snippet source file'>snippet source</a> | <a href='#snippet-TestDataBuildersTests_D_ObjectMother_NamedScenario' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 **Where Object Mothers break down:** every variation needs its own method (`LeaseWithZeroDown()`,
 `LeaseWith48Terms()`, `PurchaseForCustomerJane()`, ...). With enough variations the mother becomes a large file of
@@ -251,7 +279,9 @@ near-duplicates, which is the problem builders solve.
 A builder holds a **sensible default for every value**, has a `With...()` method for anything a test might
 vary, and `Build()` creates a brand-new graph each time:
 
-```csharp
+<!-- snippet: OfferBuilder.cs -->
+<a id='snippet-OfferBuilder.cs'></a>
+```cs
 using UnitTestingCookbook.Support.Models;
 
 namespace UnitTestingCookbook.Tests.TestData;
@@ -309,10 +339,14 @@ public sealed class OfferBuilder
     };
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/TestData/OfferBuilder.cs#L1-L56' title='Snippet source file'>snippet source</a> | <a href='#snippet-OfferBuilder.cs' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 The test now says exactly what's special about its data, and nothing else:
 
-```csharp
+<!-- snippet: TestDataBuildersTests_E_Builder_OnlyWhatMatters -->
+<a id='snippet-TestDataBuildersTests_E_Builder_OnlyWhatMatters'></a>
+```cs
 public void E_Builder_OnlyWhatMatters()
 {
     // Arrange
@@ -329,11 +363,15 @@ public void E_Builder_OnlyWhatMatters()
         .Which.Should().Be("Lease terms cannot exceed 36 months.");
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/TestDataBuildersTests.cs#L107-L123' title='Snippet source file'>snippet source</a> | <a href='#snippet-TestDataBuildersTests_E_Builder_OnlyWhatMatters' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 Varying a single value doesn't require restating the rest of the object, so it combines well with
 [Data Driven](./README_DataDriven.md) tests:
 
-```csharp
+<!-- snippet: TestDataBuildersTests_F_Builder_VaryOneValue -->
+<a id='snippet-TestDataBuildersTests_F_Builder_VaryOneValue'></a>
+```cs
 [TestCase(0, true)]
 [TestCase(-1, false)]
 public void F_Builder_VaryOneValue(int downPayment, bool expectedValid)
@@ -350,10 +388,14 @@ public void F_Builder_VaryOneValue(int downPayment, bool expectedValid)
     errors.Should().HaveCount(expectedValid ? 0 : 1);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/TestDataBuildersTests.cs#L129-L145' title='Snippet source file'>snippet source</a> | <a href='#snippet-TestDataBuildersTests_F_Builder_VaryOneValue' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 Because `Build()` creates new objects, one builder can safely produce several instances:
 
-```csharp
+<!-- snippet: TestDataBuildersTests_G_Builder_EachBuild_IsAFreshObject -->
+<a id='snippet-TestDataBuildersTests_G_Builder_EachBuild_IsAFreshObject'></a>
+```cs
 public void G_Builder_EachBuild_IsAFreshObject()
 {
     // Arrange
@@ -373,6 +415,8 @@ public void G_Builder_EachBuild_IsAFreshObject()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/TestDataBuildersTests.cs#L152-L171' title='Snippet source file'>snippet source</a> | <a href='#snippet-TestDataBuildersTests_G_Builder_EachBuild_IsAFreshObject' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 **NOTE:** `C_` and `G_` were checked the same way. Temporarily changing `OfferMother.Purchase()` and
 `OfferBuilder.Build()` to return a cached instance makes exactly those two tests fail, while the other tests keep
@@ -393,14 +437,20 @@ Mother.
 For **immutable** types, the language has a builder built in. `with` copies a record and changes only the named
 properties. The original is never modified, so sharing a default instance is safe:
 
-```csharp
+<!-- snippet: FinanceTerms.cs -->
+<a id='snippet-FinanceTerms.cs'></a>
+```cs
 namespace UnitTestingCookbook.Support.Models;
 
 // Immutable counterpart to Finance (see TestValues.cs) - used by the Test Data Builders chapter to show `with` expressions
 public sealed record FinanceTerms(string PaymentType, int MaxTerms, int DownPayment);
 ```
+<sup><a href='/UnitTestingCookbook.Support/Models/FinanceTerms.cs#L1-L4' title='Snippet source file'>snippet source</a> | <a href='#snippet-FinanceTerms.cs' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
-```csharp
+<!-- snippet: TestDataBuildersTests_H_Record_With_Expression -->
+<a id='snippet-TestDataBuildersTests_H_Record_With_Expression'></a>
+```cs
 public void H_Record_With_Expression()
 {
     // Arrange
@@ -417,6 +467,8 @@ public void H_Record_With_Expression()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/TestDataBuildersTests.cs#L179-L195' title='Snippet source file'>snippet source</a> | <a href='#snippet-TestDataBuildersTests_H_Record_With_Expression' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 **Watch out:** `with` is a **shallow** copy. If a record has a property of a *mutable* reference type (a `List<T>`,
 or a class like `Finance`), the copy and the original share that object, and Data Hangover is back. `with` is only

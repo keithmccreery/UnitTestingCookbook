@@ -17,6 +17,7 @@ public class HttpBinOrgService : IHttpBinOrgService
         this.logger = logger;
     }
 
+    // begin-snippet: HttpBinOrgService_GetStatusAsync
     public async Task<HttpStatusCode> GetStatusAsync(HttpStatusCode status, CancellationToken cancellationToken = default)
     {
         HttpClient httpClient = httpClientFactory.CreateClient("HttpBinOrg"); // short-lived
@@ -34,4 +35,5 @@ public class HttpBinOrgService : IHttpBinOrgService
 
         return response.StatusCode;
     }
+    // end-snippet
 }

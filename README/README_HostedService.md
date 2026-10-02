@@ -18,7 +18,9 @@ Inject `TimeProvider` and use it for the delay between iterations (`Task.Delay(p
 stoppingToken)` - .NET 8+'s `TimeProvider`-aware overload) instead of a bare `Task.Delay(period)`. In tests,
 substitute `FakeTimeProvider` and advance it instead of waiting in real time.
 
-```csharp
+<!-- snippet: HeartbeatWorker -->
+<a id='snippet-HeartbeatWorker'></a>
+```cs
 public class HeartbeatWorker : BackgroundService
 {
     private readonly TimeProvider timeProvider;
@@ -42,6 +44,8 @@ public class HeartbeatWorker : BackgroundService
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Support/Services/HeartbeatWorker.cs#L5-L28' title='Snippet source file'>snippet source</a> | <a href='#snippet-HeartbeatWorker' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 **NOTE:** `BackgroundService.ExecuteAsync` is `protected`, so a test can't call it directly - drive the worker
 through the public `StartAsync`/`StopAsync` (both inherited from `IHostedService`) instead, exactly as the host
@@ -56,7 +60,9 @@ in small repeated steps instead of one big jump: an `Advance()` call before the 
 once the timer *does* register, the remaining small steps simply accumulate up to its due time and fire it
 exactly once.
 
-```csharp
+<!-- snippet: HostedServiceTests_AdvanceUntilNextHeartbeat -->
+<a id='snippet-HostedServiceTests_AdvanceUntilNextHeartbeat'></a>
+```cs
 private static async Task AdvanceUntilNextHeartbeat(FakeTimeProvider timeProvider, HeartbeatWorker worker, TimeSpan step, TimeSpan timeout)
 {
     int initialCount = worker.HeartbeatCount;
@@ -68,8 +74,12 @@ private static async Task AdvanceUntilNextHeartbeat(FakeTimeProvider timeProvide
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/HostedServiceTests.cs#L16-L27' title='Snippet source file'>snippet source</a> | <a href='#snippet-HostedServiceTests_AdvanceUntilNextHeartbeat' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
-```csharp
+<!-- snippet: HostedServiceTests_A_HeartbeatWorker_AdvancingTimeProvider_IncrementsHeartbeatCount -->
+<a id='snippet-HostedServiceTests_A_HeartbeatWorker_AdvancingTimeProvider_IncrementsHeartbeatCount'></a>
+```cs
 public async Task A_HeartbeatWorker_AdvancingTimeProvider_IncrementsHeartbeatCount()
 {
     // Arrange
@@ -87,10 +97,14 @@ public async Task A_HeartbeatWorker_AdvancingTimeProvider_IncrementsHeartbeatCou
     await worker.StopAsync(CancellationToken.None);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/HostedServiceTests.cs#L31-L48' title='Snippet source file'>snippet source</a> | <a href='#snippet-HostedServiceTests_A_HeartbeatWorker_AdvancingTimeProvider_IncrementsHeartbeatCount' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ## How do I test that stopping the worker doesn't throw?
 
-```csharp
+<!-- snippet: HostedServiceTests_C_HeartbeatWorker_StopAsync_StopsGracefully -->
+<a id='snippet-HostedServiceTests_C_HeartbeatWorker_StopAsync_StopsGracefully'></a>
+```cs
 public async Task C_HeartbeatWorker_StopAsync_StopsGracefully()
 {
     // Arrange
@@ -105,6 +119,8 @@ public async Task C_HeartbeatWorker_StopAsync_StopsGracefully()
     await action.Should().NotThrowAsync();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/HostedServiceTests.cs#L72-L86' title='Snippet source file'>snippet source</a> | <a href='#snippet-HostedServiceTests_C_HeartbeatWorker_StopAsync_StopsGracefully' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 `BackgroundService.StopAsync` cancels the token passed to `ExecuteAsync`, which makes the pending
 `Task.Delay(..., stoppingToken)` throw `OperationCanceledException` internally - `BackgroundService` catches

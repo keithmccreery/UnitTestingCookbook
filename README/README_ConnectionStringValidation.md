@@ -45,7 +45,9 @@ or fails for real, against a resource (a file, or `:memory:`) that's entirely un
 makes both outcomes below deterministic, unlike trying to reliably fail a connection to an actual SQL Server or
 PostgreSQL instance without one running somewhere.
 
-```csharp
+<!-- snippet: ConnectionStringValidator -->
+<a id='snippet-ConnectionStringValidator'></a>
+```cs
 public class ConnectionStringValidator : IValidateOptions<ConnectionStringOptions>
 {
     public const string ProviderName = "Microsoft.Data.Sqlite";
@@ -78,19 +80,27 @@ public class ConnectionStringValidator : IValidateOptions<ConnectionStringOption
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.MinimalApi/ConnectionStringValidator.cs#L12-L44' title='Snippet source file'>snippet source</a> | <a href='#snippet-ConnectionStringValidator' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 `DbProviderFactories` needs the SQLite factory registered once, at startup (`Program.cs` - it's not automatic
 the way it would be via `machine.config` in .NET Framework):
 
-```csharp
+<!-- snippet: ConnectionStringValidationTests_RegisterFactory -->
+<a id='snippet-ConnectionStringValidationTests_RegisterFactory'></a>
+```cs
 DbProviderFactories.RegisterFactory(ConnectionStringValidator.ProviderName, SqliteFactory.Instance);
 ```
+<sup><a href='/UnitTestingCookbook.Tests/ConnectionStringValidationTests.cs#L26-L28' title='Snippet source file'>snippet source</a> | <a href='#snippet-ConnectionStringValidationTests_RegisterFactory' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
 ## How do I prove a "valid-looking" connection string can actually be opened?
 
-```csharp
+<!-- snippet: ConnectionStringValidationTests_A_OpenableConnectionString_Succeeds -->
+<a id='snippet-ConnectionStringValidationTests_A_OpenableConnectionString_Succeeds'></a>
+```cs
 public void A_OpenableConnectionString_Succeeds()
 {
     // Arrange
@@ -104,6 +114,8 @@ public void A_OpenableConnectionString_Succeeds()
     result.Succeeded.Should().BeTrue();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/ConnectionStringValidationTests.cs#L36-L49' title='Snippet source file'>snippet source</a> | <a href='#snippet-ConnectionStringValidationTests_A_OpenableConnectionString_Succeeds' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -113,7 +125,9 @@ public void A_OpenableConnectionString_Succeeds()
 file path wouldn't fail here (it would just get created). `Mode=ReadOnly` against a file that doesn't exist does
 fail, since SQLite can't create one when it's only allowed to read.  
 
-```csharp
+<!-- snippet: ConnectionStringValidationTests_B_UnreachableConnectionString_Fails -->
+<a id='snippet-ConnectionStringValidationTests_B_UnreachableConnectionString_Fails'></a>
+```cs
 public void B_UnreachableConnectionString_Fails()
 {
     // Arrange
@@ -134,6 +148,8 @@ public void B_UnreachableConnectionString_Fails()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/ConnectionStringValidationTests.cs#L60-L80' title='Snippet source file'>snippet source</a> | <a href='#snippet-ConnectionStringValidationTests_B_UnreachableConnectionString_Fails' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 The actual failure message:
 
@@ -148,7 +164,9 @@ Unable to open a connection using 'Data Source=/this/path/does/not/exist/cookboo
 A missing/empty value is a different failure mode than an unreachable one - worth its own check and its own
 message, rather than letting it fall through to a confusing "unable to open a connection using ''" error.
 
-```csharp
+<!-- snippet: ConnectionStringValidationTests_C_MissingConnectionString_Fails -->
+<a id='snippet-ConnectionStringValidationTests_C_MissingConnectionString_Fails'></a>
+```cs
 public void C_MissingConnectionString_Fails()
 {
     // Arrange
@@ -166,6 +184,8 @@ public void C_MissingConnectionString_Fails()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/ConnectionStringValidationTests.cs#L87-L104' title='Snippet source file'>snippet source</a> | <a href='#snippet-ConnectionStringValidationTests_C_MissingConnectionString_Fails' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 

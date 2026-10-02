@@ -1,5 +1,6 @@
 namespace UnitTestingCookbook.Support.Services;
 
+// begin-snippet: GreetingClock
 public class GreetingClock
 {
     private readonly TimeProvider timeProvider;
@@ -21,3 +22,4 @@ public class GreetingClock
         };
     }
 }
+// end-snippet

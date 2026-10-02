@@ -14,7 +14,9 @@ link here), so you shouldn't need to bounce between READMEs to see any one demo 
 
 ## How do I setup IConfiguration for testing?
 
-```csharp
+<!-- snippet: DependencyInjectionTests_A_IConfiguration -->
+<a id='snippet-DependencyInjectionTests_A_IConfiguration'></a>
+```cs
 public void A_IConfiguration()
 {
     // Arrange
@@ -30,6 +32,8 @@ public void A_IConfiguration()
     configuration["key"].Should().Be("value");
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/DependencyInjectionTests.cs#L23-L38' title='Snippet source file'>snippet source</a> | <a href='#snippet-DependencyInjectionTests_A_IConfiguration' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -52,7 +56,9 @@ instead of quietly giving you an instance that lives as long as the provider (ef
 - Both scopes stay open until the end of the test, so every resolved instance is still live when it's asserted on.
 Disposing a scope also disposes the `IDisposable` services it created, so don't keep a service around after its scope is disposed.
 
-```csharp
+<!-- snippet: DependencyInjectionTests_B_Scope -->
+<a id='snippet-DependencyInjectionTests_B_Scope'></a>
+```cs
 public void B_Scope()
 {
     // Arrange
@@ -81,12 +87,16 @@ public void B_Scope()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/DependencyInjectionTests.cs#L46-L74' title='Snippet source file'>snippet source</a> | <a href='#snippet-DependencyInjectionTests_B_Scope' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
 ## How do I setup IOptions<T> for testing?
 
-```csharp
+<!-- snippet: DependencyInjectionTests_C_IOptions -->
+<a id='snippet-DependencyInjectionTests_C_IOptions'></a>
+```cs
 public void C_IOptions()
 {
     // Arrange
@@ -98,6 +108,8 @@ public void C_IOptions()
         .Which.SizeLimit.Should().Be(200 * 1024 * 1024);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/DependencyInjectionTests.cs#L81-L92' title='Snippet source file'>snippet source</a> | <a href='#snippet-DependencyInjectionTests_C_IOptions' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 

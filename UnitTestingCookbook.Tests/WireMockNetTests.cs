@@ -46,14 +46,17 @@ public class WireMockNetTests
             );
     }
 
+    // begin-snippet: WireMockNetTests_OneTimeTearDown
     [OneTimeTearDown]
     public void OneTimeTearDown()
     {
         _wireMockServer.Stop();
         _wireMockServer.Dispose();
     }
+    // end-snippet
 
     [SetUp]
+    // begin-snippet: WireMockNetTests_SetUp
     public void SetUp()
     {
         //
@@ -73,18 +76,22 @@ public class WireMockNetTests
 
         _serviceProvider = services.BuildServiceProvider(true);
     }
+    // end-snippet
 
+    // begin-snippet: WireMockNetTests_TearDown
     [TearDown]
     public void TearDown()
     {
         (_serviceProvider as IDisposable)?.Dispose();
     }
+    // end-snippet
 
     //
     // Q: 
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: WireMockNetTests_A_WireMockNet
     public async Task A_WireMockNet()
     {
         // Arrange
@@ -106,4 +113,5 @@ public class WireMockNetTests
             .ResponseMessage!.Headers!.FirstOrDefault(h => h.Key.Equals("Authorization"))
             .Value.FirstOrDefault().Should().Be("valid");
     }
+    // end-snippet
 }

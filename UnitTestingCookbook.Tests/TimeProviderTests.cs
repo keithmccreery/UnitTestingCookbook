@@ -10,6 +10,7 @@ public class TimeProviderTests
 {
     [Test]
     [Category("_passes")]
+    // begin-snippet: TimeProviderTests_A_GetGreeting_BeforeNoon_ReturnsGoodMorning
     public void A_GetGreeting_BeforeNoon_ReturnsGoodMorning()
     {
         // Arrange
@@ -23,6 +24,7 @@ public class TimeProviderTests
         // Assert
         result.Should().Be("Good morning");
     }
+    // end-snippet
 
     [Test]
     [Category("_passes")]
@@ -60,6 +62,7 @@ public class TimeProviderTests
 
     [Test]
     [Category("_passes")]
+    // begin-snippet: TimeProviderTests_D_ExpiringCache_AfterTimeToLiveElapses_ReturnsNothing
     public void D_ExpiringCache_AfterTimeToLiveElapses_ReturnsNothing()
     {
         // Arrange
@@ -75,4 +78,5 @@ public class TimeProviderTests
         found.Should().BeFalse();
         result.Should().BeNull();
     }
+    // end-snippet
 }

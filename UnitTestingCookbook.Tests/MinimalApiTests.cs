@@ -61,6 +61,7 @@ public class MinimalApiTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: MinimalApiTests_B_GetAnimal_Found
     public async Task B_GetAnimal_Found()
     {
         // Arrange
@@ -72,12 +73,14 @@ public class MinimalApiTests
         response.Should().Be200Ok()
             .And.BeAs(new { id = 1, species = "Blue Whale" });
     }
+    // end-snippet
 
     //
     // Q: How do I test a GET endpoint's not-found path?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: MinimalApiTests_C_GetAnimal_NotFound
     public async Task C_GetAnimal_NotFound()
     {
         // Arrange
@@ -88,12 +91,14 @@ public class MinimalApiTests
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
+    // end-snippet
 
     //
     // Q: How do I test a POST endpoint that creates a resource?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: MinimalApiTests_D_CreateAnimal
     public async Task D_CreateAnimal()
     {
         // Arrange
@@ -112,4 +117,5 @@ public class MinimalApiTests
             response.Headers.Location.Should().Be("/animals/2"); // seeded animal is Id 1
         }
     }
+    // end-snippet
 }

@@ -1,5 +1,6 @@
 namespace UnitTestingCookbook.Support.Services;
 
+// begin-snippet: ExpiringCache
 public class ExpiringCache<TValue>
 {
     private readonly TimeProvider timeProvider;
@@ -32,3 +33,4 @@ public class ExpiringCache<TValue>
         return true;
     }
 }
+// end-snippet

@@ -19,7 +19,9 @@ something realistic to persist and query.
 EF Core's `InMemory` provider swaps the storage engine for an in-process dictionary - fast, no external
 dependency, good for basic add/query round trips.
 
-```csharp
+<!-- snippet: EntityFrameworkCoreTests_A_InMemory_AddAndQuery_RoundTrips -->
+<a id='snippet-EntityFrameworkCoreTests_A_InMemory_AddAndQuery_RoundTrips'></a>
+```cs
 public void A_InMemory_AddAndQuery_RoundTrips()
 {
     // Arrange
@@ -39,6 +41,8 @@ public void A_InMemory_AddAndQuery_RoundTrips()
     result!.Price.Should().Be(9.99m);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/EntityFrameworkCoreTests.cs#L15-L34' title='Snippet source file'>snippet source</a> | <a href='#snippet-EntityFrameworkCoreTests_A_InMemory_AddAndQuery_RoundTrips' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 **NOTE:** Give each `InMemory` test its own database name (`Guid.NewGuid().ToString()`) - the same name reuses
 the same underlying in-process store, so two tests sharing a name would see each other's data.
@@ -49,7 +53,9 @@ Microsoft's own docs are explicit about this: `InMemory` is *not* a relational d
 things a real one would - constraints, unique indexes, cascading behavior, transaction semantics, and provider-
 specific SQL translation all differ. A configured unique index is a clean, concrete example:
 
-```csharp
+<!-- snippet: EntityFrameworkCoreTests_B_InMemory_DoesNotEnforceUniqueIndex -->
+<a id='snippet-EntityFrameworkCoreTests_B_InMemory_DoesNotEnforceUniqueIndex'></a>
+```cs
 public void B_InMemory_DoesNotEnforceUniqueIndex()
 {
     // Arrange
@@ -69,6 +75,8 @@ public void B_InMemory_DoesNotEnforceUniqueIndex()
     dbContext.Products.Count().Should().Be(2);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/EntityFrameworkCoreTests.cs#L38-L57' title='Snippet source file'>snippet source</a> | <a href='#snippet-EntityFrameworkCoreTests_B_InMemory_DoesNotEnforceUniqueIndex' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 `CatalogDbContext` configures `HasIndex(p => p.Name).IsUnique()` in `OnModelCreating` - a real database would
 reject the second insert. `InMemory` lets both through silently. A test suite that only ever runs against
@@ -80,7 +88,9 @@ Use EF Core's `Sqlite` provider against an **open** `Data Source=:memory:` conne
 relational engine - constraints, unique indexes, and foreign keys are genuinely enforced - and an in-memory
 SQLite database needs no file on disk, no server process, and no Docker.
 
-```csharp
+<!-- snippet: EntityFrameworkCoreTests_C_Sqlite_EnforcesUniqueIndex_Throws -->
+<a id='snippet-EntityFrameworkCoreTests_C_Sqlite_EnforcesUniqueIndex_Throws'></a>
+```cs
 public void C_Sqlite_EnforcesUniqueIndex_Throws()
 {
     // Arrange
@@ -103,6 +113,8 @@ public void C_Sqlite_EnforcesUniqueIndex_Throws()
     action.Should().Throw<DbUpdateException>();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/EntityFrameworkCoreTests.cs#L61-L83' title='Snippet source file'>snippet source</a> | <a href='#snippet-EntityFrameworkCoreTests_C_Sqlite_EnforcesUniqueIndex_Throws' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 **NOTE:** The `SqliteConnection` must stay open for the whole test - a `:memory:` SQLite database only exists
 for the lifetime of the connection that created it, so closing (or disposing) the connection early destroys it.

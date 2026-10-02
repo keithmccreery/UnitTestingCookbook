@@ -12,10 +12,21 @@ that same code. See `README.md` for the full chapter list and the project's stat
 theory-of-testing document, and it deliberately includes a few "don't do that, but here's why" anti-pattern examples
 - see `README_DataHangover.md` and the "BUG" comments in `WireMockNetPollyPoliciesTests.cs`).
 
-**The READMEs are hand-maintained copies, not generated.** There is no tooling that keeps a README's fenced
-` ```csharp ` blocks in sync with the real source file. Any change to a test method's code, or to its surrounding
-setup/teardown, must be re-copied into the corresponding README section by hand, or the two drift (this has
-happened before - see git history for fixes to README/source drift).
+**README code blocks are generated from the source by [MarkdownSnippets](https://github.com/SimonCropp/MarkdownSnippets)**
+(local .NET tool, pinned in root `dotnet-tools.json`; config in root `mdsnippets.json`, `InPlaceOverwrite` convention).
+Code shown in a README is wrapped in the source with `// begin-snippet: <Key>` / `// end-snippet` comments, and the
+README references it with a bare `snippet: <Key>` line, which the tool expands in place into a fenced code block plus
+a "snippet source" link to the exact lines on GitHub. Whole files can be referenced by file name
+(`snippet: OrderMetrics.cs`). Snippets can nest (an excerpt inside a method that's also shown in full).
+- After changing any code inside a snippet region (or adding a new one), run `dotnet mdsnippets` from the repo root
+  and commit the regenerated READMEs. CI fails if regenerating changes any `.md` file.
+- Never hand-edit the generated part of a README (between `<!-- snippet: ... -->` and `<!-- endSnippet -->`) - it is
+  overwritten on the next run. Edit the source instead.
+- Key convention: `<FileStem>_<MethodName>` for test methods (e.g. `LoggingTests_Q_FakeLogger`), the type name for a
+  type, or a descriptive `<FileStem>_<What>` for an excerpt.
+- A handful of README blocks are deliberately still hand-written ` ```csharp ` blocks - illustrative sketches,
+  abbreviated excerpts (e.g. a class shown without its XML docs), or fixture-setup excerpts that skip members. Those
+  are **not** checked by CI, so keep them in sync by hand if their source changes.
 
 ## Commands
 
@@ -48,6 +59,12 @@ scopes it to - see `README_MutationTesting.md`):
 ```
 dotnet tool restore
 cd UnitTestingCookbook.Tests && dotnet stryker
+```
+
+Regenerate README code blocks from the source (MarkdownSnippets - see above; CI fails if this would change anything):
+```
+dotnet tool restore
+dotnet mdsnippets
 ```
 
 Check/apply formatting per `.editorconfig`:

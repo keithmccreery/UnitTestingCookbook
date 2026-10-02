@@ -37,11 +37,15 @@ Minimal APIs (top-level statements) generate an `internal partial class Program`
 outside its own assembly, and `WebApplicationFactory<TEntryPoint>` needs a public `TEntryPoint` it can see from
 the test project. Add one line at the end of `Program.cs`:
 
-```csharp
+<!-- snippet: Program_PartialClass -->
+<a id='snippet-Program_PartialClass'></a>
+```cs
 // Makes the auto-generated top-level-statements Program class visible to
 // WebApplicationFactory<Program> in the test project (it's `internal` by default).
 public partial class Program;
 ```
+<sup><a href='/UnitTestingCookbook.MinimalApi/Program.cs#L68-L72' title='Snippet source file'>snippet source</a> | <a href='#snippet-Program_PartialClass' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -90,7 +94,9 @@ public async Task A_Ping()
 
 ## How do I test a GET endpoint that returns a resource?
 
-```csharp
+<!-- snippet: MinimalApiTests_B_GetAnimal_Found -->
+<a id='snippet-MinimalApiTests_B_GetAnimal_Found'></a>
+```cs
 public async Task B_GetAnimal_Found()
 {
     // Arrange
@@ -103,6 +109,8 @@ public async Task B_GetAnimal_Found()
         .And.BeAs(new { id = 1, species = "Blue Whale" });
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/MinimalApiTests.cs#L64-L76' title='Snippet source file'>snippet source</a> | <a href='#snippet-MinimalApiTests_B_GetAnimal_Found' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 **NOTE:** The anonymous object's property names are lower-`camelCase` (`id`, `species`) because that's what
 Minimal APIs serialize JSON as by default - `.BeAs()` compares against the actual response body, so it has to
@@ -112,7 +120,9 @@ match the real casing, not the C# record's `PascalCase` property names.
 
 ## How do I test a GET endpoint's not-found path?
 
-```csharp
+<!-- snippet: MinimalApiTests_C_GetAnimal_NotFound -->
+<a id='snippet-MinimalApiTests_C_GetAnimal_NotFound'></a>
+```cs
 public async Task C_GetAnimal_NotFound()
 {
     // Arrange
@@ -124,12 +134,16 @@ public async Task C_GetAnimal_NotFound()
     response.StatusCode.Should().Be(HttpStatusCode.NotFound);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/MinimalApiTests.cs#L83-L94' title='Snippet source file'>snippet source</a> | <a href='#snippet-MinimalApiTests_C_GetAnimal_NotFound' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
 ## How do I test a POST endpoint that creates a resource?
 
-```csharp
+<!-- snippet: MinimalApiTests_D_CreateAnimal -->
+<a id='snippet-MinimalApiTests_D_CreateAnimal'></a>
+```cs
 public async Task D_CreateAnimal()
 {
     // Arrange
@@ -149,6 +163,8 @@ public async Task D_CreateAnimal()
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/MinimalApiTests.cs#L101-L120' title='Snippet source file'>snippet source</a> | <a href='#snippet-MinimalApiTests_D_CreateAnimal' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 **NOTE:** The API's `AnimalStore` is registered `AddSingleton` (see `Program.cs`), so it - and its `nextId`
 counter - persists across every test in the fixture, same as the real app would in a single running process.

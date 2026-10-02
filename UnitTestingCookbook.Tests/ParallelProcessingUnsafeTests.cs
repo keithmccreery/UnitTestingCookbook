@@ -9,6 +9,7 @@ public class ParallelProcessingUnsafeTests
 {
     [Test]
     [Category("_passes")]
+    // begin-snippet: ParallelProcessingUnsafeTests_A_OverlappingEnvironmentVariableScopes_OutOfOrderDisposal_CorruptsSharedState
     public void A_OverlappingEnvironmentVariableScopes_OutOfOrderDisposal_CorruptsSharedState()
     {
         // Arrange
@@ -41,4 +42,5 @@ public class ParallelProcessingUnsafeTests
         // Cleanup
         Environment.SetEnvironmentVariable(key, null);
     }
+    // end-snippet
 }

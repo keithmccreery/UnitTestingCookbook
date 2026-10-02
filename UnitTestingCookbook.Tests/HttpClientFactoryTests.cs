@@ -20,6 +20,7 @@ public class HttpClientFactoryTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: HttpClientFactoryTests_A_Mock_HttpClient
     public async Task A_Mock_HttpClient()
     {
         // Arrange
@@ -46,12 +47,14 @@ public class HttpClientFactoryTests
             .Protected()
             .Verify("SendAsync", Times.Exactly(0), ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Get), ItExpr.IsAny<CancellationToken>());
     }
+    // end-snippet
 
     //
     // Q: How do I Mock HttpClient? - Better
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: HttpClientFactoryTests_B_Mock_HttpClientFactory
     public async Task B_Mock_HttpClientFactory()
     {
         // Arrange
@@ -89,6 +92,7 @@ public class HttpClientFactoryTests
             .Protected()
             .Verify("SendAsync", Times.Exactly(1), ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Get), ItExpr.IsAny<CancellationToken>());
     }
+    // end-snippet
 
     //
     // Q: How do I Mock HttpClient? - More Better
@@ -96,6 +100,7 @@ public class HttpClientFactoryTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: HttpClientFactoryTests_C_Mock_HttpClientFactory_Best
     public async Task C_Mock_HttpClientFactory_Best()
     {
         // Arrange
@@ -134,4 +139,5 @@ public class HttpClientFactoryTests
             .Protected()
             .Verify("SendAsync", Times.Exactly(1), ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Get), ItExpr.IsAny<CancellationToken>());
     }
+    // end-snippet
 }

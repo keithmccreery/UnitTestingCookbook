@@ -11,12 +11,14 @@ public class SingletonHttpClientTests
 {
     [Test]
     [Category("_passes")]
+    // begin-snippet: SingletonHttpClientTests_A_ConfigurePrimaryHttpMessageHandler_RegistersHandlerWithPooledConnectionLifetime
     public void A_ConfigurePrimaryHttpMessageHandler_RegistersHandlerWithPooledConnectionLifetime()
     {
         // Arrange
         TimeSpan expectedPooledConnectionLifetime = TimeSpan.FromMinutes(5);
 
         IServiceCollection services = new ServiceCollection();
+        // begin-snippet: SingletonHttpClientTests_AddHttpClient
         services.AddHttpClient(nameof(SingletonHttpService))
             .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
             {
@@ -24,6 +26,7 @@ public class SingletonHttpClientTests
             });
         services.AddSingleton<ISingletonHttpService>(serviceProvider =>
             new SingletonHttpService(serviceProvider.GetRequiredService<IHttpClientFactory>().CreateClient(nameof(SingletonHttpService))));
+        // end-snippet
 
         using ServiceProvider serviceProvider = services.BuildServiceProvider(true);
 
@@ -47,4 +50,5 @@ public class SingletonHttpClientTests
             socketsHttpHandler.PooledConnectionLifetime.Should().Be(expectedPooledConnectionLifetime);
         }
     }
+    // end-snippet
 }

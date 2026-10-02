@@ -24,6 +24,17 @@ jobs:
       - name: Restore
         run: dotnet restore UnitTestingCookbook.sln
 
+      # README code blocks are generated from the source by MarkdownSnippets (see CLAUDE.md). Regenerating
+      # them must be a no-op - otherwise a source change was committed without re-running `dotnet mdsnippets`.
+      - name: Check README snippets are up to date
+        run: |
+          dotnet tool restore
+          dotnet mdsnippets
+          if ! git diff --exit-code -- '*.md'; then
+            echo "::error::README snippets are out of date - run 'dotnet mdsnippets' locally and commit the result."
+            exit 1
+          fi
+
       - name: Build
         run: dotnet build UnitTestingCookbook.sln --no-restore --configuration Release
 

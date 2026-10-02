@@ -20,6 +20,7 @@ public class AwesomeAssertionsTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: AwesomeAssertionsTests_A_Simple
     public void A_Simple()
     {
         // Arrange
@@ -30,6 +31,7 @@ public class AwesomeAssertionsTests
         // Assert
         fullName.Should().Be("John Doe");
     }
+    // end-snippet
 
     //
     // Q: Why are AwesomeAssertions better than traditional Asserts (part 1)?
@@ -39,6 +41,7 @@ public class AwesomeAssertionsTests
     //
     [Test]
     [Category("_fails")]
+    // begin-snippet: AwesomeAssertionsTests_B_SubjectIdentification
     public void B_SubjectIdentification()
     {
         // Arrange
@@ -49,6 +52,7 @@ public class AwesomeAssertionsTests
         // Assert
         fullName.Should().Be("Jane Doe");
     }
+    // end-snippet
 
     //
     // Q: Why are AwesomeAssertions better than traditional Asserts (part 2)?
@@ -64,6 +68,7 @@ public class AwesomeAssertionsTests
     //
     [Test]
     [Category("_fails")]
+    // begin-snippet: AwesomeAssertionsTests_C_Assert_Vs_AwesomeAssertion_ErrorMessage
     public void C_Assert_Vs_AwesomeAssertion_ErrorMessage()
     {
         // Arrange
@@ -74,6 +79,7 @@ public class AwesomeAssertionsTests
         // Assert
         ClassicAssert.AreEqual("Jane Doe", fullName);
     }
+    // end-snippet
 
     //
     // Q: How do I add a custom error message?
@@ -83,6 +89,7 @@ public class AwesomeAssertionsTests
     //
     [Test]
     [Category("_fails")]
+    // begin-snippet: AwesomeAssertionsTests_D_Custom_ErrorMessage
     public void D_Custom_ErrorMessage()
     {
         // Arrange
@@ -92,6 +99,7 @@ public class AwesomeAssertionsTests
         // Assert
         100.Should().Be(99, "gas mileage should be 99");
     }
+    // end-snippet
 
     //
     // Q: How do I batch multiple assertions?
@@ -102,6 +110,7 @@ public class AwesomeAssertionsTests
     //
     [Test]
     [Category("_fails")]
+    // begin-snippet: AwesomeAssertionsTests_E_AssertionScope
     public void E_AssertionScope()
     {
         // Arrange
@@ -115,12 +124,14 @@ public class AwesomeAssertionsTests
             100.Should().Be(99);
         }
     }
+    // end-snippet
 
     //
     // Q: How do I chain assertions?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: AwesomeAssertionsTests_F_ChainAssertions
     public void F_ChainAssertions()
     {
         // Arrange
@@ -133,12 +144,14 @@ public class AwesomeAssertionsTests
             .And.StartWith("John")
             .And.EndWith("Doe");
     }
+    // end-snippet
 
     //
     // Q: How do I Assert on a list with a single Object?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: AwesomeAssertionsTests_G_ContainSingle
     public void G_ContainSingle()
     {
         // Arrange
@@ -153,12 +166,14 @@ public class AwesomeAssertionsTests
         animals.Should().ContainSingle()
             .Which.Species.Should().Be("Whale"); // .Which allows the chaining from the conversion
     }
+    // end-snippet
 
     //
     // Q: How do I downcast?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: AwesomeAssertionsTests_H_Downcast
     public void H_Downcast()
     {
         // Arrange
@@ -172,12 +187,14 @@ public class AwesomeAssertionsTests
         // Assert
         animals[0].As<Whale>().Length.Should().Be(100);
     }
+    // end-snippet
 
     //
     // Q: How do I assert on all items of a collection, individually (part 1)?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: AwesomeAssertionsTests_I_AllSatisfy
     public void I_AllSatisfy()
     {
         // Arrange
@@ -197,12 +214,14 @@ public class AwesomeAssertionsTests
             ((Whale) x).Length.Should().BeGreaterThan(50);
         });
     }
+    // end-snippet
 
     //
     // Q: How do I assert on all items of a collection, individually (part 2)?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: AwesomeAssertionsTests_I_SatisfyRespectively
     public void I_SatisfyRespectively()
     {
         // Arrange
@@ -230,12 +249,14 @@ public class AwesomeAssertionsTests
             }
         );
     }
+    // end-snippet
 
     //
     // Q: How do I assert on all items of a collection, individually (part 3)?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: AwesomeAssertionsTests_I_Satisfy
     public void I_Satisfy()
     {
         // Arrange
@@ -257,12 +278,14 @@ public class AwesomeAssertionsTests
                 && ((Whale) x).Length == 100 // must box
         );
     }
+    // end-snippet
 
     //
     // Q: How do I Assert that a Dictionary contains a specific value?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: AwesomeAssertionsTests_K_ContainValue
     public void K_ContainValue()
     {
         // Arrange
@@ -278,12 +301,14 @@ public class AwesomeAssertionsTests
         // Assert
         critters.Should().ContainValue(whale); // uses .Equal( object )
     }
+    // end-snippet
 
     //
     // Q: How do I assert an Exception?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: AwesomeAssertionsTests_L_Exception
     public void L_Exception()
     {
         // Arrange
@@ -301,12 +326,14 @@ public class AwesomeAssertionsTests
             .WithInnerExceptionExactly<NullReferenceException>()
             .WithMessage("inner exception");
     }
+    // end-snippet
 
     //
     // Q: How do I assert an Exception on async code?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: AwesomeAssertionsTests_M_ExceptionAsync
     public async Task M_ExceptionAsync()
     {
         // Arrange
@@ -318,12 +345,14 @@ public class AwesomeAssertionsTests
         // Assert
         await action.Should().ThrowExactlyAsync<InvalidOperationException>();
     }
+    // end-snippet
 
     //
     // Q: How do I assert an Inner Exception on async code?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: AwesomeAssertionsTests_N_ExceptionAndInnerExceptionAsync
     public async Task N_ExceptionAndInnerExceptionAsync()
     {
         // Arrange
@@ -338,12 +367,14 @@ public class AwesomeAssertionsTests
             .WithInnerExceptionExactly(typeof(NullReferenceException)) // can't use generic WithInnerException<T>() or WithInnerExceptionExactly<T>() with async
             .WithMessage("inner exception");
     }
+    // end-snippet
 
     //
     // Q: How do I assert on code that returns an IEnumerable using yield?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: AwesomeAssertionsTests_O_IEnumerableYield
     public void O_IEnumerableYield()
     {
         // Arrange
@@ -355,12 +386,14 @@ public class AwesomeAssertionsTests
         // Assert
         action.Enumerating().Should().ThrowExactly<ArgumentNullException>();
     }
+    // end-snippet
 
     //
     // Q: How do I compare Objects?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: AwesomeAssertionsTests_P_ObjectComparison
     public void P_ObjectComparison()
     {
         // Arrange
@@ -372,12 +405,14 @@ public class AwesomeAssertionsTests
         // Act
         atlanticWhale.Should().BeEquivalentTo(pacificWhale);
     }
+    // end-snippet
 
     //
     // Q: How do I compare an Object to an Anonymous Object with missing Members?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: AwesomeAssertionsTests_Q_AnonymousObjectComparison
     public void Q_AnonymousObjectComparison()
     {
         // Arrange
@@ -391,12 +426,14 @@ public class AwesomeAssertionsTests
             Species = "Blue",
         }, options => options.ExcludingMissingMembers());
     }
+    // end-snippet
 
     //
     // Q: How do I override the comparison on a Member when comparing Objects?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: AwesomeAssertionsTests_R_ObjectComparisonWithUsing
     public void R_ObjectComparisonWithUsing()
     {
         // Arrange
@@ -414,12 +451,14 @@ public class AwesomeAssertionsTests
                 .When(p => p.Path.EndsWith("Length")) // .When( lambda ) or .WhenTypeIs<T>() is required
             );
     }
+    // end-snippet
 
     //
     // Q: How do I Assert an Event?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: AwesomeAssertionsTests_S_Events
     public void S_Events()
     {
         // Arrange
@@ -433,12 +472,14 @@ public class AwesomeAssertionsTests
         // Assert
         miscellaneousMonitor.Should().Raise("SomethingHappenedEvent");
     }
+    // end-snippet
 
     //
     // Q: How do I Assert the execution time of a Method?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: AwesomeAssertionsTests_T_ExecutionTimeO
     public void T_ExecutionTimeO()
     {
         // Arrange
@@ -451,12 +492,14 @@ public class AwesomeAssertionsTests
             .ExecutionTimeOf(s => s.SlowRunningMethod())
             .Should().BeLessThanOrEqualTo(500.Milliseconds());
     }
+    // end-snippet
 
     //
     // Q: How do I Assert the execution time of an async Method?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: AwesomeAssertionsTests_U_CompleteWithinAsyncWithResult
     public async Task U_CompleteWithinAsyncWithResult()
     {
         // Arrange
@@ -470,12 +513,14 @@ public class AwesomeAssertionsTests
         // flaked intermittently in CI before being loosened.
         await work.Should().CompleteWithinAsync(500.Milliseconds()).WithResult(-1);
     }
+    // end-snippet
 
     //
     // Q: How do I ensure all async methods are suffixed 'Async'
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: AwesomeAssertionsTests_V_PolicyAssertionForAsyncMethods
     public void V_PolicyAssertionForAsyncMethods()
     {
         // Arrange
@@ -507,12 +552,14 @@ public class AwesomeAssertionsTests
                 .All(m => m.GetParameters()[^1].ParameterType == typeof(CancellationToken)).Should().BeTrue();
         }
     }
+    // end-snippet
 
     //
     // Q: How do I ensure all Test Methods have a Category?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: AwesomeAssertionsTests_W_PolicyAssertionForAttributes
     public void W_PolicyAssertionForAttributes()
     {
         // Arrange
@@ -525,12 +572,14 @@ public class AwesomeAssertionsTests
             .ThatAreDecoratedWith<TestAttribute>() // get only test methods
             .Should().BeDecoratedWith<CategoryAttribute>(); // verify they have a Category assigned
     }
+    // end-snippet
 
     //
     // Q: How can I assert XML?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: AwesomeAssertionsTests_X_XML
     public void X_XML()
     {
         // Arrange
@@ -566,6 +615,7 @@ public class AwesomeAssertionsTests
             parents.Should().HaveElement("Parent", Exactly.Twice());
         }
     }
+    // end-snippet
 
     //
     // Q: How do I Assert HttpResponseMessage StatusCode?
@@ -577,6 +627,7 @@ public class AwesomeAssertionsTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: AwesomeAssertionsTests_Y_HttpResponseMessage
     public void Y_HttpResponseMessage()
     {
         // Arrange
@@ -587,4 +638,5 @@ public class AwesomeAssertionsTests
         // Assert
         httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.OK);
     }
+    // end-snippet
 }

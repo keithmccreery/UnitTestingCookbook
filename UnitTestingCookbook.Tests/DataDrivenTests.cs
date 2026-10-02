@@ -27,6 +27,7 @@ public class DataDrivenTests
     //       Using TestName, especially with VS TestExplorer doesn't lend well to
     //       the visual appearance of the test names.
     //
+    // begin-snippet: DataDrivenTests_A_DataDrivenTest_TestCase
     [TestCase(1, 1, 2)]
     [TestCase(0, 0, 0)]
     [TestCase(-1, 1, 0)]
@@ -41,10 +42,12 @@ public class DataDrivenTests
         // Assert
         result.Should().Be(expected);
     }
+    // end-snippet
 
     //
     // Q: How do I create a Data Driven test for any object?
     //
+    // begin-snippet: DataDrivenTests_B_DataDrivenTest_TestCaseSource
     [TestCaseSource(typeof(DataDrivenTestData), nameof(DataDrivenTestData.TestCaseSourceData))]
     [Category("_passes")]
     public void B_DataDrivenTest_TestCaseSource(Whale whale, bool expected)
@@ -57,6 +60,7 @@ public class DataDrivenTests
         // Assert
         result.Should().Be(expected);
     }
+    // end-snippet
 }
 
 // This class can be named anything

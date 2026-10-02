@@ -28,7 +28,9 @@ Configure the primary handler explicitly with `SocketsHttpHandler.PooledConnecti
 value. This forces the *connections themselves* to be periodically torn down and re-established - including a
 fresh DNS lookup - even though the C# `HttpClient` object the Singleton holds never changes.
 
-```csharp
+<!-- snippet: SingletonHttpClientTests_AddHttpClient -->
+<a id='snippet-SingletonHttpClientTests_AddHttpClient'></a>
+```cs
 services.AddHttpClient(nameof(SingletonHttpService))
     .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
     {
@@ -37,6 +39,8 @@ services.AddHttpClient(nameof(SingletonHttpService))
 services.AddSingleton<ISingletonHttpService>(serviceProvider =>
     new SingletonHttpService(serviceProvider.GetRequiredService<IHttpClientFactory>().CreateClient(nameof(SingletonHttpService))));
 ```
+<sup><a href='/UnitTestingCookbook.Tests/SingletonHttpClientTests.cs#L21-L29' title='Snippet source file'>snippet source</a> | <a href='#snippet-SingletonHttpClientTests_AddHttpClient' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 Note the factory delegate passed to `AddSingleton` calls `IHttpClientFactory.CreateClient()` exactly once - at
 first resolution - and the container caches that one `HttpClient` for its lifetime. This is the standard "safe
@@ -62,7 +66,9 @@ Confirming the DI wiring itself - that the consumer really is registered `Single
 - uses the same `IServiceCollection`/`ServiceDescriptor` inspection technique as
 [AwesomeAssertions Add-Ons](./README_AwesomeAssertionsAddOns.md#di-servicecollection-assertions-no-add-on).
 
-```csharp
+<!-- snippet: SingletonHttpClientTests_A_ConfigurePrimaryHttpMessageHandler_RegistersHandlerWithPooledConnectionLifetime -->
+<a id='snippet-SingletonHttpClientTests_A_ConfigurePrimaryHttpMessageHandler_RegistersHandlerWithPooledConnectionLifetime'></a>
+```cs
 public void A_ConfigurePrimaryHttpMessageHandler_RegistersHandlerWithPooledConnectionLifetime()
 {
     // Arrange
@@ -100,6 +106,8 @@ public void A_ConfigurePrimaryHttpMessageHandler_RegistersHandlerWithPooledConne
     }
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/SingletonHttpClientTests.cs#L14-L53' title='Snippet source file'>snippet source</a> | <a href='#snippet-SingletonHttpClientTests_A_ConfigurePrimaryHttpMessageHandler_RegistersHandlerWithPooledConnectionLifetime' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 

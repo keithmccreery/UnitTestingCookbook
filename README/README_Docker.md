@@ -38,7 +38,9 @@ drop-in-compatible reimplementation with its own published Docker image.
 
 ### SetUp
 
-```csharp
+<!-- snippet: DockerTests_OneTimeSetup -->
+<a id='snippet-DockerTests_OneTimeSetup'></a>
+```cs
 public async Task OneTimeSetup()
 {
     const ushort port = 80;
@@ -54,20 +56,28 @@ public async Task OneTimeSetup()
     await _container.StartAsync().ConfigureAwait(false);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/DockerTests.cs#L15-L30' title='Snippet source file'>snippet source</a> | <a href='#snippet-DockerTests_OneTimeSetup' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ### TearDown
 
-```csharp
+<!-- snippet: DockerTests_OneTimeTearDown -->
+<a id='snippet-DockerTests_OneTimeTearDown'></a>
+```cs
 public async Task OneTimeTearDown()
 {
     await _container.StopAsync().ConfigureAwait(false);
     await _container.DisposeAsync().ConfigureAwait(false);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/DockerTests.cs#L33-L39' title='Snippet source file'>snippet source</a> | <a href='#snippet-DockerTests_OneTimeTearDown' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ### Solution
 
-```csharp
+<!-- snippet: DockerTests_A_Container -->
+<a id='snippet-DockerTests_A_Container'></a>
+```cs
 public async Task A_Container()
 {
     // Arrange
@@ -81,6 +91,8 @@ public async Task A_Container()
     response.Should().Be201Created();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/DockerTests.cs#L47-L60' title='Snippet source file'>snippet source</a> | <a href='#snippet-DockerTests_A_Container' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 **NOTES:** TestContainer also supports creating containers.  
 

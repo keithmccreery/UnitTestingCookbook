@@ -24,16 +24,22 @@ side by side, so you can compare and decide for yourself.
 
 ## How do I mock an interface and set up a return value?
 
-```csharp
+<!-- snippet: IGreetingService -->
+<a id='snippet-IGreetingService'></a>
+```cs
 public interface IGreetingService
 {
     string Greet(string name);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Support/Services/IGreetingService.cs#L3-L8' title='Snippet source file'>snippet source</a> | <a href='#snippet-IGreetingService' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ### Moq
 
-```csharp
+<!-- snippet: MockingTests_A_SetupReturnValue_Moq -->
+<a id='snippet-MockingTests_A_SetupReturnValue_Moq'></a>
+```cs
 public void A_SetupReturnValue_Moq()
 {
     // Arrange
@@ -47,13 +53,17 @@ public void A_SetupReturnValue_Moq()
     result.Should().Be("Hello, Alice!");
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/MockingTests.cs#L17-L30' title='Snippet source file'>snippet source</a> | <a href='#snippet-MockingTests_A_SetupReturnValue_Moq' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ### NSubstitute
 
 Notice there's no separate `.Object` to unwrap - `Substitute.For<T>()` returns something that already *is* a
 `T`, and you configure it by just calling the method directly.
 
-```csharp
+<!-- snippet: MockingTests_B_SetupReturnValue_NSubstitute -->
+<a id='snippet-MockingTests_B_SetupReturnValue_NSubstitute'></a>
+```cs
 public void B_SetupReturnValue_NSubstitute()
 {
     // Arrange
@@ -67,6 +77,8 @@ public void B_SetupReturnValue_NSubstitute()
     result.Should().Be("Hello, Alice!");
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/MockingTests.cs#L34-L47' title='Snippet source file'>snippet source</a> | <a href='#snippet-MockingTests_B_SetupReturnValue_NSubstitute' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -74,7 +86,9 @@ public void B_SetupReturnValue_NSubstitute()
 
 ### Moq
 
-```csharp
+<!-- snippet: MockingTests_C_VerifyCallWasMade_Moq -->
+<a id='snippet-MockingTests_C_VerifyCallWasMade_Moq'></a>
+```cs
 public void C_VerifyCallWasMade_Moq()
 {
     // Arrange
@@ -87,10 +101,14 @@ public void C_VerifyCallWasMade_Moq()
     greetingServiceMock.Verify(x => x.Greet("Bob"), Times.Once());
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/MockingTests.cs#L51-L63' title='Snippet source file'>snippet source</a> | <a href='#snippet-MockingTests_C_VerifyCallWasMade_Moq' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ### NSubstitute
 
-```csharp
+<!-- snippet: MockingTests_D_VerifyCallWasMade_NSubstitute -->
+<a id='snippet-MockingTests_D_VerifyCallWasMade_NSubstitute'></a>
+```cs
 public void D_VerifyCallWasMade_NSubstitute()
 {
     // Arrange
@@ -103,6 +121,8 @@ public void D_VerifyCallWasMade_NSubstitute()
     greetingService.Received(1).Greet("Bob");
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/MockingTests.cs#L67-L79' title='Snippet source file'>snippet source</a> | <a href='#snippet-MockingTests_D_VerifyCallWasMade_NSubstitute' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -110,7 +130,9 @@ public void D_VerifyCallWasMade_NSubstitute()
 
 ### Moq
 
-```csharp
+<!-- snippet: MockingTests_E_ArgumentMatching_Moq -->
+<a id='snippet-MockingTests_E_ArgumentMatching_Moq'></a>
+```cs
 public void E_ArgumentMatching_Moq()
 {
     // Arrange
@@ -124,10 +146,14 @@ public void E_ArgumentMatching_Moq()
     result.Should().Be("Hello, whoever you are!");
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/MockingTests.cs#L83-L96' title='Snippet source file'>snippet source</a> | <a href='#snippet-MockingTests_E_ArgumentMatching_Moq' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ### NSubstitute
 
-```csharp
+<!-- snippet: MockingTests_F_ArgumentMatching_NSubstitute -->
+<a id='snippet-MockingTests_F_ArgumentMatching_NSubstitute'></a>
+```cs
 public void F_ArgumentMatching_NSubstitute()
 {
     // Arrange
@@ -141,6 +167,8 @@ public void F_ArgumentMatching_NSubstitute()
     result.Should().Be("Hello, whoever you are!");
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/MockingTests.cs#L100-L113' title='Snippet source file'>snippet source</a> | <a href='#snippet-MockingTests_F_ArgumentMatching_NSubstitute' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -148,7 +176,9 @@ public void F_ArgumentMatching_NSubstitute()
 
 ### Moq
 
-```csharp
+<!-- snippet: MockingTests_G_ThrowException_Moq -->
+<a id='snippet-MockingTests_G_ThrowException_Moq'></a>
+```cs
 public void G_ThrowException_Moq()
 {
     // Arrange
@@ -162,12 +192,16 @@ public void G_ThrowException_Moq()
     action.Should().Throw<InvalidOperationException>();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/MockingTests.cs#L117-L130' title='Snippet source file'>snippet source</a> | <a href='#snippet-MockingTests_G_ThrowException_Moq' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ### NSubstitute
 
 **NOTE:** `.Throws<T>()` requires `using NSubstitute.ExceptionExtensions;`.
 
-```csharp
+<!-- snippet: MockingTests_H_ThrowException_NSubstitute -->
+<a id='snippet-MockingTests_H_ThrowException_NSubstitute'></a>
+```cs
 public void H_ThrowException_NSubstitute()
 {
     // Arrange
@@ -181,6 +215,8 @@ public void H_ThrowException_NSubstitute()
     action.Should().Throw<InvalidOperationException>();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/MockingTests.cs#L134-L147' title='Snippet source file'>snippet source</a> | <a href='#snippet-MockingTests_H_ThrowException_NSubstitute' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 

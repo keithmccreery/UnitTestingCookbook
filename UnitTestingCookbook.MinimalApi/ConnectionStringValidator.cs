@@ -9,6 +9,7 @@ namespace UnitTestingCookbook.MinimalApi;
 // way to actually know is to open a real connection. DbProviderFactories keeps this provider-agnostic
 // (the same code validates a SQL Server, PostgreSQL, or SQLite connection string) instead of hardcoding
 // a single ADO.NET provider's connection type.
+// begin-snippet: ConnectionStringValidator
 public class ConnectionStringValidator : IValidateOptions<ConnectionStringOptions>
 {
     public const string ProviderName = "Microsoft.Data.Sqlite";
@@ -40,3 +41,4 @@ public class ConnectionStringValidator : IValidateOptions<ConnectionStringOption
         }
     }
 }
+// end-snippet

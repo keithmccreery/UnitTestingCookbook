@@ -38,6 +38,7 @@ public class ParallelProcessingSafeTests
 
     [Test]
     [Category("_passes")]
+    // begin-snippet: ParallelProcessingSafeTests_C_PerInstanceConfiguration_OutOfOrderDisposal_DoesNotInterfere
     public void C_PerInstanceConfiguration_OutOfOrderDisposal_DoesNotInterfere()
     {
         // Arrange - compare against ParallelProcessingUnsafeTests.A: each "test" gets its own IConfiguration
@@ -62,4 +63,5 @@ public class ParallelProcessingSafeTests
             valueForB.Should().Be("test-b-value");
         }
     }
+    // end-snippet
 }

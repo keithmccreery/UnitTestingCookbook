@@ -12,6 +12,7 @@ public class DockerTests
 
     // https://httpbin.org
     [OneTimeSetUp]
+    // begin-snippet: DockerTests_OneTimeSetup
     public async Task OneTimeSetup()
     {
         const ushort port = 80;
@@ -26,13 +27,16 @@ public class DockerTests
 
         await _container.StartAsync().ConfigureAwait(false);
     }
+    // end-snippet
 
     [OneTimeTearDown]
+    // begin-snippet: DockerTests_OneTimeTearDown
     public async Task OneTimeTearDown()
     {
         await _container.StopAsync().ConfigureAwait(false);
         await _container.DisposeAsync().ConfigureAwait(false);
     }
+    // end-snippet
 
     //
     // Q: How do I execute a Docker container for testing?
@@ -40,6 +44,7 @@ public class DockerTests
     [Test]
     [Category("_passes")]
     [Ignore("Requires Docker - disabled by default to keep full test-suite runs fast during regular development")]
+    // begin-snippet: DockerTests_A_Container
     public async Task A_Container()
     {
         // Arrange
@@ -52,4 +57,5 @@ public class DockerTests
         // Assert
         response.Should().Be201Created();
     }
+    // end-snippet
 }

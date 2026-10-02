@@ -49,7 +49,9 @@ Can be improved to...
 
 :exclamation: For more examples... https://awesomeassertions.org/tips/#improved-assertions  
 
-```csharp
+<!-- snippet: AnalyzersTests_A_AwesomeAssertions -->
+<a id='snippet-AnalyzersTests_A_AwesomeAssertions'></a>
+```cs
 public void A_AwesomeAssertions()
 {
     // Arrange
@@ -66,6 +68,8 @@ public void A_AwesomeAssertions()
     list.Should().OnlyContain(b => b);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/AnalyzersTests.cs#L15-L31' title='Snippet source file'>snippet source</a> | <a href='#snippet-AnalyzersTests_A_AwesomeAssertions' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -77,7 +81,9 @@ AwesomeAssertions Analyzer will flag this code as possibly not executing.
 
 The statement will short-circuited and generate a false positive response, due to the Null-Conditional Operator in the Assert.  
 
-```csharp
+<!-- snippet: AnalyzersTests_B_False_Positive -->
+<a id='snippet-AnalyzersTests_B_False_Positive'></a>
+```cs
 public void B_False_Positive()
 {
     // Arrange
@@ -89,6 +95,8 @@ public void B_False_Positive()
     name?.Should().NotBeNull();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/AnalyzersTests.cs#L38-L49' title='Snippet source file'>snippet source</a> | <a href='#snippet-AnalyzersTests_B_False_Positive' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ### Example 2 - `async void` with `throw`
 

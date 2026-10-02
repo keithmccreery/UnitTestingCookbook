@@ -22,6 +22,7 @@ public class MetricsTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: MetricsTests_A_Counter
     public void A_Counter()
     {
         // Arrange
@@ -48,12 +49,14 @@ public class MetricsTests
             collector.LastMeasurement!.Value.Should().Be(1);
         }
     }
+    // end-snippet
 
     //
     // Q: How do I assert the values recorded by a Histogram?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: MetricsTests_B_Histogram
     public void B_Histogram()
     {
         // Arrange
@@ -76,12 +79,14 @@ public class MetricsTests
             .Select(x => x.Value)
             .Should().Equal(19.98, 24.50);
     }
+    // end-snippet
 
     //
     // Q: How do I assert on a measurement's tags (dimensions)?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: MetricsTests_C_Tags
     public void C_Tags()
     {
         // Arrange
@@ -111,12 +116,14 @@ public class MetricsTests
             measurements[1].Tags["channel"].Should().Be("mobile");
         }
     }
+    // end-snippet
 
     //
     // Q: How do I assert an ObservableGauge (a value that's polled, not pushed)?
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: MetricsTests_D_ObservableGauge
     public void D_ObservableGauge()
     {
         // Arrange
@@ -142,6 +149,7 @@ public class MetricsTests
             .Select(x => x.Value)
             .Should().Equal(7, 3);
     }
+    // end-snippet
 
     //
     // Q: Do metrics from one test leak into another test's collector?
@@ -149,6 +157,7 @@ public class MetricsTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: MetricsTests_E_Isolation_Per_MeterFactory
     public void E_Isolation_Per_MeterFactory()
     {
         // Arrange - two independent containers, as two tests (possibly running in parallel) would have
@@ -178,6 +187,7 @@ public class MetricsTests
             collector2.GetMeasurementSnapshot().EvaluateAsCounter().Should().Be(2); // only container 2's measurements
         }
     }
+    // end-snippet
 
     //
     // Q: How do I make measurement timestamps deterministic?
@@ -185,6 +195,7 @@ public class MetricsTests
     //
     [Test]
     [Category("_passes")]
+    // begin-snippet: MetricsTests_F_Timestamps_With_FakeTimeProvider
     public void F_Timestamps_With_FakeTimeProvider()
     {
         // Arrange
@@ -211,4 +222,5 @@ public class MetricsTests
             .Select(x => x.Timestamp)
             .Should().Equal(now, now.AddMinutes(5));
     }
+    // end-snippet
 }

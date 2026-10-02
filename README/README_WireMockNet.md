@@ -100,7 +100,9 @@ public void OneTimeSetUp()
 
 ### Setup (before each run)
 
-```csharp
+<!-- snippet: WireMockNetTests_SetUp -->
+<a id='snippet-WireMockNetTests_SetUp'></a>
+```cs
 public void SetUp()
 {
     //
@@ -121,20 +123,28 @@ public void SetUp()
     _serviceProvider = services.BuildServiceProvider(true);
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/WireMockNetTests.cs#L59-L79' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetTests_SetUp' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ### TearDown
 
-```csharp
+<!-- snippet: WireMockNetTests_TearDown -->
+<a id='snippet-WireMockNetTests_TearDown'></a>
+```cs
 [TearDown]
 public void TearDown()
 {
     (_serviceProvider as IDisposable)?.Dispose();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/WireMockNetTests.cs#L81-L87' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetTests_TearDown' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ### One Time TearDown
 
-```csharp
+<!-- snippet: WireMockNetTests_OneTimeTearDown -->
+<a id='snippet-WireMockNetTests_OneTimeTearDown'></a>
+```cs
 [OneTimeTearDown]
 public void OneTimeTearDown()
 {
@@ -142,6 +152,8 @@ public void OneTimeTearDown()
     _wireMockServer.Dispose();
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/WireMockNetTests.cs#L49-L56' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetTests_OneTimeTearDown' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
@@ -152,7 +164,9 @@ Notice NO MOCKs!
 Once the call is made, the `..HaveReceivedACall()` Assertion can be performed.
 Additionally, the WireMock `.LogEntries` can be interrogated to view the details of the requests and responses.  
 
-```csharp
+<!-- snippet: WireMockNetTests_A_WireMockNet -->
+<a id='snippet-WireMockNetTests_A_WireMockNet'></a>
+```cs
 public async Task A_WireMockNet()
 {
     // Arrange
@@ -175,6 +189,8 @@ public async Task A_WireMockNet()
         .Value.FirstOrDefault().Should().Be("valid");
 }
 ```
+<sup><a href='/UnitTestingCookbook.Tests/WireMockNetTests.cs#L94-L116' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetTests_A_WireMockNet' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
