@@ -102,6 +102,16 @@ public void Second_Test_Payment_Passes()
 }
 ```
 
+### What these patterns are called
+
+- `TestValues` is an **Object Mother**: a central place holding ready-made test objects. Its objects are
+`static readonly`, so they're shared by every test that uses them, which is what makes Data Hangover possible.
+- `_originalOffer.DeepClone()` is the **Prototype** pattern: keep one canonical instance and copy it for each test.
+
+Cloning works around the shared state rather than removing it. See [Test Data Builders](./README_TestDataBuilders.md)
+for ways to give every test its own fresh data without cloning: Object Mother factory methods, Test Data Builders,
+and C# records with `with` expressions.
+
 ---
 
 Back to [README](../README.md)
