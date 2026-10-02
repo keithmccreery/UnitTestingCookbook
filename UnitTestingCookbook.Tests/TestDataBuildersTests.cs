@@ -10,11 +10,54 @@ namespace UnitTestingCookbook.Tests;
 public class TestDataBuildersTests
 {
     //
+    // Q: How do I clone a prototype and state exactly what's different for this test?
+    // NOTE: Force.DeepCloner - see README_DataHangover.md
+    //
+    [Test]
+    [Category("_passes")]
+    public void A_Prototype_ExplicitChanges()
+    {
+        // Arrange
+        Offer offer = OfferPrototype.Offer; // always a fresh deep copy
+        offer.Finance.PaymentType = "L"; // the changes this test is about, stated explicitly
+        offer.Finance.MaxTerms = 48;
+
+        // Act
+        IReadOnlyList<string> errors = OfferValidator.Validate(offer);
+
+        // Assert
+        errors.Should().ContainSingle()
+            .Which.Should().Be("Lease terms cannot exceed 36 months.");
+    }
+
+    //
+    // Q: How do I make it impossible to forget DeepClone()?
+    //
+    [Test]
+    [Category("_passes")]
+    public void B_Prototype_EachRead_IsAFreshObject()
+    {
+        // Arrange
+        Offer first = OfferPrototype.Offer;
+        first.Finance.PaymentType = "L"; // a test mutating its data - exactly what caused Data Hangover
+
+        // Act
+        Offer second = OfferPrototype.Offer;
+
+        // Assert
+        using (new AssertionScope())
+        {
+            second.Finance.PaymentType.Should().Be("P"); // unaffected
+            second.Finance.Should().NotBeSameAs(first.Finance);
+        }
+    }
+
+    //
     // Q: How does an Object Mother avoid Data Hangover without DeepClone()?
     //
     [Test]
     [Category("_passes")]
-    public void A_ObjectMother_EachCall_IsAFreshObject()
+    public void C_ObjectMother_EachCall_IsAFreshObject()
     {
         // Arrange
         Offer first = OfferMother.Purchase();
@@ -36,7 +79,7 @@ public class TestDataBuildersTests
     //
     [Test]
     [Category("_passes")]
-    public void B_ObjectMother_NamedScenario()
+    public void D_ObjectMother_NamedScenario()
     {
         // Arrange
         Offer offer = OfferMother.Lease();
@@ -53,7 +96,7 @@ public class TestDataBuildersTests
     //
     [Test]
     [Category("_passes")]
-    public void C_Builder_OnlyWhatMatters()
+    public void E_Builder_OnlyWhatMatters()
     {
         // Arrange
         Offer offer = new OfferBuilder()
@@ -75,7 +118,7 @@ public class TestDataBuildersTests
     [TestCase(0, true)]
     [TestCase(-1, false)]
     [Category("_passes")]
-    public void D_Builder_VaryOneValue(int downPayment, bool expectedValid)
+    public void F_Builder_VaryOneValue(int downPayment, bool expectedValid)
     {
         // Arrange
         Offer offer = new OfferBuilder()
@@ -94,7 +137,7 @@ public class TestDataBuildersTests
     //
     [Test]
     [Category("_passes")]
-    public void E_Builder_EachBuild_IsAFreshObject()
+    public void G_Builder_EachBuild_IsAFreshObject()
     {
         // Arrange
         OfferBuilder builder = new OfferBuilder().AsLease();
@@ -119,7 +162,7 @@ public class TestDataBuildersTests
     //
     [Test]
     [Category("_passes")]
-    public void F_Record_With_Expression()
+    public void H_Record_With_Expression()
     {
         // Arrange
         FinanceTerms purchase = new FinanceTerms(PaymentType: "P", MaxTerms: 48, DownPayment: 1000);

@@ -57,7 +57,7 @@ public static class OfferValidator
 
 ---
 
-## 1. Object Mother + DeepClone() (Prototype) - what Data Hangover does
+## 1. Prototype - clone a baseline, then state what changes
 
 [`TestValues`](../UnitTestingCookbook.Support/Models/TestValues.cs) is an **Object Mother**: a central place for
 ready-made test objects. Because its objects are `static readonly` and *shared*, the
@@ -74,16 +74,99 @@ private readonly Offer _originalOffer = new Offer()
 
 // in each test
 Offer offer = _originalOffer.DeepClone(); // Clone original
+offer.Finance.PaymentType = "L"; // was P
 ```
 
-It works, but:
-- **It works around the shared state instead of removing it.** Forget one `.DeepClone()` and the bug is back.
-- **It copies everything.** [DeepCloner](https://github.com/force-net/DeepCloner) copies the *entire* object graph
-using reflection, including anything you didn't mean to copy (services, caches, event handlers).
-- **The test doesn't show its data.** What the test depends on lives in `TestValues`, a file away.
-- **DeepCloner itself is effectively unmaintained.** Its last release, 0.10.4, was in April 2022, and the repo
-hasn't had a push since November 2023 (as of 2026-10). It still works on .NET 10 in this repo, but it's not a
-dependency to build new tests on.
+**Its strength is explicitness.** Every test starts from one known baseline and then **states exactly what's
+different**, right there in the test, as plain assignments. There's no builder class to write or maintain, and
+any property can be varied without first adding a `With...()` method for it.
+
+**The catch is that it relies on remembering.** Each test has to call `.DeepClone()`. Forget once and that test
+mutates the shared original, and Data Hangover is back. That's easy to design away, though, while keeping the same style:
+make the original **private**, and expose it only through a property that clones on every read:
+
+```csharp
+using Force.DeepCloner;
+
+using UnitTestingCookbook.Support.Models;
+
+namespace UnitTestingCookbook.Tests.TestData;
+
+//
+// Prototype, hardened - the Data Hangover "Righteous" fix (see README_DataHangover.md), but the canonical instance is
+// private and the only way to read it is through a property that clones it. Tests keep the "clone, then state exactly
+// what changes" style, and forgetting to call DeepClone() is no longer possible.
+//
+// NOTE: The prototype owns its data (its own literals - deliberately NOT TestValues.DealerValues etc.). Cloning copies
+//       whatever the referenced objects hold at that moment, so a prototype built on shared objects that some other
+//       test mutates (as DataHangoverFailureTests does to TestValues, on purpose) would hand out corrupted clones.
+//
+public static class OfferPrototype
+{
+    private static readonly Offer Prototype = new Offer()
+    {
+        Dealer = new Dealer() { PostalCode = "12345", DealerName = "John Deere", DealerId = 1000 },
+        Customer = new Customer() { CustomerId = 12345, CustomerName = "John Doe" },
+        Finance = new Finance() { PaymentType = "P", MaxTerms = 48, DownPayment = 1000 },
+    };
+
+    // A fresh deep copy on every read
+    public static Offer Offer => Prototype.DeepClone();
+}
+```
+
+Tests read the same as before, with the baseline plus explicit changes, but there's no longer any way to get the
+shared instance:
+
+```csharp
+public void A_Prototype_ExplicitChanges()
+{
+    // Arrange
+    Offer offer = OfferPrototype.Offer; // always a fresh deep copy
+    offer.Finance.PaymentType = "L"; // the changes this test is about, stated explicitly
+    offer.Finance.MaxTerms = 48;
+
+    // Act
+    IReadOnlyList<string> errors = OfferValidator.Validate(offer);
+
+    // Assert
+    errors.Should().ContainSingle()
+        .Which.Should().Be("Lease terms cannot exceed 36 months.");
+}
+```
+
+```csharp
+public void B_Prototype_EachRead_IsAFreshObject()
+{
+    // Arrange
+    Offer first = OfferPrototype.Offer;
+    first.Finance.PaymentType = "L"; // a test mutating its data - exactly what caused Data Hangover
+
+    // Act
+    Offer second = OfferPrototype.Offer;
+
+    // Assert
+    using (new AssertionScope())
+    {
+        second.Finance.PaymentType.Should().Be("P"); // unaffected
+        second.Finance.Should().NotBeSameAs(first.Finance);
+    }
+}
+```
+
+**The prototype must own its data.** An earlier draft of `OfferPrototype` built its prototype from
+`TestValues.DealerValues` / `CustomerValues` / `FinanceValues`. It passed when run alone, but **failed** when run
+together with `DataHangoverFailureTests`, which mutates `TestValues.FinanceValues` on purpose. Cloning copies
+whatever the referenced objects hold *at that moment*, so a prototype built on shared objects that something else
+mutates hands out already-corrupted clones. Hence the prototype's own literals above.  
+
+**NOTE:** `B_` was checked by deliberately breaking the code it protects. Temporarily changing the property to
+return the shared instance (`=> Prototype;`) makes exactly that test fail.  
+
+**About DeepCloner itself:** [DeepCloner](https://github.com/force-net/DeepCloner) is effectively unmaintained. Its
+last release, 0.10.4, was in April 2022, and the repo hasn't had a push since November 2023 (as of 2026-10). It works on
+.NET 10 in this repo. With the clone-on-read property, the dependency is limited to **one line**: if a future
+runtime ever breaks it, only that line needs to change (to a hand-written copy, for example), not every test.  
 
 ---
 
@@ -123,7 +206,7 @@ public static class OfferMother
 Mutating what one call returns can't affect the next call:
 
 ```csharp
-public void A_ObjectMother_EachCall_IsAFreshObject()
+public void C_ObjectMother_EachCall_IsAFreshObject()
 {
     // Arrange
     Offer first = OfferMother.Purchase();
@@ -144,7 +227,7 @@ public void A_ObjectMother_EachCall_IsAFreshObject()
 And a named scenario reads well when the test needs a *typical* object, with no special values:
 
 ```csharp
-public void B_ObjectMother_NamedScenario()
+public void D_ObjectMother_NamedScenario()
 {
     // Arrange
     Offer offer = OfferMother.Lease();
@@ -230,7 +313,7 @@ public sealed class OfferBuilder
 The test now says exactly what's special about its data, and nothing else:
 
 ```csharp
-public void C_Builder_OnlyWhatMatters()
+public void E_Builder_OnlyWhatMatters()
 {
     // Arrange
     Offer offer = new OfferBuilder()
@@ -253,7 +336,7 @@ Varying a single value doesn't require restating the rest of the object, so it c
 ```csharp
 [TestCase(0, true)]
 [TestCase(-1, false)]
-public void D_Builder_VaryOneValue(int downPayment, bool expectedValid)
+public void F_Builder_VaryOneValue(int downPayment, bool expectedValid)
 {
     // Arrange
     Offer offer = new OfferBuilder()
@@ -271,7 +354,7 @@ public void D_Builder_VaryOneValue(int downPayment, bool expectedValid)
 Because `Build()` creates new objects, one builder can safely produce several instances:
 
 ```csharp
-public void E_Builder_EachBuild_IsAFreshObject()
+public void G_Builder_EachBuild_IsAFreshObject()
 {
     // Arrange
     OfferBuilder builder = new OfferBuilder().AsLease();
@@ -291,9 +374,9 @@ public void E_Builder_EachBuild_IsAFreshObject()
 }
 ```
 
-**NOTE:** `A_` and `E_` were checked by deliberately breaking the code they protect. Temporarily changing
-`OfferMother.Purchase()` and `OfferBuilder.Build()` to return a cached instance makes exactly those two tests
-fail, while the other tests keep passing.  
+**NOTE:** `C_` and `G_` were checked the same way. Temporarily changing `OfferMother.Purchase()` and
+`OfferBuilder.Build()` to return a cached instance makes exactly those two tests fail, while the other tests keep
+passing.  
 
 **Builder variations worth knowing:**
 - **Shortcuts** like `AsLease()` are just preset `With...()` calls, which keeps named scenarios without an Object
@@ -318,7 +401,7 @@ public sealed record FinanceTerms(string PaymentType, int MaxTerms, int DownPaym
 ```
 
 ```csharp
-public void F_Record_With_Expression()
+public void H_Record_With_Expression()
 {
     // Arrange
     FinanceTerms purchase = new FinanceTerms(PaymentType: "P", MaxTerms: 48, DownPayment: 1000);
@@ -351,21 +434,25 @@ seed it so a test stays reproducible.
 
 ## Which should I use?
 
-| | Fresh object per test | Shows only relevant data | Scales to many variations | Extra code |
+| | Fresh object per test | Shows what this test changes | Scales to many variations | Extra code |
 |---|---|---|---|---|
 | Object Mother (`static readonly` fields) | **No** - see [Data Hangover](./README_DataHangover.md) | No | No | Low |
-| Object Mother + `DeepClone()` | Yes, if you never forget to clone | No | No | Low (+ a package) |
+| Prototype, `.DeepClone()` in each test | Yes, if every test remembers to clone | **Yes** - explicit assignments | Yes | Low (+ a package) |
+| Prototype, clone-on-read property | **Yes** | **Yes** - explicit assignments | Yes | Low (+ a package) |
 | Object Mother with factory methods | Yes | Somewhat (the method name) | No - one method per variation | Low |
-| Test Data Builder | Yes | **Yes** | **Yes** | Medium (one class per type) |
-| Records + `with` | Yes, if immutable all the way down | Yes | Yes | None |
+| Test Data Builder | Yes | **Yes** - `With...()` calls | Yes | Medium (one class per type) |
+| Records + `with` | Yes, if immutable all the way down | **Yes** - `with { ... }` | Yes | None |
 | Bogus `Faker<T>` | Yes | Varies | Yes | Low (+ a package) |
 
 **Recommendation:**
 - **Records + `with`** when the types are (or can be) immutable records. It needs no extra code.
-- **Test Data Builder** for mutable classes or deep object graphs that many tests use.
+- **Prototype with a clone-on-read property** when you like tests that read as "baseline, plus exactly these changes",
+for mutable classes, with almost no extra code. Keep the original private, and let it own its data.
+- **Test Data Builder** when you want named, reusable variations (`AsLease()`), or when the object graph needs
+logic to stay valid (e.g. setting one value should also adjust a related one).
 - **Object Mother with factory methods** for a handful of typical, named scenarios. Combine it with builders
 once it grows.
-- **Avoid shared `static readonly` test objects**, and treat `DeepClone()` as a workaround, not the design.
+- **Avoid shared `static readonly` test objects that tests use directly.** That's the Data Hangover bug.
 
 ---
 

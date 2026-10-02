@@ -66,6 +66,10 @@ create a base / original data set,
 then Deep Clone the data set,
 and make the desired changes on the cloned data to test against.  
 
+**NOTE:** The Righteous tests use the `OrderAttribute` **only** to help demonstrate the solution: they run in the
+same execution order that exhibited the problem above (change a property first, then check the original value),
+and now pass.  
+
 ```csharp
 private readonly Offer _originalOffer = new Offer()
 {
@@ -107,10 +111,13 @@ public void Second_Test_Payment_Passes()
 - `TestValues` is an **Object Mother**: a central place holding ready-made test objects. Its objects are
 `static readonly`, so they're shared by every test that uses them, which is what makes Data Hangover possible.
 - `_originalOffer.DeepClone()` is the **Prototype** pattern: keep one canonical instance and copy it for each test.
+Every test starts from the same baseline and then states exactly what it changes (`offer.Finance.PaymentType = "L";`).
 
-Cloning works around the shared state rather than removing it. See [Test Data Builders](./README_TestDataBuilders.md)
-for ways to give every test its own fresh data without cloning: Object Mother factory methods, Test Data Builders,
-and C# records with `with` expressions.
+**Going one step further:** the Righteous fix asks every test to remember `.DeepClone()`. Making the original
+private, and exposing it only through a property that clones on every read, keeps the same "baseline, plus explicit
+changes" style while making it impossible to reach the shared instance. [Test Data Builders](./README_TestDataBuilders.md)
+shows this as `OfferPrototype`, alongside Object Mother factory methods, Test Data Builders, and C# records with
+`with` expressions.
 
 ---
 
