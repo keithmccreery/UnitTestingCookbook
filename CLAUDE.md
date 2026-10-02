@@ -86,8 +86,11 @@ dotnet test UnitTestingCookbook.sln --filter "TestCategory!=_fails&TestCategory!
 ```
 
 Notes on running tests:
-- `WireMockNetPollyPoliciesTests.cs` exercises real Polly wait/retry/circuit-breaker delays against a local
-  WireMock.Net server - the full suite takes roughly a minute, dominated by this file.
+- `WireMockNetPollyPoliciesTests.cs` (Polly **v7** policies, kept for comparison) exercises real wait/retry/circuit-breaker
+  delays in seconds against one shared WireMock.Net server - the full suite takes roughly a minute, dominated by this
+  file. Its `BUG` comments are explained/corrected in `README_WireMockNetPollyPolicies.md`, not edited in the code.
+  `WireMockNetResilienceTests.cs` (Polly **v8**, the current approach) runs the same scenarios in ~9s: a fresh
+  WireMock server per test, millisecond delays, and polling `LogEntries` with a deadline instead of fixed sleeps.
 - `DockerTests.cs`'s one test is permanently `[Ignore]`d - not because the technique doesn't work (verified to
   pass locally, Docker running, attribute temporarily removed), but as a deliberate development-speed tradeoff:
   a real container adds real wall-clock time to every full test-suite run. See `README_Docker.md`.

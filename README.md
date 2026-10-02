@@ -78,8 +78,9 @@ and the explanation will follow.
     - [HttpClientFactoryTests.cs](./UnitTestingCookbook.Tests/HttpClientFactoryTests.cs)
 - [WireMock.NET](./README/README_WireMockNet.md)
     - [WireMockNetTests.cs](./UnitTestingCookbook.Tests/WireMockNetTests.cs)
-- [Polly Policies](./README/README_WireMockNetPollyPolicies.md)
-    - [WireMockNetPollyPoliciesTests.cs](./UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs)
+- [WireMock.Net + Polly (Resilience)](./README/README_WireMockNetPollyPolicies.md)
+    - [WireMockNetResilienceTests.cs](./UnitTestingCookbook.Tests/WireMockNetResilienceTests.cs) (Polly v8)
+    - [WireMockNetPollyPoliciesTests.cs](./UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs) (Polly v7, for comparison)
 - [Analyzers](./README/README_Analyzers.md)
     - [AnalyzersTests.cs](./UnitTestingCookbook.Tests/AnalyzersTests.cs)
 - [General Tips](./README/README_GeneralTips.md)
@@ -127,7 +128,7 @@ and the explanation will follow.
 
 # Future
 
-- Update the WireMock.Net / Polly Policies examples from Polly's v7-style `Policy` API
-  (`Microsoft.Extensions.Http.Polly`) to Polly v8 resilience pipelines (`Microsoft.Extensions.Http.Resilience`). This
-  also removes the repo's last deprecated package (`Polly.Extensions.Http`, pulled in transitively by
-  `Microsoft.Extensions.Http.Polly`).
+- Remove the Polly v7 comparison (`WireMockNetPollyPoliciesTests` + `Microsoft.Extensions.Http.Polly`) once it's no
+  longer useful. That also removes the repo's last deprecated package (`Polly.Extensions.Http`, which
+  `Microsoft.Extensions.Http.Polly` pulls in). The v8 version is in
+  [WireMock.Net + Polly (Resilience)](./README/README_WireMockNetPollyPolicies.md).
