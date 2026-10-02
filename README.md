@@ -62,6 +62,8 @@ and the explanation will follow.
     - [MockingTests.cs](./UnitTestingCookbook.Tests/MockingTests.cs)
 - [Data Driven](./README/README_DataDriven.md)
     - [DataDrivenTests.cs](./UnitTestingCookbook.Tests/DataDrivenTests.cs)
+- [Property-Based Testing (CsCheck)](./README/README_PropertyBasedTesting.md)
+    - [PropertyBasedTestingTests.cs](./UnitTestingCookbook.Tests/PropertyBasedTestingTests.cs)
 - [AwesomeAssertions Add-Ons](./README/README_AwesomeAssertionsAddOns.md)
     - [AwesomeAssertionsAddOnsTests.cs](./UnitTestingCookbook.Tests/AwesomeAssertionsAddOnsTests.cs)
 - [Dependency Injection](./README/README_DependencyInjection.md)
