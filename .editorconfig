@@ -139,8 +139,11 @@ dotnet_diagnostic.CA1034.severity = none
 # ============================================================================
 dotnet_analyzer_diagnostic.severity = suggestion
 
-# Naming rules (below) stay enforced despite the suggestion baseline.
-dotnet_diagnostic.IDE1006.severity = warning
+# Naming rules (below) are not enforced: this cookbook's own conventions deliberately break them - test methods
+# are prefixed A_, B_, C_... to match README order (read as static-field prefixes like S_), and lower-case
+# `const string message`-style locals keep examples reading naturally. The dotnet_naming_* rules below remain as
+# IDE guidance only.
+dotnet_diagnostic.IDE1006.severity = none
 
 # --- Promoted to warning: high-signal, low-noise correctness rules ---
 dotnet_diagnostic.AsyncFixer01.severity = warning   # unnecessary async/await
