@@ -1,0 +1,24 @@
+name: PR Title
+
+# Pull requests are squash-merged, and the squash commit's subject is the PR title - so the PR title is what lands
+# on main. This check keeps every PR title (and therefore main's history) in Conventional Commits format:
+# https://www.conventionalcommits.org - e.g. "feat: add Property-Based Testing chapter", "ci: ...", "docs: ...".
+# Individual commits inside a PR use Arlo's Commit Notation instead (see CLAUDE.md).
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+permissions:
+  pull-requests: read
+
+jobs:
+  conventional-commit-title:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Validate PR title is a Conventional Commit
+        # Third-party action pinned to an exact commit (1.5.2) rather than a movable tag.
+        uses: ytanikin/pr-conventional-commits@639145d78959c53c43112365837e3abd21ed67c1 # 1.5.2
+        with:
+          task_types: '["feat","fix","docs","test","ci","build","refactor","perf","style","chore","revert"]'
+          add_label: 'false'
