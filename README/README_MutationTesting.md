@@ -269,7 +269,7 @@ already covered filter") because other mutants already cover them - nothing to a
 - **Not in this repo's CI:** run on demand. A CI job with `thresholds.break` set works well for a focused, fast
 project. On a large suite, run it nightly or only on changed files.
 - **Use it alongside coverage, not instead of it:** coverage finds code no test runs; mutation testing finds code that tests run
-without actually checking.
+without actually checking. See [Code Coverage](./README_CodeCoverage.md), which measures the same `ShippingCalculator` both ways.
 
 ---
 

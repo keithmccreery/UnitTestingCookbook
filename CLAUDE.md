@@ -53,6 +53,13 @@ dotnet test UnitTestingCookbook.Tests/UnitTestingCookbook.Tests.csproj --filter 
 dotnet test UnitTestingCookbook.Tests/UnitTestingCookbook.Tests.csproj --filter "TestCategory!=wiremocknet_pollypolicies"
 ```
 
+Collect code coverage and build a merged report (coverlet + ReportGenerator local tool; see `README_CodeCoverage.md`;
+CI publishes the same summary to each run's Summary page, informational only - no threshold):
+```
+dotnet test UnitTestingCookbook.sln --settings coverage.runsettings --collect:"XPlat Code Coverage" --results-directory TestResults
+dotnet reportgenerator -reports:"TestResults/**/coverage.cobertura.xml" -targetdir:CoverageReport -reporttypes:"Html;TextSummary"
+```
+
 Run mutation testing (Stryker.NET, a local .NET tool pinned in the root `dotnet-tools.json` - **not** run in CI;
 must be run from the test project folder, and only mutates/tests what `UnitTestingCookbook.Tests/stryker-config.json`
 scopes it to - see `README_MutationTesting.md`):
@@ -97,8 +104,10 @@ Notes on running tests:
   `Humanizer.Core.<locale>` satellite packages - these come from WireMock.Net's own transitive dependency on an
   older Humanizer and are resolved correctly (the repo's direct reference wins); they're noise, not a real conflict.
 
-CI (`.github/workflows/ci.yml`) runs restore/build/test on push and PR to master with the same filtered command
-above, against `Release` configuration.
+CI (`.github/workflows/ci.yml`) runs restore/build/test on push and PR to `main` (renamed from `master` 2026-10-02)
+with the same filtered command above, against `Release` configuration, plus the README-snippet check and code
+coverage. On pushes to `main` only, a separate `deploy-coverage` job publishes the HTML coverage report to GitHub Pages
+(https://keithmccreery.github.io/UnitTestingCookbook/).
 
 ## Architecture
 

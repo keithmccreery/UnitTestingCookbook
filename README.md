@@ -1,6 +1,7 @@
 # Unit Testing Cookbook
 
 [![CI](https://github.com/keithmccreery/UnitTestingCookbook/actions/workflows/ci.yml/badge.svg)](https://github.com/keithmccreery/UnitTestingCookbook/actions/workflows/ci.yml)
+[![Code coverage](https://keithmccreery.github.io/UnitTestingCookbook/badge_linecoverage.svg)](https://keithmccreery.github.io/UnitTestingCookbook/)
 
 ...with an introduction to **AwesomeAssertions**.  
 
@@ -110,6 +111,8 @@ and the explanation will follow.
     - [Snapshots](./UnitTestingCookbook.Tests/Snapshots)
 - [Metrics (MetricCollector)](./README/README_Metrics.md)
     - [MetricsTests.cs](./UnitTestingCookbook.Tests/MetricsTests.cs)
+- [Code Coverage (coverlet + ReportGenerator)](./README/README_CodeCoverage.md)
+    - No NUnit tests - measures the existing tests (configuration in [coverage.runsettings](./coverage.runsettings))
 - [Mutation Testing (Stryker.NET)](./README/README_MutationTesting.md)
     - [MutationTestingTests.cs](./UnitTestingCookbook.Tests/MutationTestingTests.cs)
     - [stryker-config.json](./UnitTestingCookbook.Tests/stryker-config.json)

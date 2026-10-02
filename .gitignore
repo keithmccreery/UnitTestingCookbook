@@ -74,6 +74,9 @@ nunit-*.xml
 # Approval Tests result files
 *.received.*
 
+# ReportGenerator output (dotnet reportgenerator - see README/README_CodeCoverage.md)
+CoverageReport/
+
 # Stryker.NET mutation testing reports (dotnet stryker - see README/README_MutationTesting.md)
 StrykerOutput/
 
