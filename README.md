@@ -108,6 +108,8 @@ and the explanation will follow.
     - [AsyncStreamsTests.cs](./UnitTestingCookbook.Tests/AsyncStreamsTests.cs)
 - [Entity Framework Core](./README/README_EntityFrameworkCore.md)
     - [EntityFrameworkCoreTests.cs](./UnitTestingCookbook.Tests/EntityFrameworkCoreTests.cs)
+- [Caching (IDistributedCache and HybridCache)](./README/README_Caching.md)
+    - [CachingTests.cs](./UnitTestingCookbook.Tests/CachingTests.cs)
 - [Parallel Processing](./README/README_ParallelProcessing.md)
     - [ParallelProcessingSafeTests.cs](./UnitTestingCookbook.Tests/ParallelProcessingSafeTests.cs)
     - [ParallelProcessingUnsafeTests.cs](./UnitTestingCookbook.Tests/ParallelProcessingUnsafeTests.cs)
