@@ -114,7 +114,7 @@ public void TearDown()
 <!-- endSnippet -->
 
 The v7 fixture shares **one** server across all its tests and clears its log in `[SetUp]`, with a 3-second
-`Task.Delay` in `[TearDown]` marked `BUG in WireMock.Net LogEntries`. It isn't actually a WireMock bug. **WireMock
+`Task.Delay` in `[TearDown]` - originally commented as a WireMock.Net bug. It isn't one. **WireMock
 logs a request only once its response has finished**, and some tests deliberately give up on slow responses: `B_`
 cancels after 1 second and `D_` times out after 2, while the server holds those responses for 3 seconds. Those
 responses then finish - and get logged - *after* the next test has cleared the log. Removing the delay proves it: the
@@ -434,15 +434,16 @@ public async Task H_StandardResilienceHandler()
 
 ## Polly v7 policies (kept for comparison)
 
-The original v7 version, unchanged. It still runs and passes, and it's a fair picture of how Polly + WireMock tests
-were commonly written. Two notes on its `BUG` comments, checked against Polly 7.2.4's source and by experiment:
+The original v7 version. It still runs and passes, and it's a fair picture of how Polly + WireMock tests were commonly
+written. Its code is unchanged; three comments that originally said `BUG` now explain what's actually going on (checked
+against Polly 7.2.4's source and by experiment):
 
-- **`// BUG: circuitState is not set correctly`** (in `onBreak`) - this is by design: v7 passes the state the breaker
-transitioned **from** (`Closed` or `HalfOpen`), not `Open`. Polly's `CircuitStateController` captures
-`transitionedState = _circuitState` before setting `Open`, then calls `onBreak(..., transitionedState, ...)`.
-- **`// BUG: no context to obtain logger`** (in `onHalfOpen`) - a genuine v7 limitation: `onHalfOpen` is a parameterless
-`Action`. v8's `OnHalfOpened` receives arguments including the context, and is logged automatically anyway.
-- **`// BUG in WireMock.Net LogEntries`** (in `[TearDown]`) - not a WireMock bug; see
+- **`onBreak`'s `circuitState`** - not the new state. By v7's (admittedly annoying) design it's the state the breaker
+transitioned **from** (`Closed` or `HalfOpen`): Polly's `CircuitStateController` captures `transitionedState = _circuitState`
+before setting `Open`, then calls `onBreak(..., transitionedState, ...)`. That's why the log message states `Open` itself.
+- **`onHalfOpen`** - a genuine v7 limitation: it's a parameterless `Action`, so there's no context to get a logger from.
+v8's `OnHalfOpened` receives the context, and is logged automatically anyway.
+- **The `[TearDown]` delay** - not a WireMock bug; see
 [A fresh WireMock server for every test](#a-fresh-wiremock-server-for-every-test).
 
 ### One Time Setup
@@ -546,7 +547,7 @@ Here we define the Polly Policies.
 - Use of the Polly Extension Method `.GetLogger()`.
 - The HttpClient Timeout is set to Infinity, allowing Polly to handle timeouts `client.Timeout = Timeout.InfiniteTimeSpan;`.
 - The order of the policies 'outermost: waitAndRetryPolicy / innermost: timeoutPolicy'.
-- Polly does contain a few bugs (in 6.0.x).
+- The comments in the `onBreak` / `onHalfOpen` callbacks, which explain two v7 quirks.
 - Use of Serilog `.Override()`.
 
 :exclamation: A nice chart of the recommended order of policies https://github.com/App-vNext/Polly/wiki/PolicyWrap  
@@ -590,7 +591,8 @@ public void SetUp()
             // onBreak
             (delegateResult, circuitState, timespan, context) =>
             {
-                // BUG: circuitState is not set correctly
+                // NOTE: circuitState is NOT the new state - by Polly v7's (admittedly annoying) design it's the state the
+                // breaker transitioned FROM (Closed or HalfOpen), so this message states 'Open' itself.
                 context.GetLogger()?.LogWarning("{PolicyKey} at {OperationKey}: circuit breaker is in {CircuitState} for {TimeSpan}.", context.PolicyKey, context.OperationKey, "Broken ('Open')", timespan.Humanize());
             },
             // onReset
@@ -601,7 +603,8 @@ public void SetUp()
             // onHalfOpen
             () =>
             {
-                // BUG: no context to obtain logger
+                // v7 limitation: onHalfOpen is a parameterless Action - no Context, so no logger to log with.
+                // (Polly v8's OnHalfOpened receives the context, and logs automatically - see WireMockNetResilienceTests.)
             }
         )
         .WithPolicyKey("Cookbook-CircuitBreaker-Policy");
@@ -651,7 +654,7 @@ public void SetUp()
     _serviceProvider = services.BuildServiceProvider(true);
 }
 ```
-<sup><a href='/UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs#L138-L231' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetPollyPoliciesTests_SetUp' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs#L138-L233' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetPollyPoliciesTests_SetUp' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ### TearDown
@@ -661,12 +664,16 @@ public void SetUp()
 ```cs
 public async Task TearDown()
 {
-    await Task.Delay(3000); // BUG in WireMock.Net LogEntries. Need to wait for this call to be logged, to allow .ResetLogEntries() to work
+    // Not a WireMock.Net bug: WireMock logs a request only once its response has finished. B_ (cancels after 1s) and
+    // D_ (times out after 2s) leave 3-second responses in flight on this shared server; without this wait they'd
+    // finish - and be logged - after the next test's ResetLogEntries(). WireMockNetResilienceTests avoids the wait
+    // entirely with a fresh server per test.
+    await Task.Delay(3000);
 
     (_serviceProvider as IDisposable)?.Dispose();
 }
 ```
-<sup><a href='/UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs#L234-L241' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetPollyPoliciesTests_TearDown' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs#L236-L247' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetPollyPoliciesTests_TearDown' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ### One Time TearDown
@@ -780,7 +787,7 @@ public async Task A_WireMockNet_Polly_OK()
         .AtUrl($"{_baseUrl}{ENDPOINT_STATUS_OK}");
 }
 ```
-<sup><a href='/UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs#L252-L268' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetPollyPoliciesTests_A_WireMockNet_Polly_OK' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs#L258-L274' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetPollyPoliciesTests_A_WireMockNet_Polly_OK' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ---
@@ -812,7 +819,7 @@ public async Task B_WireMockNet_Polly_CancellationToken()
     await action.Should().ThrowAsync<TaskCanceledException>();
 }
 ```
-<sup><a href='/UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs#L284-L300' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetPollyPoliciesTests_B_WireMockNet_Polly_CancellationToken' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs#L290-L306' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetPollyPoliciesTests_B_WireMockNet_Polly_CancellationToken' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ### WaitAndRetry
@@ -845,7 +852,7 @@ public async Task C_WireMockNet_Polly_InternalServerError()
     stopwatch.ElapsedMilliseconds.Should().BeGreaterThan(6000); // 6 seconds
 }
 ```
-<sup><a href='/UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs#L312-L335' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetPollyPoliciesTests_C_WireMockNet_Polly_InternalServerError' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs#L318-L341' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetPollyPoliciesTests_C_WireMockNet_Polly_InternalServerError' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 OUTPUT...
@@ -885,7 +892,7 @@ public async Task D_WireMockNet_Polly_WaitAndRetry_Timeout()
     stopwatch.ElapsedMilliseconds.Should().BeGreaterThan(12000); // 12 seconds
 }
 ```
-<sup><a href='/UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs#L347-L370' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetPollyPoliciesTests_D_WireMockNet_Polly_WaitAndRetry_Timeout' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs#L353-L376' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetPollyPoliciesTests_D_WireMockNet_Polly_WaitAndRetry_Timeout' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 OUTPUT...
@@ -959,7 +966,7 @@ public async Task E_WireMockNet_Polly_WaitAndRetry_CircuitBreaker()
     _wireMockServer.LogEntries.Should().HaveCount(17);
 }
 ```
-<sup><a href='/UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs#L382-L436' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetPollyPoliciesTests_E_WireMockNet_Polly_WaitAndRetry_CircuitBreaker' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs#L388-L442' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetPollyPoliciesTests_E_WireMockNet_Polly_WaitAndRetry_CircuitBreaker' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 OUTPUT...
@@ -1017,7 +1024,7 @@ public async Task F_WireMockNet_Polly_HandleIntermittentFailureThenSuccess()
     _wireMockServer.LogEntries.Should().HaveCount(2);
 }
 ```
-<sup><a href='/UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs#L446-L468' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetPollyPoliciesTests_F_WireMockNet_Polly_HandleIntermittentFailureThenSuccess' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/UnitTestingCookbook.Tests/WireMockNetPollyPoliciesTests.cs#L452-L474' title='Snippet source file'>snippet source</a> | <a href='#snippet-WireMockNetPollyPoliciesTests_F_WireMockNet_Polly_HandleIntermittentFailureThenSuccess' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 OUTPUT...

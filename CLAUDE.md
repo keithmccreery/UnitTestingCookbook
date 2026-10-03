@@ -10,7 +10,7 @@ etc.) is a paired **README chapter + NUnit test file**: `README/README_<Topic>.m
 and an embedded copy of the code, and `UnitTestingCookbook.Tests/<Topic>Tests.cs` is the actual, runnable version of
 that same code. See `README.md` for the full chapter list and the project's stated non-goals (it's explicitly not a
 theory-of-testing document, and it deliberately includes a few "don't do that, but here's why" anti-pattern examples
-- see `README_DataHangover.md` and the "BUG" comments in `WireMockNetPollyPoliciesTests.cs`).
+- see `README_DataHangover.md`, and the Polly v7 vs v8 comparison in `README_WireMockNetPollyPolicies.md`).
 
 **README code blocks are generated from the source by [MarkdownSnippets](https://github.com/SimonCropp/MarkdownSnippets)**
 (local .NET tool, pinned in root `dotnet-tools.json`; config in root `mdsnippets.json`, `InPlaceOverwrite` convention).
@@ -88,7 +88,7 @@ dotnet test UnitTestingCookbook.sln --filter "TestCategory!=_fails&TestCategory!
 Notes on running tests:
 - `WireMockNetPollyPoliciesTests.cs` (Polly **v7** policies, kept for comparison) exercises real wait/retry/circuit-breaker
   delays in seconds against one shared WireMock.Net server - the full suite takes roughly a minute, dominated by this
-  file. Its `BUG` comments are explained/corrected in `README_WireMockNetPollyPolicies.md`, not edited in the code.
+  file. Its former `BUG` comments were corrected (2026-10-02) to explain the real causes - see the chapter README.
   `WireMockNetResilienceTests.cs` (Polly **v8**, the current approach) runs the same scenarios in ~9s: a fresh
   WireMock server per test, millisecond delays, and polling `LogEntries` with a deadline instead of fixed sleeps.
 - `DockerTests.cs`'s one test is permanently `[Ignore]`d - not because the technique doesn't work (verified to

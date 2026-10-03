@@ -168,7 +168,8 @@ public class WireMockNetPollyPoliciesTests
                 // onBreak
                 (delegateResult, circuitState, timespan, context) =>
                 {
-                    // BUG: circuitState is not set correctly
+                    // NOTE: circuitState is NOT the new state - by Polly v7's (admittedly annoying) design it's the state the
+                    // breaker transitioned FROM (Closed or HalfOpen), so this message states 'Open' itself.
                     context.GetLogger()?.LogWarning("{PolicyKey} at {OperationKey}: circuit breaker is in {CircuitState} for {TimeSpan}.", context.PolicyKey, context.OperationKey, "Broken ('Open')", timespan.Humanize());
                 },
                 // onReset
@@ -179,7 +180,8 @@ public class WireMockNetPollyPoliciesTests
                 // onHalfOpen
                 () =>
                 {
-                    // BUG: no context to obtain logger
+                    // v7 limitation: onHalfOpen is a parameterless Action - no Context, so no logger to log with.
+                    // (Polly v8's OnHalfOpened receives the context, and logs automatically - see WireMockNetResilienceTests.)
                 }
             )
             .WithPolicyKey("Cookbook-CircuitBreaker-Policy");
@@ -234,7 +236,11 @@ public class WireMockNetPollyPoliciesTests
     // begin-snippet: WireMockNetPollyPoliciesTests_TearDown
     public async Task TearDown()
     {
-        await Task.Delay(3000); // BUG in WireMock.Net LogEntries. Need to wait for this call to be logged, to allow .ResetLogEntries() to work
+        // Not a WireMock.Net bug: WireMock logs a request only once its response has finished. B_ (cancels after 1s) and
+        // D_ (times out after 2s) leave 3-second responses in flight on this shared server; without this wait they'd
+        // finish - and be logged - after the next test's ResetLogEntries(). WireMockNetResilienceTests avoids the wait
+        // entirely with a fresh server per test.
+        await Task.Delay(3000);
 
         (_serviceProvider as IDisposable)?.Dispose();
     }
