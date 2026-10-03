@@ -88,7 +88,7 @@ dotnet test UnitTestingCookbook.sln --filter "TestCategory!=_fails&TestCategory!
 Notes on running tests:
 - `WireMockNetPollyPoliciesTests.cs` (Polly **v7** policies, kept for comparison) exercises real wait/retry/circuit-breaker
   delays in seconds against one shared WireMock.Net server - the full suite takes roughly a minute, dominated by this
-  file. Its former `BUG` comments were corrected (2026-10-02) to explain the real causes - see the chapter README.
+  file. Its comments explain two v7 quirks and why `[TearDown]` waits 3s on the shared server - see the chapter README.
   `WireMockNetResilienceTests.cs` (Polly **v8**, the current approach) runs the same scenarios in ~9s: a fresh
   WireMock server per test, millisecond delays, and polling `LogEntries` with a deadline instead of fixed sleeps.
 - `DockerTests.cs`'s one test is permanently `[Ignore]`d - not because the technique doesn't work (verified to

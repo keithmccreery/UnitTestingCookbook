@@ -236,7 +236,7 @@ public class WireMockNetPollyPoliciesTests
     // begin-snippet: WireMockNetPollyPoliciesTests_TearDown
     public async Task TearDown()
     {
-        // Not a WireMock.Net bug: WireMock logs a request only once its response has finished. B_ (cancels after 1s) and
+        // WireMock.Net logs a request only once its response has finished. B_ (cancels after 1s) and
         // D_ (times out after 2s) leave 3-second responses in flight on this shared server; without this wait they'd
         // finish - and be logged - after the next test's ResetLogEntries(). WireMockNetResilienceTests avoids the wait
         // entirely with a fresh server per test.

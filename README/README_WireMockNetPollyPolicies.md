@@ -114,11 +114,11 @@ public void TearDown()
 <!-- endSnippet -->
 
 The v7 fixture shares **one** server across all its tests and clears its log in `[SetUp]`, with a 3-second
-`Task.Delay` in `[TearDown]` - originally commented as a WireMock.Net bug. It isn't one. **WireMock
-logs a request only once its response has finished**, and some tests deliberately give up on slow responses: `B_`
-cancels after 1 second and `D_` times out after 2, while the server holds those responses for 3 seconds. Those
-responses then finish - and get logged - *after* the next test has cleared the log. Removing the delay proves it: the
-next tests see **one extra request each** (`C_` finds 4 instead of 3, `E_` finds 17 instead of 16).
+`Task.Delay` in `[TearDown]`. That delay is needed because **WireMock logs a request only once its response has
+finished**, and some tests deliberately give up on slow responses: `B_` cancels after 1 second and `D_` times out after
+2, while the server holds those responses for 3 seconds. Those responses then finish - and get logged - *after* the
+next test has cleared the log. Removing the delay proves it: the next tests see **one extra request each** (`C_` finds
+4 instead of 3, `E_` finds 17 instead of 16).
 
 A shared server also carries **scenario state** between tests: once the "Fail then Succeed" scenario has advanced, any
 later test hitting that endpoint starts in the "already failed" state. That's [Data Hangover](./README_DataHangover.md)
@@ -435,15 +435,15 @@ public async Task H_StandardResilienceHandler()
 ## Polly v7 policies (kept for comparison)
 
 The original v7 version. It still runs and passes, and it's a fair picture of how Polly + WireMock tests were commonly
-written. Its code is unchanged; three comments that originally said `BUG` now explain what's actually going on (checked
-against Polly 7.2.4's source and by experiment):
+written. Comments in its code explain two v7 quirks and one test-isolation workaround (checked against Polly 7.2.4's
+source and by experiment):
 
 - **`onBreak`'s `circuitState`** - not the new state. By v7's (admittedly annoying) design it's the state the breaker
 transitioned **from** (`Closed` or `HalfOpen`): Polly's `CircuitStateController` captures `transitionedState = _circuitState`
 before setting `Open`, then calls `onBreak(..., transitionedState, ...)`. That's why the log message states `Open` itself.
 - **`onHalfOpen`** - a genuine v7 limitation: it's a parameterless `Action`, so there's no context to get a logger from.
 v8's `OnHalfOpened` receives the context, and is logged automatically anyway.
-- **The `[TearDown]` delay** - not a WireMock bug; see
+- **The `[TearDown]` delay** - lets in-flight responses finish on the shared server before the next test; see
 [A fresh WireMock server for every test](#a-fresh-wiremock-server-for-every-test).
 
 ### One Time Setup
@@ -547,7 +547,6 @@ Here we define the Polly Policies.
 - Use of the Polly Extension Method `.GetLogger()`.
 - The HttpClient Timeout is set to Infinity, allowing Polly to handle timeouts `client.Timeout = Timeout.InfiniteTimeSpan;`.
 - The order of the policies 'outermost: waitAndRetryPolicy / innermost: timeoutPolicy'.
-- The comments in the `onBreak` / `onHalfOpen` callbacks, which explain two v7 quirks.
 - Use of Serilog `.Override()`.
 
 :exclamation: A nice chart of the recommended order of policies https://github.com/App-vNext/Polly/wiki/PolicyWrap  
@@ -664,7 +663,7 @@ public void SetUp()
 ```cs
 public async Task TearDown()
 {
-    // Not a WireMock.Net bug: WireMock logs a request only once its response has finished. B_ (cancels after 1s) and
+    // WireMock.Net logs a request only once its response has finished. B_ (cancels after 1s) and
     // D_ (times out after 2s) leave 3-second responses in flight on this shared server; without this wait they'd
     // finish - and be logged - after the next test's ResetLogEntries(). WireMockNetResilienceTests avoids the wait
     // entirely with a fresh server per test.
