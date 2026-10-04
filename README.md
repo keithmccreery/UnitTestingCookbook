@@ -87,6 +87,8 @@ and the explanation will follow.
     - [GeneralTipsTests.cs](./UnitTestingCookbook.Tests/GeneralTipsTests.cs)
 - [Bogus](./README/README_Bogus.md)
     - [BogusTests.cs](./UnitTestingCookbook.Tests/BogusTests.cs)
+- [AutoFixture (and how it differs from Bogus)](./README/README_AutoFixture.md)
+    - [AutoFixtureTests.cs](./UnitTestingCookbook.Tests/AutoFixtureTests.cs)
 - [MinimalApi Integration Testing](./README/README_MinimalApi.md)
     - [MinimalApiTests.cs](./UnitTestingCookbook.Tests/MinimalApiTests.cs)
     - [UnitTestingCookbook.MinimalApi](./UnitTestingCookbook.MinimalApi)
