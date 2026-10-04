@@ -42,6 +42,7 @@
     <PackageReference Include="Moq" />
     <PackageReference Include="Moq.Contrib.HttpClient" />
     <PackageReference Include="NetArchTest.Rules" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit3TestAdapter" />
@@ -54,6 +55,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Polly" />
+    <PackageReference Include="Respawn" />
     <PackageReference Include="Serilog" />
     <PackageReference Include="Serilog.Extensions.Logging" />
     <PackageReference Include="Serilog.Sinks.Console" />
@@ -65,6 +67,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Testcontainers" />
+    <PackageReference Include="Testcontainers.PostgreSql" />
     <PackageReference Include="Testcontainers.Redis" />
     <PackageReference Include="Verify.NUnit" />
     <PackageReference Include="WireMock.Net" />
