@@ -36,7 +36,7 @@ for details.
 
 ## Assumptions
 
-- There are many Testing Frameworks. This presentation will use NUnit.
+- There are many Testing Frameworks. This presentation will use NUnit (see [Other Test Frameworks](#other-test-frameworks)).
 - Some of the Frameworks (e.g. XUnit) may have functionality built-in that is being presented here.
 
 ## Caveat Emptor
@@ -126,9 +126,16 @@ and the explanation will follow.
     - [MutationTestingTests.cs](./UnitTestingCookbook.Tests/MutationTestingTests.cs)
     - [stryker-config.json](./UnitTestingCookbook.Tests/stryker-config.json)
 
-# Errata
+# Other Test Frameworks
 
-- NUnit vs. XUnit vs. MSTest: Comparing Unit Testing Frameworks In C# https://www.lambdatest.com/blog/nunit-vs-xunit-vs-mstest/
+This cookbook uses NUnit, but its patterns aren't NUnit-specific: they translate directly to the other major .NET test
+frameworks, where mostly the attributes differ (a test is `[Test]` in NUnit and TUnit, `[Fact]` in xUnit, and
+`[TestMethod]` in MSTest). Comparing the frameworks themselves is out of scope here - see each one's own documentation:
+
+- NUnit https://docs.nunit.org
+- xUnit.net https://xunit.net
+- MSTest https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-mstest-intro
+- TUnit https://tunit.dev
 
 # Future
 
