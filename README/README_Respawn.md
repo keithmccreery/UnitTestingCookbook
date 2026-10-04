@@ -24,10 +24,33 @@ There are a few ways to give every test a clean database:
 | **A fresh in-memory SQLite database per test** | Fastest and simplest - the [Entity Framework Core](./README_EntityFrameworkCore.md) chapter does this | Only if SQLite can stand in for your real database |
 | **Recreate the database per test** (`EnsureDeleted` + `EnsureCreated`, or re-running migrations) | Always a perfectly clean schema | Gets slower as the schema grows; easy to trip over (see the PostgreSQL notes below) |
 | **Roll back a transaction per test** | Fast; nothing is ever committed | Breaks as soon as the code under test opens its own connection or commits - e.g. a `WebApplicationFactory` integration test |
+| **A new database container per test** | Perfect isolation, real database | About a second per test, just to start the container (measured below) |
 | **Respawn** - keep the schema, empty the tables | Fast; works with any number of connections; keeps reference data if asked | The database (and its schema) must already exist |
 
 Respawn is for the common case of a **real, shared test database**: it inspects the schema once, works out how to
 empty every table despite foreign keys, and then resets the database in one round trip before each test.
+
+### Why not just start a new container for every test?
+
+Because of what it costs - and because containers and Respawn aren't alternatives; they work at different scopes.
+Measured on this machine with PostgreSQL 17 via Testcontainers:
+
+| | Time |
+|---|---|
+| Start a PostgreSQL container - first time (cold) | about **4.1 s** |
+| Start a PostgreSQL container - after that | about **1.2 s** each |
+| Create the schema (`EnsureCreated`) | about **40 ms** |
+| Insert a row **and** reset with Respawn | about **15 ms** |
+
+A container per *test* means roughly a second of startup per test - about 10 minutes for 500 tests - against a few
+seconds of Respawn resets for the same 500. So the usual pattern combines them:
+
+- **A container per test run (or per fixture)** gives an **ephemeral database**: nothing shared with anyone else, gone
+when the run ends.
+- **Respawn per test, inside that container** gives each test **clean tables** without paying for a new container.
+
+(Somewhere in between: one container, but a new *database* per test inside it - e.g. PostgreSQL's
+`CREATE DATABASE ... TEMPLATE` copies an existing, already-migrated database. Not covered here.)
 
 ---
 
@@ -146,7 +169,7 @@ public async Task C_ForeignKeys_MakeTheOrderMatter()
     // Assert - the review still points at the product, and the relationship is Restrict
     await naiveCleanup.Should().ThrowAsync<SqliteException>().WithMessage("*FOREIGN KEY constraint failed*");
 
-    // Respawn gets around the foreign keys for you (on SQLite, by switching foreign-key checks off while it deletes)
+    // Respawn reads the foreign keys from the schema and deletes child tables before their parents
     await _respawner.ResetAsync(_connection);
 
     await using CatalogDbContext dbContext = new CatalogDbContext(_options);
@@ -160,8 +183,9 @@ public async Task C_ForeignKeys_MakeTheOrderMatter()
 A hand-written cleanup has to list every table, in the right order, and be kept up to date as the schema changes.
 Respawn reads the schema and handles the foreign keys itself - differently for each database:
 
-- **SQLite** - switches foreign-key checks off, deletes, and switches them back on (`PRAGMA foreign_keys = OFF; ...`) -
-seen in its generated `DeleteSql`.
+- **SQLite** - deletes the tables in dependency order, children before parents. (Its generated `DeleteSql` also
+includes `PRAGMA foreign_keys = OFF` / `ON`, but Respawn runs the delete inside a transaction, where SQLite ignores that
+pragma - so it's the order that does the work. The `TablesToIgnore` limitation below proves it.)
 - **PostgreSQL** - one `TRUNCATE ... CASCADE` statement for every table - seen in the PostgreSQL example below.
 - **SQL Server** - a `DELETE` per table, in dependency order (children before parents), only disabling constraints for
 tables with circular relationships - from Respawn 7.0.0's source, not run here.
@@ -263,6 +287,64 @@ database`.
 (`EnsureDeleted` + `EnsureCreated`) took about **40ms** per reset; inserting a product and resetting with Respawn took
 about **15ms** (averages of 5, over two runs). With a 2-table schema the gap is small - but recreating grows with the
 size of the schema (and with migrations, if you apply them), while emptying tables doesn't grow nearly as fast.
+
+---
+
+## Limitations
+
+Respawn is simple and fast, but it's a blunt tool. Everything below was checked while writing this chapter (by running
+it, or in Respawn 7.0.0's source, as noted).
+
+- **It empties whole tables - it can't delete "only the rows my tests created".** Never point it at a shared database
+(staging, integration, a team "non-prod"): it deletes everyone's data in every table it covers. `TablesToIgnore`,
+`TablesToInclude`, and the schema options work per table and per schema, never per row. Respawn also has no check of
+its own on *which* database it's resetting, so a guard that refuses to run unless the connection is a known test
+database (by name) is cheap insurance.
+- **Generated IDs keep counting.** By default, identity columns and sequences aren't reset: on PostgreSQL, the first
+product after a reset got ID `2`, not `1`. `WithReseed = true` restarts them (it got `1`). Better still, don't write
+tests that depend on specific generated IDs.
+- **The database and schema must already exist.** Respawn never creates or migrates anything, and it reads the schema
+once, in `Respawner.CreateAsync` - after a schema change, create a new `Respawner`.
+- **Tests sharing one database can't run in parallel.** Resetting before one test would wipe the rows another test is
+in the middle of using. Run them sequentially, or give each parallel worker its own database (see
+[Parallel Processing](./README_ParallelProcessing.md)).
+- **It only resets tables.** Anything else that remembers state between tests - an in-memory or distributed cache (see
+[Caching](./README_Caching.md)), files, message queues, external services - needs its own reset.
+
+### Ignoring a table that points at a table being reset doesn't work
+
+`TablesToIgnore` is safe for tables that *other* tables point at - reference and lookup data, like `D_` above. It
+isn't safe for a table that points *at* something being reset, and it fails differently on each database. Here, Reviews
+(which references Products) is ignored while Products is reset:
+
+- **SQLite** - the reset fails with `FOREIGN KEY constraint failed`, because the kept reviews would point at deleted
+products. That's also the proof that, on SQLite, Respawn's `PRAGMA foreign_keys = OFF` has no effect (see above).
+- **PostgreSQL** - the reset *succeeds*, but `TRUNCATE "public"."Products" CASCADE` empties the "ignored" Reviews table
+anyway. (Checked against PostgreSQL 17.)
+
+<!-- snippet: RespawnTests_F_IgnoringAChildTable_BreaksTheReset -->
+<a id='snippet-RespawnTests_F_IgnoringAChildTable_BreaksTheReset'></a>
+```cs
+public async Task F_IgnoringAChildTable_BreaksTheReset()
+{
+    // Arrange - ignore Reviews (the child), but reset Products (the parent it points at)
+    await AddProductWithReviewAsync("Widget");
+
+    Respawner keepReviews = await Respawner.CreateAsync(_connection, new RespawnerOptions
+    {
+        DbAdapter = DbAdapter.Sqlite,
+        TablesToIgnore = [new Table("Reviews")],
+    });
+
+    // Act
+    Func<Task> reset = () => keepReviews.ResetAsync(_connection);
+
+    // Assert - the kept reviews would be left pointing at deleted products, so the reset fails
+    await reset.Should().ThrowAsync<SqliteException>().WithMessage("*FOREIGN KEY constraint failed*");
+}
+```
+<sup><a href='/UnitTestingCookbook.Tests/RespawnTests.cs#L213-L231' title='Snippet source file'>snippet source</a> | <a href='#snippet-RespawnTests_F_IgnoringAChildTable_BreaksTheReset' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 ---
 
