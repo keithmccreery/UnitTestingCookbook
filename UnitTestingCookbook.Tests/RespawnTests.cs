@@ -121,7 +121,7 @@ public class RespawnTests
         // Assert - the review still points at the product, and the relationship is Restrict
         await naiveCleanup.Should().ThrowAsync<SqliteException>().WithMessage("*FOREIGN KEY constraint failed*");
 
-        // Respawn gets around the foreign keys for you (on SQLite, by switching foreign-key checks off while it deletes)
+        // Respawn reads the foreign keys from the schema and deletes child tables before their parents
         await _respawner.ResetAsync(_connection);
 
         await using CatalogDbContext dbContext = new CatalogDbContext(_options);
@@ -200,6 +200,33 @@ public class RespawnTests
         }
 
         respawner.DeleteSql.Should().Contain("truncate table"); // on PostgreSQL: TRUNCATE ... CASCADE, in one statement
+    }
+    // end-snippet
+
+    //
+    // Q: What happens if I ignore a table that points at a table being reset?
+    // NOTE: A limitation, not a recipe - see README_Respawn.md. (On PostgreSQL the same setup silently empties the
+    //       "ignored" table anyway, via TRUNCATE ... CASCADE.)
+    //
+    [Test]
+    [Category("_passes")]
+    // begin-snippet: RespawnTests_F_IgnoringAChildTable_BreaksTheReset
+    public async Task F_IgnoringAChildTable_BreaksTheReset()
+    {
+        // Arrange - ignore Reviews (the child), but reset Products (the parent it points at)
+        await AddProductWithReviewAsync("Widget");
+
+        Respawner keepReviews = await Respawner.CreateAsync(_connection, new RespawnerOptions
+        {
+            DbAdapter = DbAdapter.Sqlite,
+            TablesToIgnore = [new Table("Reviews")],
+        });
+
+        // Act
+        Func<Task> reset = () => keepReviews.ResetAsync(_connection);
+
+        // Assert - the kept reviews would be left pointing at deleted products, so the reset fails
+        await reset.Should().ThrowAsync<SqliteException>().WithMessage("*FOREIGN KEY constraint failed*");
     }
     // end-snippet
 }
