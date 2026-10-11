@@ -122,6 +122,8 @@ and the explanation will follow.
     - [Snapshots](./UnitTestingCookbook.Tests/Snapshots)
 - [Metrics (MetricCollector)](./README/README_Metrics.md)
     - [MetricsTests.cs](./UnitTestingCookbook.Tests/MetricsTests.cs)
+- [Traces (ActivityListener)](./README/README_Traces.md)
+    - [TracesTests.cs](./UnitTestingCookbook.Tests/TracesTests.cs)
 - [Code Coverage (coverlet + ReportGenerator)](./README/README_CodeCoverage.md)
     - No NUnit tests - measures the existing tests (configuration in [coverage.runsettings](./coverage.runsettings))
 - [Mutation Testing (Stryker.NET)](./README/README_MutationTesting.md)
